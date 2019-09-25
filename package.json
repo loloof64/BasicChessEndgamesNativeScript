@@ -1,6 +1,6 @@
 {
   "nativescript": {
-    "id": "org.nativescript.BasicChessEndgames",
+    "id": "com.loloof64.android.basicchessendgamestrainer",
     "tns-android": {
       "version": "6.1.1"
     },
@@ -8,7 +8,7 @@
       "version": "6.1.0"
     }
   },
-  "description": "NativeScript Application",
+  "description": "Train your basic chess endgames knowledge against your device.",
   "license": "SEE LICENSE IN <your-license-filename>",
   "repository": "<fill-your-repository-here>",
   "dependencies": {
@@ -23,8 +23,10 @@
     "nativescript-dev-webpack": "~1.2.0",
     "nativescript-vue-template-compiler": "~2.4.0",
     "node-sass": "^4.7.1",
-    "vue-loader": "~15.4.0"
+    "vue-loader": "~15.4.0",
+    "vuejs-logger": "^1.5.3"
   },
   "gitHead": "e9af7b54b243e55ef28e4610c4ef8c83837d86c0",
-  "readme": "NativeScript Application"
+  "readme": "NativeScript Application",
+  "author": "Laurent Bernabe"
 }
