@@ -5,32 +5,58 @@
         </ActionBar>
 
         <GridLayout>
-            <Label class="info" horizontalAlignment="center" verticalAlignment="center">
-                <FormattedString>
-                    <Span class="fa" text.decode="&#xf135; "/>
-                    <Span :text="message"/>
-                </FormattedString>
-            </Label>
+            <WebViewExt src="~/stockfish/index.html"
+                width="0" height="0"
+                @loadFinished="onWebViewLoaded"
+            />
+            <Button @tap='() => sendCommandToStockfish("go depth 15")'>
+                Get Stockfish move !
+            </Button>
         </GridLayout>
     </Page>
 </template>
 
 <script>
+    import "@nota/nativescript-webview-ext/vue";
+
     export default {
-        computed: {
-            message() {
-                return "Blank {N}-Vue app";
+        data() {
+            return {
+                webview: undefined,
             }
+        },
+        methods: {
+            onWebViewLoaded(args) {
+                this.webview = args.object;
+                try {
+                    this.webview.on('stockfishOutput', this.processStockfishOutput);
+                }
+                catch (error) {
+                    console.error(error);
+                }
+            },
+            sendCommandToStockfish(command) {
+                if (this.webview !== undefined) {
+                    try {
+                        this.webview.executeJavaScript(`stockfish.postMessage('${command}');`);
+                    }
+                    catch (error) {
+                        console.error(error);
+                    }
+                }
+            },
+            processStockfishOutput(output) {
+                console.log(output.data);
+            }
+        },
+        computed: {
         }
     };
 </script>
 
 <style scoped lang="scss">
-    // Start custom common variables
     @import '../app-variables';
-    // End custom common variables
 
-    // Custom styles
     .fa {
         color: $accent-dark;
     }
