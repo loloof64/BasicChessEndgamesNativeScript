@@ -9,15 +9,14 @@
                 width="0" height="0"
                 @loadFinished="onWebViewLoaded"
             />
-            <Button @tap='() => sendCommandToStockfish("go depth 15")'>
-                Get Stockfish move !
-            </Button>
+            <Chessboard size="300"/>
         </GridLayout>
     </Page>
 </template>
 
 <script>
     import "@nota/nativescript-webview-ext/vue";
+    import Chessboard from './chessboard/Chessboard.vue';
 
     export default {
         data() {
@@ -50,6 +49,9 @@
             }
         },
         computed: {
+        },
+        components: {
+            Chessboard,
         }
     };
 </script>
