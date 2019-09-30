@@ -2,21 +2,21 @@
   "nativescript": {
     "id": "com.loloof64.android.basicchessendgamestrainer",
     "tns-android": {
-      "version": "6.1.1"
+      "version": "6.1.2"
     },
     "tns-ios": {
-      "version": "6.1.0"
+      "version": "6.1.1"
     }
   },
   "description": "Train your basic chess endgames knowledge against your device.",
-  "license": "SEE LICENSE IN LICENSE file",
+  "license": "GPLv3",
   "repository": "<fill-your-repository-here>",
   "dependencies": {
     "@nota/nativescript-webview-ext": "5.4.1",
     "chess.js": "^0.10.2",
     "nativescript-theme-core": "~1.0.6",
     "nativescript-vue": "~2.4.0",
-    "tns-core-modules": "~6.1.0"
+    "tns-core-modules": "~6.1.1"
   },
   "devDependencies": {
     "@babel/core": "~7.1.0",

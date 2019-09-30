@@ -9,7 +9,7 @@
                 width="0" height="0"
                 @loadFinished="onWebViewLoaded"
             />
-            <Chessboard size="300"/>
+            <Chessboard size="300" :reversed="false"></Chessboard>
         </GridLayout>
     </Page>
 </template>
