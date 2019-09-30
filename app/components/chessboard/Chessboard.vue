@@ -1,6 +1,7 @@
 <template>
 	<GridLayout columns="*,2*,2*,2*,2*,2*,2*,2*,2*,*" rows="*,2*,2*,2*,2*,2*,2*,2*,2*,*"
-        :width="size" :height="size" :backgroundColor="backgroundColor">
+        :width="size" :height="size" :backgroundColor="backgroundColor"
+        >
         <Label row="0" col="0"></Label>
         <Label coordinate :fontSize="fontSize" row="0" col="1" :text="fileCoords[0]"
             :color="coordsColor"></Label>
@@ -23,6 +24,7 @@
         <Label :fontSize="fontSize" coordinate row="1" col="0" :text="rankCoords[0]"
             :color="coordsColor"></Label>
         <Label id="70" row="1" col="1" :backgroundColor="whiteCellColor"></Label>
+        <SVGImage row="1" col="1" src="~/components/chessboard/chess_vectors/Chess_bdt45.svg" width="100" height="100"/>
         <Label id="71" row="1" col="2" :backgroundColor="blackCellColor"></Label>
         <Label id="72" row="1" col="3" :backgroundColor="whiteCellColor"></Label>
         <Label id="73" row="1" col="4" :backgroundColor="blackCellColor"></Label>
@@ -222,7 +224,7 @@ export default {
                 case 'k': imageBase = piece.color === 'b' ? 'kd' : 'kl'; break;
             }
             if (!imageBase) return null;
-            return `~/chess_vectors/Chess_${imageBase}t45.svg`;
+            return `~/components/chessboard/chess_vectors/Chess_${imageBase}t45.svg`;
         },
         pieceImageAtRowCol(row, col) {
             const rank = this.reversed ? 7-row : row;
