@@ -143,7 +143,7 @@
             :color="coordsColor"></Label>
         <Label :fontSize="fontSize" coordinate row="9" col="8" :text="fileCoords(7)"
             :color="coordsColor"></Label>
-        <Label id="playerTurn" row="9" col="9"></Label>
+        <StackLayout row="9" col="9"><Label id="playerTurn" :backgroundColor="turnColor()" :borderRadius="halfCellSize / 2.0"/></StackLayout>
     </GridLayout>
 </template>
 
@@ -231,6 +231,13 @@ export default {
         rankCoords(index) {
             return this.reversed ? ['1', '2', '3', '4', '5', '6', '7', '8'][index]: ['8', '7', '6', '5', '4', '3', '2', '1'][index];
         },
+        turnColor() {
+            switch(this.boardLogic.turn()) {
+                case 'w': return 'white';
+                case 'b': return 'black';
+                default: return 'transparent';
+            }
+        }
     },
 }
 </script>
