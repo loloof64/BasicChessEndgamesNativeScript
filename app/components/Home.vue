@@ -4,19 +4,20 @@
             <Label class="action-bar-title" text="Home"></Label>
         </ActionBar>
 
-        <GridLayout>
-            <WebViewExt src="~/stockfish/index.html"
+        <DockLayout orientation="vertical">
+            <WebViewExt dock="top" src="~/stockfish/index.html"
                 width="0" height="0"
                 @loadFinished="onWebViewLoaded"
             />
-            <Chessboard size="300" :reversed="false"></Chessboard>
-        </GridLayout>
+            <Chessboard :size="boardWidth" :reversed="false"></Chessboard>
+        </DockLayout>
     </Page>
 </template>
 
 <script>
     import "@nota/nativescript-webview-ext/vue";
     import Chessboard from './chessboard/Chessboard.vue';
+    const platformModule = require("tns-core-modules/platform");
 
     export default {
         data() {
@@ -49,6 +50,12 @@
             }
         },
         computed: {
+            boardWidth() {
+                const screenWidth = platformModule.screen.mainScreen.widthDIPs;
+                const screenHeight = platformModule.screen.mainScreen.heightDIPs;
+
+                return screenWidth < screenHeight ? screenWidth : screenHeight;
+            }
         },
         components: {
             Chessboard,
