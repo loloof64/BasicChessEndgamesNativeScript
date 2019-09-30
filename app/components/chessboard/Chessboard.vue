@@ -23,107 +23,106 @@
 
         <Label :fontSize="fontSize" coordinate row="1" col="0" :text="rankCoords[0]"
             :color="coordsColor"></Label>
-        <Label id="70" row="1" col="1" :backgroundColor="whiteCellColor"></Label>
-        <SVGImage row="1" col="1" src="~/components/chessboard/chess_vectors/Chess_bdt45.svg" width="100" height="100"/>
-        <Label id="71" row="1" col="2" :backgroundColor="blackCellColor"></Label>
-        <Label id="72" row="1" col="3" :backgroundColor="whiteCellColor"></Label>
-        <Label id="73" row="1" col="4" :backgroundColor="blackCellColor"></Label>
-        <Label id="74" row="1" col="5" :backgroundColor="whiteCellColor"></Label>
-        <Label id="75" row="1" col="6" :backgroundColor="blackCellColor"></Label>
-        <Label id="76" row="1" col="7" :backgroundColor="whiteCellColor"></Label>
-        <Label id="77" row="1" col="8" :backgroundColor="blackCellColor"></Label>
+        <StackLayout id="70" row="1" col="1" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(7, 0)"/></StackLayout>
+        <StackLayout id="71" row="1" col="2" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(7, 1)"/></StackLayout>
+        <StackLayout id="72" row="1" col="3" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(7, 2)"/></StackLayout>
+        <StackLayout id="73" row="1" col="4" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(7, 3)"/></StackLayout>
+        <StackLayout id="74" row="1" col="5" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(7, 4)"/></StackLayout>
+        <StackLayout id="75" row="1" col="6" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(7, 5)"/></StackLayout>
+        <StackLayout id="76" row="1" col="7" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(7, 6)"/></StackLayout>
+        <StackLayout id="77" row="1" col="8" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(7, 7)"/></StackLayout>
         <Label :fontSize="fontSize" coordinate row="1" col="9" :text="rankCoords[0]"
             :color="coordsColor"></Label>
 
         <Label coordinate :fontSize="fontSize" row="2" col="0" :text="rankCoords[1]"
             :color="coordsColor"></Label>
-        <Label id="60" row="2" col="1" :backgroundColor="blackCellColor"></Label>
-        <Label id="61" row="2" col="2" :backgroundColor="whiteCellColor"></Label>
-        <Label id="62" row="2" col="3" :backgroundColor="blackCellColor"></Label>
-        <Label id="63" row="2" col="4" :backgroundColor="whiteCellColor"></Label>
-        <Label id="64" row="2" col="5" :backgroundColor="blackCellColor"></Label>
-        <Label id="65" row="2" col="6" :backgroundColor="whiteCellColor"></Label>
-        <Label id="66" row="2" col="7" :backgroundColor="blackCellColor"></Label>
-        <Label id="67" row="2" col="8" :backgroundColor="whiteCellColor"></Label>
+        <StackLayout id="60" row="2" col="1" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(6, 0)"/></StackLayout>
+        <StackLayout id="61" row="2" col="2" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(6, 1)"/></StackLayout>
+        <StackLayout id="62" row="2" col="3" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(6, 2)"/></StackLayout>
+        <StackLayout id="63" row="2" col="4" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(6, 3)"/></StackLayout>
+        <StackLayout id="64" row="2" col="5" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(6, 4)"/></StackLayout>
+        <StackLayout id="65" row="2" col="6" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(6, 5)"/></StackLayout>
+        <StackLayout id="66" row="2" col="7" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(6, 6)"/></StackLayout>
+        <StackLayout id="67" row="2" col="8" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(6, 7)"/></StackLayout>
         <Label coordinate :fontSize="fontSize" row="2" col="9" :text="rankCoords[1]"
             :color="coordsColor"></Label>
 
         <Label :fontSize="fontSize" coordinate row="3" col="0" :text="rankCoords[2]"
             :color="coordsColor"></Label>
-        <Label id="50" row="3" col="1" :backgroundColor="whiteCellColor"></Label>
-        <Label id="51" row="3" col="2" :backgroundColor="blackCellColor"></Label>
-        <Label id="52" row="3" col="3" :backgroundColor="whiteCellColor"></Label>
-        <Label id="53" row="3" col="4" :backgroundColor="blackCellColor"></Label>
-        <Label id="54" row="3" col="5" :backgroundColor="whiteCellColor"></Label>
-        <Label id="55" row="3" col="6" :backgroundColor="blackCellColor"></Label>
-        <Label id="56" row="3" col="7" :backgroundColor="whiteCellColor"></Label>
-        <Label id="57" row="3" col="8" :backgroundColor="blackCellColor"></Label>
+        <StackLayout id="50" row="3" col="1" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(5, 0)"/></StackLayout>
+        <StackLayout id="51" row="3" col="2" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(5, 1)"/></StackLayout>
+        <StackLayout id="52" row="3" col="3" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(5, 2)"/></StackLayout>
+        <StackLayout id="53" row="3" col="4" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(5, 3)"/></StackLayout>
+        <StackLayout id="54" row="3" col="5" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(5, 4)"/></StackLayout>
+        <StackLayout id="55" row="3" col="6" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(5, 5)"/></StackLayout>
+        <StackLayout id="56" row="3" col="7" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(5, 6)"/></StackLayout>
+        <StackLayout id="57" row="3" col="8" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(5, 7)"/></StackLayout>
         <Label :fontSize="fontSize" coordinate row="3" col="9" :text="rankCoords[2]"
             :color="coordsColor"></Label>
 
         <Label :fontSize="fontSize" coordinate row="4" col="0" :text="rankCoords[3]"
             :color="coordsColor"></Label>
-        <Label id="40" row="4" col="1" :backgroundColor="blackCellColor"></Label>
-        <Label id="41" row="4" col="2" :backgroundColor="whiteCellColor"></Label>
-        <Label id="42" row="4" col="3" :backgroundColor="blackCellColor"></Label>
-        <Label id="43" row="4" col="4" :backgroundColor="whiteCellColor"></Label>
-        <Label id="44" row="4" col="5" :backgroundColor="blackCellColor"></Label>
-        <Label id="45" row="4" col="6" :backgroundColor="whiteCellColor"></Label>
-        <Label id="46" row="4" col="7" :backgroundColor="blackCellColor"></Label>
-        <Label id="47" row="4" col="8" :backgroundColor="whiteCellColor"></Label>
+        <StackLayout id="40" row="4" col="1" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(4, 0)"/></StackLayout>
+        <StackLayout id="41" row="4" col="2" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(4, 1)"/></StackLayout>
+        <StackLayout id="42" row="4" col="3" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(4, 2)"/></StackLayout>
+        <StackLayout id="43" row="4" col="4" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(4, 3)"/></StackLayout>
+        <StackLayout id="44" row="4" col="5" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(4, 4)"/></StackLayout>
+        <StackLayout id="45" row="4" col="6" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(4, 5)"/></StackLayout>
+        <StackLayout id="46" row="4" col="7" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(4, 6)"/></StackLayout>
+        <StackLayout id="47" row="4" col="8" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(4, 7)"/></StackLayout>
         <Label :fontSize="fontSize" coordinate row="4" col="9" :text="rankCoords[3]"
             :color="coordsColor"></Label>
 
         <Label :fontSize="fontSize" coordinate row="5" col="0" :text="rankCoords[4]"
             :color="coordsColor"></Label>
-        <Label id="30" row="5" col="1" :backgroundColor="whiteCellColor"></Label>
-        <Label id="31" row="5" col="2" :backgroundColor="blackCellColor"></Label>
-        <Label id="32" row="5" col="3" :backgroundColor="whiteCellColor"></Label>
-        <Label id="33" row="5" col="4" :backgroundColor="blackCellColor"></Label>
-        <Label id="34" row="5" col="5" :backgroundColor="whiteCellColor"></Label>
-        <Label id="35" row="5" col="6" :backgroundColor="blackCellColor"></Label>
-        <Label id="36" row="5" col="7" :backgroundColor="whiteCellColor"></Label>
-        <Label id="37" row="5" col="8" :backgroundColor="blackCellColor"></Label>
+        <StackLayout id="30" row="5" col="1" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(3, 0)"/></StackLayout>
+        <StackLayout id="31" row="5" col="2" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(3, 1)"/></StackLayout>
+        <StackLayout id="32" row="5" col="3" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(3, 2)"/></StackLayout>
+        <StackLayout id="33" row="5" col="4" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(3, 3)"/></StackLayout>
+        <StackLayout id="34" row="5" col="5" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(3, 4)"/></StackLayout>
+        <StackLayout id="35" row="5" col="6" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(3, 5)"/></StackLayout>
+        <StackLayout id="36" row="5" col="7" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(3, 6)"/></StackLayout>
+        <StackLayout id="37" row="5" col="8" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(3, 7)"/></StackLayout>
         <Label :fontSize="fontSize" coordinate row="5" col="9" :text="rankCoords[4]"
             :color="coordsColor"></Label>
 
         <Label :fontSize="fontSize" coordinate row="6" col="0" :text="rankCoords[5]"
             :color="coordsColor"></Label>
-        <Label id="20" row="6" col="1" :backgroundColor="blackCellColor"></Label>
-        <Label id="21" row="6" col="2" :backgroundColor="whiteCellColor"></Label>
-        <Label id="22" row="6" col="3" :backgroundColor="blackCellColor"></Label>
-        <Label id="23" row="6" col="4" :backgroundColor="whiteCellColor"></Label>
-        <Label id="24" row="6" col="5" :backgroundColor="blackCellColor"></Label>
-        <Label id="25" row="6" col="6" :backgroundColor="whiteCellColor"></Label>
-        <Label id="26" row="6" col="7" :backgroundColor="blackCellColor"></Label>
-        <Label id="27" row="6" col="8" :backgroundColor="whiteCellColor"></Label>
+        <StackLayout id="20" row="6" col="1" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(2, 0)"/></StackLayout>
+        <StackLayout id="21" row="6" col="2" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(2, 1)"/></StackLayout>
+        <StackLayout id="22" row="6" col="3" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(2, 2)"/></StackLayout>
+        <StackLayout id="23" row="6" col="4" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(2, 3)"/></StackLayout>
+        <StackLayout id="24" row="6" col="5" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(2, 4)"/></StackLayout>
+        <StackLayout id="25" row="6" col="6" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(2, 5)"/></StackLayout>
+        <StackLayout id="26" row="6" col="7" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(2, 6)"/></StackLayout>
+        <StackLayout id="27" row="6" col="8" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(2, 7)"/></StackLayout>
         <Label :fontSize="fontSize" coordinate row="6" col="9" :text="rankCoords[5]"
             :color="coordsColor"></Label>
 
 
         <Label :fontSize="fontSize" coordinate row="7" col="0" :text="rankCoords[6]"
             :color="coordsColor"></Label>
-        <Label id="10" row="7" col="1" :backgroundColor="whiteCellColor"></Label>
-        <Label id="11" row="7" col="2" :backgroundColor="blackCellColor"></Label>
-        <Label id="12" row="7" col="3" :backgroundColor="whiteCellColor"></Label>
-        <Label id="13" row="7" col="4" :backgroundColor="blackCellColor"></Label>
-        <Label id="14" row="7" col="5" :backgroundColor="whiteCellColor"></Label>
-        <Label id="15" row="7" col="6" :backgroundColor="blackCellColor"></Label>
-        <Label id="16" row="7" col="7" :backgroundColor="whiteCellColor"></Label>
-        <Label id="17" row="7" col="8" :backgroundColor="blackCellColor"></Label>
+        <StackLayout id="10" row="7" col="1" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(1, 0)"/></StackLayout>
+        <StackLayout id="11" row="7" col="2" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(1, 1)"/></StackLayout>
+        <StackLayout id="12" row="7" col="3" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(1, 2)"/></StackLayout>
+        <StackLayout id="13" row="7" col="4" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(1, 3)"/></StackLayout>
+        <StackLayout id="14" row="7" col="5" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(1, 4)"/></StackLayout>
+        <StackLayout id="15" row="7" col="6" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(1, 5)"/></StackLayout>
+        <StackLayout id="16" row="7" col="7" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(1, 6)"/></StackLayout>
+        <StackLayout id="17" row="7" col="8" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(1, 7)"/></StackLayout>
         <Label :fontSize="fontSize" coordinate row="7" col="9" :text="rankCoords[6]"
             :color="coordsColor"></Label>
 
         <Label :fontSize="fontSize" coordinate row="8" col="0" :text="rankCoords[7]"
             :color="coordsColor"></Label>
-        <Label id="00" row="8" col="1" :backgroundColor="blackCellColor"></Label>
-        <Label id="01" row="8" col="2" :backgroundColor="whiteCellColor"></Label>
-        <Label id="02" row="8" col="3" :backgroundColor="blackCellColor"></Label>
-        <Label id="03" row="8" col="4" :backgroundColor="whiteCellColor"></Label>
-        <Label id="04" row="8" col="5" :backgroundColor="blackCellColor"></Label>
-        <Label id="05" row="8" col="6" :backgroundColor="whiteCellColor"></Label>
-        <Label id="06" row="8" col="7" :backgroundColor="blackCellColor"></Label>
-        <Label id="07" row="8" col="8" :backgroundColor="whiteCellColor"></Label>
+        <StackLayout id="00" row="8" col="1" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(0, 0)"/></StackLayout>
+        <StackLayout id="01" row="8" col="2" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(0, 1)"/></StackLayout>
+        <StackLayout id="02" row="8" col="3" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(0, 2)"/></StackLayout>
+        <StackLayout id="03" row="8" col="4" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(0, 3)"/></StackLayout>
+        <StackLayout id="04" row="8" col="5" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(0, 4)"/></StackLayout>
+        <StackLayout id="05" row="8" col="6" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(0, 5)"/></StackLayout>
+        <StackLayout id="06" row="8" col="7" :backgroundColor="blackCellColor"><Image :src="pieceImageAtRowCol(0, 6)"/></StackLayout>
+        <StackLayout id="07" row="8" col="8" :backgroundColor="whiteCellColor"><Image :src="pieceImageAtRowCol(0, 7)"/></StackLayout>
         <Label :fontSize="fontSize" coordinate row="8" col="9" :text="rankCoords[7]"
             :color="coordsColor"></Label>
 
@@ -224,7 +223,7 @@ export default {
                 case 'k': imageBase = piece.color === 'b' ? 'kd' : 'kl'; break;
             }
             if (!imageBase) return null;
-            return `~/components/chessboard/chess_vectors/Chess_${imageBase}t45.svg`;
+            return `~/components/chessboard/chess_vectors/${imageBase}.png`;
         },
         pieceImageAtRowCol(row, col) {
             const rank = this.reversed ? 7-row : row;
