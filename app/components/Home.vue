@@ -9,7 +9,7 @@
                 width="0" height="0"
                 @loadFinished="onWebViewLoaded"
             />
-            <Chessboard :size="boardWidth" :reversed="false"></Chessboard>
+            <Chessboard :size="boardWidth" :reversed="true"></Chessboard>
         </DockLayout>
     </Page>
 </template>
