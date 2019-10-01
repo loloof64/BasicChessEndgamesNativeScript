@@ -207,6 +207,12 @@ export default {
             return piece;
         },
         pieceImageAtRankFile(rank, file) {
+            const row = this.reversed ? 7-rank : rank;
+            const col = this.reversed ? 7-file : file;
+            const isTheMovingPiece = this.dndOriginRow === row && this.dndOriginCol === col;
+
+            if (isTheMovingPiece) return null;
+
             const piece = this.pieceAt(rank, file);
             if (piece === null) return null;
             let imageBase;
@@ -244,9 +250,14 @@ export default {
             }
         },
         cellBackgroundRowCol(row, col) {
-            if (row === this.dndOriginRow && col === this.dndOriginCol) return 'red';
-            if (row === this.dndDestRow || col === this.dndDestCol) return 'green';
-            return (row+col) %2 === 0 ? this.whiteCellColor : this.blackCellColor;
+            const isTheDndOriginCell = row === this.dndOriginRow && col === this.dndOriginCol;
+            const isADndCellToHighlight = row === this.dndDestRow || col === this.dndDestCol;
+            const isWhiteCell = (row+col) % 2 === 0;
+
+            if (isTheDndOriginCell) return 'red';
+            if (isADndCellToHighlight) return 'green';
+
+            return isWhiteCell ? this.whiteCellColor : this.blackCellColor;
         },
         reactToTouch(event) {
             const col = Math.floor((event.getX() - this.halfCellSize) / this.cellSize);
