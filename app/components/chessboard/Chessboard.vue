@@ -217,14 +217,14 @@ export default {
                     if (isValidMove) {
                         const isAPromotionMove = moveResult.promotion !== undefined;
                         if (isAPromotionMove) {
-                            const queenOption = "Queen";
-                            const rookOption = "Rook";
-                            const bishopOption = "Bishop";
-                            const knightOption = "Knight";
+                            const queenOption = L('queen_promotion');
+                            const rookOption = L('rook_promotion');
+                            const bishopOption = L('bishop_promotion');
+                            const knightOption = L('knight_promotion');
 
                             dialogs.action({
-                                message: "Choose the promotion piece",
-                                cancelButtonText: "Cancel",
+                                message: L('choose_promotion_piece'),
+                                cancelButtonText: L('cancel_promotion_choice'),
                                 actions: [queenOption, rookOption, bishopOption, knightOption]
                             }).then((result)  => {
                                 let promotionType;
