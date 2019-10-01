@@ -174,6 +174,8 @@ export default {
 
             switch(event.action) {
                 case 'down':
+                    const isAnEmptyCell = this.pieceImageAtRowCol(row, col) === null;
+                    if (isAnEmptyCell) return;
                     this.dndMovedPieceImage = this.pieceImageAtRowCol(row, col);
                     this.dndActive = true;
                     this.dndOriginCol = col;
