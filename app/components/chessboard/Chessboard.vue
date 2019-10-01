@@ -31,7 +31,8 @@
 <script>
 import Chess from 'chess.js';
 
-const chess = new Chess('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
+let chess = new Chess('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
+const dialogs = require("tns-core-modules/ui/dialogs");
 
 export default {
     props: {
@@ -210,14 +211,50 @@ export default {
                     const endCellStr = rankAndFileToCoordinate(destRank, destFile);
 
                     const boardLogicClone = new Chess(this.boardLogic.fen());
-                    const isValidMove = boardLogicClone.move({from: startCellStr, to: endCellStr}) !== null;
+                    const moveResult = boardLogicClone.move({from: startCellStr, to: endCellStr, promotion: 'q'}) ;
+                    const isValidMove = moveResult !== null;
 
                     if (isValidMove) {
-                        this.boardLogic.move({from: startCellStr, to: endCellStr});
-                    }
+                        const isAPromotionMove = moveResult.promotion !== undefined;
+                        if (isAPromotionMove) {
+                            const queenOption = "Queen";
+                            const rookOption = "Rook";
+                            const bishopOption = "Bishop";
+                            const knightOption = "Knight";
 
-                    cancelDnd();
-                    break;
+                            dialogs.action({
+                                message: "Choose the promotion piece",
+                                cancelButtonText: "Cancel",
+                                actions: [queenOption, rookOption, bishopOption, knightOption]
+                            }).then((result)  => {
+                                let promotionType;
+                                switch (result) {
+                                    case rookOption:
+                                        promotionType = 'r';
+                                        break;
+                                    case bishopOption:
+                                        promotionType = 'b';
+                                        break;
+                                    case knightOption:
+                                        promotionType = 'n';
+                                        break;
+                                    case queenOption:
+                                    default:
+                                        promotionType = 'q';
+                                }
+                                this.boardLogic.move({from: startCellStr, to: endCellStr, promotion: promotionType});
+                                cancelDnd();
+                            });
+
+                        }
+                        else {
+                            this.boardLogic.move({from: startCellStr, to: endCellStr});
+                            cancelDnd();
+                        }
+                    }
+                    else {
+                        cancelDnd();
+                    }
             }
         },
     },
