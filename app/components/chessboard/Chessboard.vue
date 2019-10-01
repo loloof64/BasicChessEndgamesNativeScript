@@ -21,7 +21,7 @@
         <Label row="9" col="0"></Label>
         <Label v-for="col in [0,1,2,3,4,5,6,7]" :key="'coord_bottom_' + col" coordinate :fontSize="fontSize" row="9" :col="col+1" :text="fileCoords(col)"
             :color="coordsColor"></Label>
-        <StackLayout row="9" col="9"><Label id="playerTurn" :backgroundColor="turnColor()" :borderRadius="halfCellSize / 2.0"/></StackLayout>
+        <StackLayout row="9" col="9"><Label id="playerTurn" :backgroundColor="turnColor()" :borderRadius="halfCellSize / 2.0" :width="halfCellSize" :height="halfCellSize"/></StackLayout>
         <AbsoluteLayout rowSpan="10" colSpan="10" row="0" col="0">
             <Image :width="cellSize" :height="cellSize" :src="movedPieceImage()" :top="movedPieceTop()" :left="movedPieceLeft()" />
         </AbsoluteLayout>
