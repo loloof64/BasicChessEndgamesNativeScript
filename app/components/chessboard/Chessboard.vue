@@ -153,6 +153,10 @@ export default {
             return this.dndMovedPieceLeft;
         },
         reactToTouch(event) {
+            const rankAndFileToCoordinate = function(rank, file) {
+                return `${String.fromCharCode('a'.charCodeAt(0) + file)}${String.fromCharCode('1'.charCodeAt(0) + rank)}`;
+            }
+
             const col = Math.floor((event.getX() - this.halfCellSize) / this.cellSize);
             const row = 7 - Math.floor((event.getY() - this.halfCellSize) / this.cellSize);
             const outsideZone = col < 0 || col > 7 || row < 0 || row > 7;
@@ -187,13 +191,31 @@ export default {
                     break;
                 case 'move':
                     if (! this.dndActive) return;
+
                     this.dndDestCol = col;
                     this.dndDestRow = row;
                     this.dndMovedPieceLeft = event.getX() - this.halfCellSize;
                     this.dndMovedPieceTop = event.getY() - this.halfCellSize;
+
                     break;
                 case 'up':
                     if (!this.dndActive) return;
+
+                    const originRank = this.reversed ? 7 - this.dndOriginRow : this.dndOriginRow;
+                    const originFile = this.reversed ? 7 - this.dndOriginCol : this.dndOriginCol;
+                    const destRank = this.reversed ? 7-row : row;
+                    const destFile = this.reversed ? 7-col : col;
+
+                    const startCellStr = rankAndFileToCoordinate(originRank, originFile);
+                    const endCellStr = rankAndFileToCoordinate(destRank, destFile);
+
+                    const boardLogicClone = new Chess(this.boardLogic.fen());
+                    const isValidMove = boardLogicClone.move({from: startCellStr, to: endCellStr}) !== null;
+
+                    if (isValidMove) {
+                        this.boardLogic.move({from: startCellStr, to: endCellStr});
+                    }
+
                     cancelDnd();
                     break;
             }
