@@ -244,8 +244,8 @@ export default {
             }
         },
         cellBackgroundRowCol(row, col) {
-            if (row === this.dndDestRow && col === this.dndDestCol) return 'green';
             if (row === this.dndOriginRow && col === this.dndOriginCol) return 'red';
+            if (row === this.dndDestRow || col === this.dndDestCol) return 'green';
             return (row+col) %2 === 0 ? this.whiteCellColor : this.blackCellColor;
         },
         reactToTouch(event) {
