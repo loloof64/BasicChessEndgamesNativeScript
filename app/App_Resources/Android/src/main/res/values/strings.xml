@@ -6,8 +6,8 @@
 <string name="cancel_promotion_choice">Cancel (queen by default)</string>
 
 <string name="choose_promotion_piece">Choose the promotion piece.</string>
-<string name="queen_promotion">Queen</string>
-<string name="rook_promotion">Rook</string>
-<string name="bishop_promotion">Bishop</string>
-<string name="knight_promotion">Knight</string>
+<string name="queen_promotion">%s Queen</string>
+<string name="rook_promotion">%s Rook</string>
+<string name="bishop_promotion">%s Bishop</string>
+<string name="knight_promotion">%s Knight</string>
 </resources>

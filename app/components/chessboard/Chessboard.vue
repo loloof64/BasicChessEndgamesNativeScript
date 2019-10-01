@@ -217,10 +217,17 @@ export default {
                     if (isValidMove) {
                         const isAPromotionMove = moveResult.promotion !== undefined;
                         if (isAPromotionMove) {
-                            const queenOption = L('queen_promotion');
-                            const rookOption = L('rook_promotion');
-                            const bishopOption = L('bishop_promotion');
-                            const knightOption = L('knight_promotion');
+
+                            const whiteMove = this.boardLogic.turn() === 'w';
+                            const queenFigurine = whiteMove ? '\u2655' : '\u265B';
+                            const rookFigurine = whiteMove ? '\u2656' : '\u265C';
+                            const bishopFigurine = whiteMove ? '\u2657' : '\u265D';
+                            const knightFigurine = whiteMove ? '\u2658' : '\u265E';
+
+                            const queenOption = L('queen_promotion', queenFigurine);
+                            const rookOption = L('rook_promotion', rookFigurine);
+                            const bishopOption = L('bishop_promotion', bishopFigurine);
+                            const knightOption = L('knight_promotion', knightFigurine);
 
                             dialogs.action({
                                 message: L('choose_promotion_piece'),

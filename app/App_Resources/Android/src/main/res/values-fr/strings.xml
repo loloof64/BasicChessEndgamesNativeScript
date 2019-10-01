@@ -6,8 +6,8 @@
 <string name="cancel_promotion_choice">Annuler (dame par défaut)</string>
 
 <string name="choose_promotion_piece">Choisissez la pièce de promotion.</string>
-<string name="queen_promotion">Dame</string>
-<string name="rook_promotion">Tour</string>
-<string name="bishop_promotion">Fou</string>
-<string name="knight_promotion">Cavalier</string>
+<string name="queen_promotion">%s Dame</string>
+<string name="rook_promotion">%s Tour</string>
+<string name="bishop_promotion">%s Fou</string>
+<string name="knight_promotion">%s Cavalier</string>
 </resources>
