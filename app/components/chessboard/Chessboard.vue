@@ -10,14 +10,10 @@
         <template v-for="row in [0,1,2,3,4,5,6,7]">
              <Label :key="'coord_left_'+row" :fontSize="fontSize" coordinate :row="row+1" col="0" :text="rankCoords(row)"
             :color="coordsColor"></Label>
-            <StackLayout :key="'cell_'+(7-row)+'0'" :row="row+1" col="1" :backgroundColor="cellBackgroundRowCol(7-row,0)"><Image :src="pieceImageAtRowCol(7-row, 0)"/></StackLayout>
-            <StackLayout :key="'cell_'+(7-row)+'1'" :row="row+1" col="2" :backgroundColor="cellBackgroundRowCol(7-row,1)"><Image :src="pieceImageAtRowCol(7-row, 1)"/></StackLayout>
-            <StackLayout :key="'cell_'+(7-row)+'2'" :row="row+1" col="3" :backgroundColor="cellBackgroundRowCol(7-row,2)"><Image :src="pieceImageAtRowCol(7-row, 2)"/></StackLayout>
-            <StackLayout :key="'cell_'+(7-row)+'3'" :row="row+1" col="4" :backgroundColor="cellBackgroundRowCol(7-row,3)"><Image :src="pieceImageAtRowCol(7-row, 3)"/></StackLayout>
-            <StackLayout :key="'cell_'+(7-row)+'4'" :row="row+1" col="5" :backgroundColor="cellBackgroundRowCol(7-row,4)"><Image :src="pieceImageAtRowCol(7-row, 4)"/></StackLayout>
-            <StackLayout :key="'cell_'+(7-row)+'5'" :row="row+1" col="6" :backgroundColor="cellBackgroundRowCol(7-row,5)"><Image :src="pieceImageAtRowCol(7-row, 5)"/></StackLayout>
-            <StackLayout :key="'cell_'+(7-row)+'6'" :row="row+1" col="7" :backgroundColor="cellBackgroundRowCol(7-row,6)"><Image :src="pieceImageAtRowCol(7-row, 6)"/></StackLayout>
-            <StackLayout :key="'cell_'+(7-row)+'7'" :row="row+1" col="8" :backgroundColor="cellBackgroundRowCol(7-row,7)"><Image :src="pieceImageAtRowCol(7-row, 7)"/></StackLayout>
+            <StackLayout v-for="col in [0,1,2,3,4,5,6,7]" :key="'cell_'+(7-row)+col" :row="row+1" :col="col+1"
+                :backgroundColor="cellBackgroundRowCol(7-row, col)">
+                    <Image :src="pieceImageAtRowCol(7-row, col)"/>
+            </StackLayout>
             <Label :key="'coord_right_'+row" :fontSize="fontSize" coordinate :row="row+1" col="9" :text="rankCoords(row)"
                 :color="coordsColor"></Label>
         </template>
