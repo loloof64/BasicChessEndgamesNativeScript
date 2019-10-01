@@ -22,6 +22,9 @@
         <Label v-for="col in [0,1,2,3,4,5,6,7]" :key="'coord_bottom_' + col" coordinate :fontSize="fontSize" row="9" :col="col+1" :text="fileCoords(col)"
             :color="coordsColor"></Label>
         <StackLayout row="9" col="9"><Label id="playerTurn" :backgroundColor="turnColor()" :borderRadius="halfCellSize / 2.0"/></StackLayout>
+        <AbsoluteLayout rowSpan="10" colSpan="10" row="0" col="0">
+            <Image :width="cellSize" :height="cellSize" :src="movedPieceImage()" :top="movedPieceTop()" :left="movedPieceLeft()" />
+        </AbsoluteLayout>
     </GridLayout>
 </template>
 
@@ -137,6 +140,18 @@ export default {
 
             return isWhiteCell ? this.whiteCellColor : this.blackCellColor;
         },
+        movedPieceImage() {
+            if (!this.dndActive) return null;
+            return this.dndMovedPieceImage;
+        },
+        movedPieceTop() {
+            if (!this.dndActive) return undefined;
+            return this.dndMovedPieceTop;
+        },
+        movedPieceLeft() {
+            if (!this.dndActive) return undefined;
+            return this.dndMovedPieceLeft;
+        },
         reactToTouch(event) {
             const col = Math.floor((event.getX() - this.halfCellSize) / this.cellSize);
             const row = 7 - Math.floor((event.getY() - this.halfCellSize) / this.cellSize);
@@ -148,6 +163,9 @@ export default {
                 this.dndOriginRow = undefined;
                 this.dndDestCol = undefined;
                 this.dndDestRow = undefined;
+                this.dndMovedPieceTop = undefined;
+                this.dndMovedPieceLeft = undefined;
+                this.dndMovedPieceImage = undefined;
             }
 
             if (outsideZone) {
@@ -156,16 +174,21 @@ export default {
 
             switch(event.action) {
                 case 'down':
+                    this.dndMovedPieceImage = this.pieceImageAtRowCol(row, col);
                     this.dndActive = true;
                     this.dndOriginCol = col;
                     this.dndOriginRow = row;
                     this.dndDestCol = col;
                     this.dndDestRow = row;
+                    this.dndMovedPieceLeft = event.getX() - this.halfCellSize;
+                    this.dndMovedPieceTop = event.getY() - this.halfCellSize;
                     break;
                 case 'move':
                     if (! this.dndActive) return;
                     this.dndDestCol = col;
                     this.dndDestRow = row;
+                    this.dndMovedPieceLeft = event.getX() - this.halfCellSize;
+                    this.dndMovedPieceTop = event.getY() - this.halfCellSize;
                     break;
                 case 'up':
                     if (!this.dndActive) return;
