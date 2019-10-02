@@ -281,6 +281,15 @@ export default {
 </script>
 
 <style scoped>
+    @keyframes showPromotionDialog {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 0.6;
+		}
+	}
+
     Label[coordinate] {
         text-align: center;
         vertical-align: middle;
@@ -292,9 +301,12 @@ export default {
     }
 
     #promotionDialog.opened {
-        background-color: whitesmoke;
         opacity: 0.6;
+        background-color: whitesmoke;
         visibility: visible;
+        animation-name: showPromotionDialog;
+		animation-duration: 1s;
+		animation-fill-mode: forwards;
     }
 
     #promotionDialog Label {
