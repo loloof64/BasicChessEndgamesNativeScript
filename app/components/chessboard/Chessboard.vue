@@ -30,22 +30,22 @@
             row="0" col="0" :class="{opened: promotionDialogOpened}"
             :set="whiteTurn = this.boardLogic.turn() === 'w'"
         >
-            <Label id="title" :text="'choose_promotion_piece' | L" horizontalAlignment="center"/>
+            <Label id="title" :text="'choose_promotion_piece' | L" horizontalAlignment="center" :fontSize="cellSize * 0.5"/>
             <StackLayout orientation="horizontal" @tap="commitPromotion('q')" horizontalAlignment="left" width="100%">
-                <Label :text="queenFigurine(whiteTurn)" />
-                <Label :text="'queen_promotion' | L" />
+                <Label :text="queenFigurine(whiteTurn)" :fontSize="cellSize * 0.8" />
+                <Label :text="'queen_promotion' | L" :fontSize="cellSize * 0.8" />
             </StackLayout>
             <StackLayout orientation="horizontal" @tap="commitPromotion('r')" horizontalAlignment="left" width="100%">
-                <Label :text="rookFigurine(whiteTurn)" />
-                <Label :text="'rook_promotion' | L" />
+                <Label :text="rookFigurine(whiteTurn)" :fontSize="cellSize * 0.8" />
+                <Label :text="'rook_promotion' | L" :fontSize="cellSize * 0.8" />
             </StackLayout>
             <StackLayout orientation="horizontal" @tap="commitPromotion('b')" horizontalAlignment="left" width="100%">
-                <Label :text="bishopFigurine(whiteTurn)" />
-                <Label :text="'bishop_promotion' | L" />
+                <Label :text="bishopFigurine(whiteTurn)" :fontSize="cellSize * 0.8" />
+                <Label :text="'bishop_promotion' | L" :fontSize="cellSize * 0.8" />
             </StackLayout>
             <StackLayout orientation="horizontal" @tap="commitPromotion('n')" horizontalAlignment="left" width="100%">
-                <Label :text="knightFigurine(whiteTurn)" />
-                <Label :text="'knight_promotion' | L" />
+                <Label :text="knightFigurine(whiteTurn)" :fontSize="cellSize * 0.8" />
+                <Label :text="'knight_promotion' | L" :fontSize="cellSize * 0.8" />
             </StackLayout>
         </StackLayout>
     </GridLayout>
@@ -318,12 +318,9 @@ export default {
 
     #promotionDialog Label {
         color: black;
-        font-size: 48;
-        padding: 10 0;
     }
 
     #promotionDialog > #title {
         color: black;
-        font-size: 24;
     }
 </style>
