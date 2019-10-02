@@ -226,10 +226,16 @@ export default {
                 this.cancelDnd();
             }
 
+            const file = this.reversed ? 7-col : col;
+            const rank = this.reversed ? 7-row : row;
+            const pieceAtClickedSquare = this.boardLogic.get(rankAndFileToCoordinate(rank, file));
+
             switch(event.action) {
                 case 'down':
                     const isAnEmptyCell = this.pieceImageAtRowCol(row, col) === null;
                     if (isAnEmptyCell) return;
+                    const notOurPiece = this.boardLogic.turn() !== pieceAtClickedSquare.color;
+                    if (notOurPiece) return;
                     this.dndMovedPieceImage = this.pieceImageAtRowCol(row, col);
                     this.dndActive = true;
                     this.dndOriginCol = col;
