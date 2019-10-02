@@ -216,6 +216,8 @@ export default {
                 return `${String.fromCharCode('a'.charCodeAt(0) + file)}${String.fromCharCode('1'.charCodeAt(0) + rank)}`;
             }
 
+            if (this.promotionDialogOpened) return;
+
             const col = Math.floor((event.getX() - this.halfCellSize) / this.cellSize);
             const row = 7 - Math.floor((event.getY() - this.halfCellSize) / this.cellSize);
             const outsideZone = col < 0 || col > 7 || row < 0 || row > 7;
