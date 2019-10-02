@@ -1,6 +1,6 @@
 <template>
 	<GridLayout columns="*,2*,2*,2*,2*,2*,2*,2*,2*,*" rows="*,2*,2*,2*,2*,2*,2*,2*,2*,*"
-        :width="size" :height="size" :backgroundColor="backgroundColor" @touch="reactToTouch" @tap="testTap"
+        :width="size" :height="size" :backgroundColor="backgroundColor" @touch="reactToTouch"
         >
         <Label row="0" col="0"></Label>
         <Label v-for="col in [0,1,2,3,4,5,6,7]" :key="'coord_top_' + col" coordinate :fontSize="fontSize" row="0" :col="col+1" :text="fileCoords(col)"
@@ -25,6 +25,29 @@
         <AbsoluteLayout rowSpan="10" colSpan="10" row="0" col="0">
             <Image :width="cellSize" :height="cellSize" :src="movedPieceImage()" :top="movedPieceTop()" :left="movedPieceLeft()" />
         </AbsoluteLayout>
+
+        <StackLayout orientation="vertical" id="promotionDialog" rowSpan="10" colSpan="10"
+            row="0" col="0" :class="{opened: promotionDialogOpened}"
+            :set="whiteTurn = this.boardLogic.turn() === 'w'"
+        >
+            <Label id="title" :text="'choose_promotion_piece' | L" horizontalAlignment="center"/>
+            <StackLayout orientation="horizontal" @tap="commitPromotion('q')" horizontalAlignment="left" width="100%">
+                <Label :text="queenFigurine(whiteTurn)" />
+                <Label :text="'queen_promotion' | L" />
+            </StackLayout>
+            <StackLayout orientation="horizontal" @tap="commitPromotion('r')" horizontalAlignment="left" width="100%">
+                <Label :text="rookFigurine(whiteTurn)" />
+                <Label :text="'rook_promotion' | L" />
+            </StackLayout>
+            <StackLayout orientation="horizontal" @tap="commitPromotion('b')" horizontalAlignment="left" width="100%">
+                <Label :text="bishopFigurine(whiteTurn)" />
+                <Label :text="'bishop_promotion' | L" />
+            </StackLayout>
+            <StackLayout orientation="horizontal" @tap="commitPromotion('n')" horizontalAlignment="left" width="100%">
+                <Label :text="knightFigurine(whiteTurn)" />
+                <Label :text="'knight_promotion' | L" />
+            </StackLayout>
+        </StackLayout>
     </GridLayout>
 </template>
 
@@ -33,6 +56,11 @@ import Chess from 'chess.js';
 
 let chess = new Chess('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
 const dialogs = require("tns-core-modules/ui/dialogs");
+
+import Vue from "nativescript-vue";
+import { localize } from "nativescript-localize";
+
+Vue.filter("L", localize);
 
 export default {
     props: {
@@ -69,6 +97,7 @@ export default {
             dndOriginRow: undefined,
             dndDestCol: undefined,
             dndDestRow: undefined,
+            promotionDialogOpened: false,
         };
     },
     computed: {
@@ -153,6 +182,35 @@ export default {
             if (!this.dndActive) return undefined;
             return this.dndMovedPieceLeft;
         },
+        queenFigurine(whiteTurn) {
+            return whiteTurn ? '\u2655' : '\u265B';
+        },
+        rookFigurine(whiteTurn) {
+            return whiteTurn ? '\u2656' : '\u265C';
+        },
+        bishopFigurine(whiteTurn) {
+            return whiteTurn ? '\u2657' : '\u265D';
+        },
+        knightFigurine(whiteTurn) {
+            return whiteTurn ? '\u2658' : '\u265E';
+        },
+        commitPromotion(typeStr) {
+            this.promotionDialogOpened = false;
+            this.boardLogic.move({from: this.startCellStr, to: this.endCellStr, promotion: typeStr});
+            this.cancelDnd();
+        },
+        cancelDnd() {
+            this.dndActive = false;
+            this.dndOriginCol = undefined;
+            this.dndOriginRow = undefined;
+            this.dndDestCol = undefined;
+            this.dndDestRow = undefined;
+            this.dndMovedPieceTop = undefined;
+            this.dndMovedPieceLeft = undefined;
+            this.dndMovedPieceImage = undefined;
+            this.startCellStr = undefined;
+            this.endCellStr = undefined;
+        },
         reactToTouch(event) {
             const rankAndFileToCoordinate = function(rank, file) {
                 return `${String.fromCharCode('a'.charCodeAt(0) + file)}${String.fromCharCode('1'.charCodeAt(0) + rank)}`;
@@ -162,19 +220,8 @@ export default {
             const row = 7 - Math.floor((event.getY() - this.halfCellSize) / this.cellSize);
             const outsideZone = col < 0 || col > 7 || row < 0 || row > 7;
 
-            const cancelDnd = () => {
-                this.dndActive = false;
-                this.dndOriginCol = undefined;
-                this.dndOriginRow = undefined;
-                this.dndDestCol = undefined;
-                this.dndDestRow = undefined;
-                this.dndMovedPieceTop = undefined;
-                this.dndMovedPieceLeft = undefined;
-                this.dndMovedPieceImage = undefined;
-            }
-
             if (outsideZone) {
-                cancelDnd();
+                this.cancelDnd();
             }
 
             switch(event.action) {
@@ -207,60 +254,25 @@ export default {
                     const destRank = this.reversed ? 7-row : row;
                     const destFile = this.reversed ? 7-col : col;
 
-                    const startCellStr = rankAndFileToCoordinate(originRank, originFile);
-                    const endCellStr = rankAndFileToCoordinate(destRank, destFile);
+                    this.startCellStr = rankAndFileToCoordinate(originRank, originFile);
+                    this.endCellStr = rankAndFileToCoordinate(destRank, destFile);
 
                     const boardLogicClone = new Chess(this.boardLogic.fen());
-                    const moveResult = boardLogicClone.move({from: startCellStr, to: endCellStr, promotion: 'q'}) ;
+                    const moveResult = boardLogicClone.move({from: this.startCellStr, to: this.endCellStr, promotion: 'q'}) ;
                     const isValidMove = moveResult !== null;
 
                     if (isValidMove) {
                         const isAPromotionMove = moveResult.promotion !== undefined;
                         if (isAPromotionMove) {
-
-                            const whiteMove = this.boardLogic.turn() === 'w';
-                            const queenFigurine = whiteMove ? '\u2655' : '\u265B';
-                            const rookFigurine = whiteMove ? '\u2656' : '\u265C';
-                            const bishopFigurine = whiteMove ? '\u2657' : '\u265D';
-                            const knightFigurine = whiteMove ? '\u2658' : '\u265E';
-
-                            const queenOption = L('queen_promotion', queenFigurine);
-                            const rookOption = L('rook_promotion', rookFigurine);
-                            const bishopOption = L('bishop_promotion', bishopFigurine);
-                            const knightOption = L('knight_promotion', knightFigurine);
-
-                            dialogs.action({
-                                message: L('choose_promotion_piece'),
-                                cancelButtonText: L('cancel_promotion_choice'),
-                                actions: [queenOption, rookOption, bishopOption, knightOption]
-                            }).then((result)  => {
-                                let promotionType;
-                                switch (result) {
-                                    case rookOption:
-                                        promotionType = 'r';
-                                        break;
-                                    case bishopOption:
-                                        promotionType = 'b';
-                                        break;
-                                    case knightOption:
-                                        promotionType = 'n';
-                                        break;
-                                    case queenOption:
-                                    default:
-                                        promotionType = 'q';
-                                }
-                                this.boardLogic.move({from: startCellStr, to: endCellStr, promotion: promotionType});
-                                cancelDnd();
-                            });
-
+                            this.promotionDialogOpened = true;
                         }
                         else {
-                            this.boardLogic.move({from: startCellStr, to: endCellStr});
-                            cancelDnd();
+                            this.boardLogic.move({from: this.startCellStr, to: this.endCellStr});
+                            this.cancelDnd();
                         }
                     }
                     else {
-                        cancelDnd();
+                        this.cancelDnd();
                     }
             }
         },
@@ -272,5 +284,27 @@ export default {
     Label[coordinate] {
         text-align: center;
         vertical-align: middle;
+    }
+
+    #promotionDialog {
+        opacity: 0;
+        visibility: collapse;
+    }
+
+    #promotionDialog.opened {
+        background-color: whitesmoke;
+        opacity: 0.6;
+        visibility: visible;
+    }
+
+    #promotionDialog Label {
+        color: black;
+        font-size: 48;
+        padding: 10 0;
+    }
+
+    #promotionDialog > #title {
+        color: black;
+        font-size: 24;
     }
 </style>

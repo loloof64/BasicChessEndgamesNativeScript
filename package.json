@@ -14,7 +14,7 @@
   "dependencies": {
     "@nota/nativescript-webview-ext": "5.4.1",
     "chess.js": "^0.10.2",
-    "nativescript-i18n": "^0.4.0",
+    "nativescript-localize": "^4.2.0",
     "nativescript-theme-core": "~1.0.6",
     "nativescript-vue": "~2.4.0",
     "tns-core-modules": "~6.1.1"

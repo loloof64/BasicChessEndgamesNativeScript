@@ -1,0 +1,8 @@
+{
+  "app.name": "Basic chess endgames",
+  "choose_promotion_piece": "Choose the promotion piece :",
+  "queen_promotion": "Queen",
+  "rook_promotion": "Rook",
+  "bishop_promotion": "Bishop",
+  "knight_promotion": "Knight"
+}

@@ -1,0 +1,8 @@
+{
+  "app.name": "Finales d'échecs basiques",
+  "choose_promotion_piece": "Choisissez la pièce de promotion :",
+  "queen_promotion": "Dame",
+  "rook_promotion": "Tour",
+  "bishop_promotion": "Fou",
+  "knight_promotion": "Cavalier"
+}

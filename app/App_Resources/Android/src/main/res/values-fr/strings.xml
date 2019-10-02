@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<string name="app_name">Finales d\'échecs basiques</string>
-<string name="title_activity_kimera">Finales d\'échecs basiques</string>
-
-<string name="cancel_promotion_choice">Annuler (dame par défaut)</string>
-
-<string name="choose_promotion_piece">Choisissez la pièce de promotion.</string>
-<string name="queen_promotion">%s Dame</string>
-<string name="rook_promotion">%s Tour</string>
-<string name="bishop_promotion">%s Fou</string>
-<string name="knight_promotion">%s Cavalier</string>
+  <string name="knight_promotion">"Cavalier"</string>
+  <string name="bishop_promotion">"Fou"</string>
+  <string name="rook_promotion">"Tour"</string>
+  <string name="queen_promotion">"Dame"</string>
+  <string name="choose_promotion_piece">"Choisissez la pièce de promotion :"</string>
+  <string name="_app_name_1k3Sbz">"Finales d\'échecs basiques"</string>
+  <string name="app_name">"Finales d\'échecs basiques"</string>
+  <string name="title_activity_kimera">"Finales d\'échecs basiques"</string>
 </resources>
