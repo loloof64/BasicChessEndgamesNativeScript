@@ -54,7 +54,6 @@
 <script>
 import Chess from 'chess.js';
 
-let chess = new Chess('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
 const dialogs = require("tns-core-modules/ui/dialogs");
 
 import Vue from "nativescript-vue";
@@ -91,7 +90,7 @@ export default {
     },
     data() {
         return {
-            boardLogic: chess,
+            boardLogic: new Chess('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'),
             dndActive: false,
             dndOriginCol: undefined,
             dndOriginRow: undefined,
