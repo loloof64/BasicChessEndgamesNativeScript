@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="game_ending_draw_fifty_moves_rule">"Nulle par la règle des 50 coups"</string>
+  <string name="game_ending_draw_three_fold_repetitions">"Nulle par triple répétition"</string>
+  <string name="game_ending_draw_missing_material">"Nulle par insuffisance matérielle"</string>
+  <string name="game_ending_draw_stalemate">"Nulle par pat"</string>
+  <string name="game_ending_mate">"Echec et mat"</string>
   <string name="knight_promotion">"Cavalier"</string>
   <string name="bishop_promotion">"Fou"</string>
   <string name="rook_promotion">"Tour"</string>

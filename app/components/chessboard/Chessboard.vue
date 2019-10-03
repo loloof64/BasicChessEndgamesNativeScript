@@ -48,6 +48,12 @@
                 <Label :text="'knight_promotion' | L" :fontSize="cellSize * 0.8" />
             </StackLayout>
         </StackLayout>
+        <StackLayout id="gameEndedText" orientation="vertical" rowSpan="10" colSpan="10"
+            row="0" col="0"
+            horizontalAlignment="center" verticalAlignment="center"
+            :class="{opened: !gameInProgress}">
+            <Label :text="gameEndedReason | L" :fontSize="cellSize * 0.8" textWrap="true" color="red" />
+        </StackLayout>
     </GridLayout>
 </template>
 
@@ -98,6 +104,8 @@ export default {
             dndDestRow: undefined,
             promotionDialogOpened: false,
             boardOrientationBeforePromotionDialog: undefined,
+            gameInProgress: false,
+            gameEndedReason: undefined,
         };
     },
     computed: {
@@ -116,6 +124,8 @@ export default {
             this.cancelDnd();
             this.promotionDialogOpened = false;
             this.boardLogic = new Chess(startPosisitionStr || 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
+            this.gameEndedReason = undefined;
+            this.gameInProgress = true;
         },
         pieceAt(rank, file) {
             const square = `${String.fromCharCode('a'.charCodeAt(0) + file)}${String.fromCharCode('1'.charCodeAt(0) + rank)}`;
@@ -237,6 +247,7 @@ export default {
             this.boardOrientationBeforePromotionDialog = undefined;
             this.boardLogic.move({from: this.startCellStr, to: this.endCellStr, promotion: typeStr});
             this.cancelDnd();
+            this.checkGameEndedStateAndNotifyUser();
         },
         cancelDnd() {
             this.dndActive = false;
@@ -250,11 +261,30 @@ export default {
             this.startCellStr = undefined;
             this.endCellStr = undefined;
         },
+        checkGameEndedStateAndNotifyUser() {
+            if (this.boardLogic.in_checkmate()) {
+                this.gameInProgress = false;
+                this.gameEndedReason = 'game_ending_mate';
+            } else if (this.boardLogic.in_stalemate()) {
+                this.gameInProgress = false;
+                this.gameEndedReason = 'game_ending_draw_stalemate';
+            } else if (this.boardLogic.in_threefold_repetition()) {
+                this.gameInProgress = false;
+                this.gameEndedReason = 'game_ending_draw_three_fold_repetitions';
+            } else if (this.boardLogic.insufficient_material()) {
+                this.gameInProgress = false;
+                this.gameEndedReason = 'game_ending_draw_missing_material';
+            } else if (this.boardLogic.in_draw()) {
+                this.gameInProgress = false;
+                this.gameEndedReason = 'game_ending_draw_fifty_moves_rule';
+            }
+        },
         reactToTouch(event) {
             const rankAndFileToCoordinate = function(rank, file) {
                 return `${String.fromCharCode('a'.charCodeAt(0) + file)}${String.fromCharCode('1'.charCodeAt(0) + rank)}`;
             }
 
+            if (! this.gameInProgress) return;
             if (this.promotionDialogOpened) return;
 
             const col = Math.floor((event.getX() - this.halfCellSize) / this.cellSize);
@@ -317,6 +347,7 @@ export default {
                         else {
                             this.boardLogic.move({from: this.startCellStr, to: this.endCellStr});
                             this.cancelDnd();
+                            this.checkGameEndedStateAndNotifyUser();
                         }
                     }
                     else {
@@ -329,7 +360,7 @@ export default {
 </script>
 
 <style scoped>
-    @keyframes showPromotionDialog {
+    @keyframes fadeIn {
 		from {
 			opacity: 0;
 		}
@@ -352,7 +383,7 @@ export default {
         opacity: 0.6;
         background-color: whitesmoke;
         visibility: visible;
-        animation-name: showPromotionDialog;
+        animation-name: fadeIn;
 		animation-duration: 1s;
 		animation-fill-mode: forwards;
     }
@@ -363,5 +394,18 @@ export default {
 
     #promotionDialog > #title {
         color: black;
+    }
+
+    #gameEndedText {
+        opacity: 0;
+        visibility: collapse;
+    }
+
+    #gameEndedText.opened {
+        opacity: 0.6;
+        visibility: visible;
+        animation-name: fadeIn;
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
     }
 </style>

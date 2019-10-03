@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="game_ending_draw_fifty_moves_rule">"Draw by the 50-moves rule"</string>
+  <string name="game_ending_draw_three_fold_repetitions">"Draw by three-fold repetitions"</string>
+  <string name="game_ending_draw_missing_material">"Draw by missing mating material"</string>
+  <string name="game_ending_draw_stalemate">"Draw by stalemate"</string>
+  <string name="game_ending_mate">"Chessmate"</string>
   <string name="knight_promotion">"Knight"</string>
   <string name="bishop_promotion">"Bishop"</string>
   <string name="rook_promotion">"Rook"</string>

@@ -1,8 +1,15 @@
 {
   "app.name": "Finales d'échecs basiques",
+
   "choose_promotion_piece": "Choisissez la pièce de promotion :",
   "queen_promotion": "Dame",
   "rook_promotion": "Tour",
   "bishop_promotion": "Fou",
-  "knight_promotion": "Cavalier"
+  "knight_promotion": "Cavalier",
+
+  "game_ending_mate": "Echec et mat",
+  "game_ending_draw_stalemate": "Nulle par pat",
+  "game_ending_draw_missing_material": "Nulle par insuffisance matérielle",
+  "game_ending_draw_three_fold_repetitions": "Nulle par triple répétition",
+  "game_ending_draw_fifty_moves_rule": "Nulle par la règle des 50 coups"
 }
