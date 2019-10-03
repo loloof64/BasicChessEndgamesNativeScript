@@ -90,7 +90,7 @@ export default {
     },
     data() {
         return {
-            boardLogic: new Chess('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'),
+            boardLogic: new Chess('8/8/8/8/8/8/8/8 w - - 0 1'),
             dndActive: false,
             dndOriginCol: undefined,
             dndOriginRow: undefined,
@@ -112,10 +112,10 @@ export default {
         },
     },
     methods: {
-        startNewGame() {
+        startNewGame(startPosisitionStr) {
             this.cancelDnd();
             this.promotionDialogOpened = false;
-            this.boardLogic = new Chess('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
+            this.boardLogic = new Chess(startPosisitionStr);
         },
         pieceAt(rank, file) {
             const square = `${String.fromCharCode('a'.charCodeAt(0) + file)}${String.fromCharCode('1'.charCodeAt(0) + rank)}`;
