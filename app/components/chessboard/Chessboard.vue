@@ -97,6 +97,7 @@ export default {
             dndDestCol: undefined,
             dndDestRow: undefined,
             promotionDialogOpened: false,
+            boardOrientationBeforePromotionDialog: undefined,
         };
     },
     computed: {
@@ -124,7 +125,15 @@ export default {
         pieceImageAtRankFile(rank, file) {
             const row = this.reversed ? 7-rank : rank;
             const col = this.reversed ? 7-file : file;
-            const isTheMovingPiece = this.dndOriginRow === row && this.dndOriginCol === col;
+            let isTheMovingPiece;
+            if (this.promotionDialogOpened) {
+                const boardReversedSincePromotionDialog = this.boardOrientationBeforePromotionDialog !== this.reversed;
+                let realCol = boardReversedSincePromotionDialog ? 7-col : col;
+                let realRow = boardReversedSincePromotionDialog ? 7-row : row;
+                isTheMovingPiece = this.dndOriginRow === realRow && this.dndOriginCol === realCol;
+            } else {
+                isTheMovingPiece = this.dndOriginRow === row && this.dndOriginCol === col;
+            }
 
             if (isTheMovingPiece) return null;
 
@@ -165,8 +174,19 @@ export default {
             }
         },
         cellBackgroundRowCol(row, col) {
-            const isTheDndOriginCell = row === this.dndOriginRow && col === this.dndOriginCol;
-            const isADndCellToHighlight = row === this.dndDestRow || col === this.dndDestCol;
+            let isTheDndOriginCell;
+            let isADndCellToHighlight;
+            if (this.promotionDialogOpened) {
+                const boardReversedSincePromotionDialog = this.boardOrientationBeforePromotionDialog !== this.reversed;
+                const realCol = boardReversedSincePromotionDialog ? 7 - col : col;
+                const realRow = boardReversedSincePromotionDialog ? 7 - row : row;
+
+                isTheDndOriginCell = realRow === this.dndOriginRow && realCol === this.dndOriginCol;
+                isADndCellToHighlight = realRow === this.dndDestRow || realCol === this.dndDestCol;
+            } else {
+                isTheDndOriginCell = row === this.dndOriginRow && col === this.dndOriginCol;
+                isADndCellToHighlight = row === this.dndDestRow || col === this.dndDestCol;
+            }
             const isWhiteCell = (row+col) % 2 === 0;
 
             if (isTheDndOriginCell) return 'red';
@@ -180,11 +200,25 @@ export default {
         },
         movedPieceTop() {
             if (!this.dndActive) return undefined;
-            return this.dndMovedPieceTop;
+            if (this.promotionDialogOpened) {
+                const boardReversedSincePromotionDialog = this.boardOrientationBeforePromotionDialog !== this.reversed;
+                const realTop = boardReversedSincePromotionDialog ? (this.size - this.dndMovedPieceTop - this.cellSize) : this.dndMovedPieceTop;
+                return realTop;
+            }
+            else {
+                return this.dndMovedPieceTop;
+            }
         },
         movedPieceLeft() {
             if (!this.dndActive) return undefined;
-            return this.dndMovedPieceLeft;
+            if (this.promotionDialogOpened) {
+                const boardReversedSincePromotionDialog = this.boardOrientationBeforePromotionDialog !== this.reversed;
+                const realLeft = boardReversedSincePromotionDialog ? (this.size - this.dndMovedPieceLeft - this.cellSize) : this.dndMovedPieceLeft;
+                return realLeft;
+            }
+            else {
+                return this.dndMovedPieceLeft;
+            }
         },
         queenFigurine(whiteTurn) {
             return whiteTurn ? '\u2655' : '\u265B';
@@ -200,6 +234,7 @@ export default {
         },
         commitPromotion(typeStr) {
             this.promotionDialogOpened = false;
+            this.boardOrientationBeforePromotionDialog = undefined;
             this.boardLogic.move({from: this.startCellStr, to: this.endCellStr, promotion: typeStr});
             this.cancelDnd();
         },
@@ -276,6 +311,7 @@ export default {
                     if (isValidMove) {
                         const isAPromotionMove = moveResult.promotion !== undefined;
                         if (isAPromotionMove) {
+                            this.boardOrientationBeforePromotionDialog = this.reversed;
                             this.promotionDialogOpened = true;
                         }
                         else {

@@ -9,7 +9,7 @@
                 width="0" height="0"
                 @loadFinished="onWebViewLoaded"
             />
-            <WrapLayout dock="top" orientation="horizontal">
+            <WrapLayout dock="top" orqientation="horizontal">
                 <Label  class="button" @tap="newGame()">
                     <FormattedString>
                         <Span class="fa button" text.decode="&#xf11e;" fontSize="50" />
