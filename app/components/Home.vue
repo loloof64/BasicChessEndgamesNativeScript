@@ -10,7 +10,7 @@
                 @loadFinished="onWebViewLoaded"
             />
             <WrapLayout dock="top" orqientation="horizontal">
-                <Label  class="button" @tap="newGame('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')">
+                <Label  class="button" @tap="newGame()">
                     <FormattedString>
                         <Span class="fa button" text.decode="&#xf11e;" fontSize="50" />
                     </FormattedString>

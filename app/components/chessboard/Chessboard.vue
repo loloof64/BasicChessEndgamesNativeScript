@@ -115,7 +115,7 @@ export default {
         startNewGame(startPosisitionStr) {
             this.cancelDnd();
             this.promotionDialogOpened = false;
-            this.boardLogic = new Chess(startPosisitionStr);
+            this.boardLogic = new Chess(startPosisitionStr || 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
         },
         pieceAt(rank, file) {
             const square = `${String.fromCharCode('a'.charCodeAt(0) + file)}${String.fromCharCode('1'.charCodeAt(0) + rank)}`;
