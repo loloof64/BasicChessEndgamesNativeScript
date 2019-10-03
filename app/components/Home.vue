@@ -9,7 +9,14 @@
                 width="0" height="0"
                 @loadFinished="onWebViewLoaded"
             />
-            <Chessboard :size="boardWidth" :reversed="false"></Chessboard>
+            <WrapLayout dock="top" orientation="horizontal">
+                <Label  class="button" @tap="newGame()">
+                    <FormattedString>
+                        <Span class="fa button" text.decode="&#xf11e;" fontSize="50" />
+                    </FormattedString>
+                </Label>
+            </WrapLayout>
+            <Chessboard ref="board" :size="boardWidth" :reversed="false"></Chessboard>
         </DockLayout>
     </Page>
 </template>
@@ -47,6 +54,9 @@
             },
             processStockfishOutput(output) {
                 console.log(output.data);
+            },
+            newGame() {
+                this.$refs['board'].startNewGame();
             }
         },
         computed: {
@@ -70,7 +80,10 @@
         color: $accent-dark;
     }
 
-    .info {
-        font-size: 20;
+    Label.button {
+        margin: 10 20;
+        border-color: $accent-dark;
+        border-width: 2;
+        padding: 3;
     }
 </style>
