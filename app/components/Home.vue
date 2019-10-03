@@ -15,8 +15,13 @@
                         <Span class="fa button" text.decode="&#xf11e;" fontSize="50" />
                     </FormattedString>
                 </Label>
+                <Label  class="button" @tap="reverseBoard()">
+                    <FormattedString>
+                        <Span class="fa button" text.decode="&#xf338;" fontSize="50" />
+                    </FormattedString>
+                </Label>
             </WrapLayout>
-            <Chessboard ref="board" :size="boardWidth" :reversed="false"></Chessboard>
+            <Chessboard ref="board" :size="boardWidth" :reversed="reversed"></Chessboard>
         </DockLayout>
     </Page>
 </template>
@@ -30,6 +35,7 @@
         data() {
             return {
                 webview: undefined,
+                reversed: false,
             }
         },
         methods: {
@@ -57,6 +63,9 @@
             },
             newGame() {
                 this.$refs['board'].startNewGame();
+            },
+            reverseBoard() {
+                this.reversed = ! this.reversed;
             }
         },
         computed: {
@@ -85,5 +94,8 @@
         border-color: $accent-dark;
         border-width: 2;
         padding: 3;
+        width: 60;
+        height: 60;
+        text-align: center;
     }
 </style>
