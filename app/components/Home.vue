@@ -4,7 +4,7 @@
             <Label class="action-bar-title" text="Home"></Label>
         </ActionBar>
 
-        <DockLayout orientation="vertical">
+        <StackLayout orientation="vertical">
             <WebViewExt dock="top" src="~/stockfish/index.html"
                 width="0" height="0"
                 @loadFinished="onWebViewLoaded"
@@ -22,7 +22,7 @@
                 </Label>
             </WrapLayout>
             <Chessboard ref="board" :size="boardWidth" :reversed="reversed"></Chessboard>
-        </DockLayout>
+        </StackLayout>
     </Page>
 </template>
 
