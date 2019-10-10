@@ -398,11 +398,38 @@ export default {
         },
         repaint() {
             this._drawBackground();
+            this._drawCoordinates();
             this._drawCells();
         },
         _drawBackground() {
             this.webview.executeJavaScript(`ctx.fillStyle = '${this.backgroundColor}';`);
             this.webview.executeJavaScript(`ctx.fillRect(0, 0, ${this.size}, ${this.size});`);
+        },
+        _drawCoordinates() {
+            for (let row of [0,1,2,3,4,5,6,7]) {
+                const coordinate = this.rankCoords(row);
+                const y = this.cellSize * (1.115 + row);
+                const left = this.cellSize * 0.12;
+                const right = this.cellSize * 8.62;
+
+                this.webview.executeJavaScript(`ctx.fillStyle = '${this.coordsColor}';`);
+                this.webview.executeJavaScript(`ctx.font = '${this.fontSize}px Arial'`);
+
+                this.webview.executeJavaScript(`ctx.fillText('${coordinate}', ${left}, ${y});`);
+                this.webview.executeJavaScript(`ctx.fillText('${coordinate}', ${right}, ${y});`);
+            }
+            for (let col of [0,1,2,3,4,5,6,7]) {
+                const coordinate = this.fileCoords(col);
+                const x = this.cellSize * (0.85 + col);
+                const top = this.cellSize * 0.40;
+                const bottom = this.cellSize * 8.82;
+
+                this.webview.executeJavaScript(`ctx.fillStyle = '${this.coordsColor}';`);
+                this.webview.executeJavaScript(`ctx.font = '${this.fontSize}px Arial'`);
+
+                this.webview.executeJavaScript(`ctx.fillText('${coordinate}', ${x}, ${top});`);
+                this.webview.executeJavaScript(`ctx.fillText('${coordinate}', ${x}, ${bottom});`);
+            }
         },
         _drawCells() {
             for (let row of [0,1,2,3,4,5,6,7]) {
