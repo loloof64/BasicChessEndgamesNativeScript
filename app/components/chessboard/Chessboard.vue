@@ -1,7 +1,16 @@
 <template>
-	<GridLayout columns="*,2*,2*,2*,2*,2*,2*,2*,2*,*" rows="*,2*,2*,2*,2*,2*,2*,2*,2*,*"
+    <WebViewExt src="~/components/chessboard/index.html"
+                row="0" col="0"
+                rowSpan="10" colSpan="10"
+                :width="size" :height="size"
+                @loadFinished="onWebViewLoaded"
+                opacity="0.2"
+    />
+	<!--
+    <GridLayout columns="*,2*,2*,2*,2*,2*,2*,2*,2*,*" rows="*,2*,2*,2*,2*,2*,2*,2*,2*,*"
         :width="size" :height="size" :backgroundColor="backgroundColor" @touch="reactToTouch"
         >
+
         <Label row="0" col="0"></Label>
         <Label v-for="col in [0,1,2,3,4,5,6,7]" :key="'coord_top_' + col" coordinate :fontSize="fontSize" row="0" :col="col+1" :text="fileCoords(col)"
             :color="coordsColor"></Label>
@@ -22,6 +31,7 @@
         <Label v-for="col in [0,1,2,3,4,5,6,7]" :key="'coord_bottom_' + col" coordinate :fontSize="fontSize" row="9" :col="col+1" :text="fileCoords(col)"
             :color="coordsColor"></Label>
         <StackLayout row="9" col="9"><Label id="playerTurn" :backgroundColor="turnColor()" :borderRadius="halfCellSize / 2.0" :width="halfCellSize" :height="halfCellSize"/></StackLayout>
+
         <AbsoluteLayout rowSpan="10" colSpan="10" row="0" col="0">
             <Image :width="cellSize" :height="cellSize" :src="movedPieceImage()" :top="movedPieceTop()" :left="movedPieceLeft()" />
         </AbsoluteLayout>
@@ -55,9 +65,11 @@
             <Label :text="gameEndedReason | L" :fontSize="cellSize * 0.8" textWrap="true" color="red" />
         </StackLayout>
     </GridLayout>
+    -->
 </template>
 
 <script>
+import "@nota/nativescript-webview-ext/vue";
 import Chess from 'chess.js';
 
 const dialogs = require("tns-core-modules/ui/dialogs");
@@ -96,6 +108,7 @@ export default {
     },
     data() {
         return {
+            webview: undefined,
             boardLogic: new Chess('8/8/8/8/8/8/8/8 w - - 0 1'),
             dndActive: false,
             dndOriginCol: undefined,
@@ -120,7 +133,32 @@ export default {
         },
     },
     methods: {
+        onWebViewLoaded(args) {
+            this.webview = args.object;
+            try {
+                this.webview.on('stockfishOutput', this.processStockfishOutput);
+            }
+            catch (error) {
+                console.error(error);
+            }
+        },
+        sendCommandToStockfish(command) {
+            if (this.webview !== undefined) {
+                try {
+                    this.webview.executeJavaScript(`stockfish.postMessage('${command}');`);
+                }
+                catch (error) {
+                    console.error(error);
+                }
+            }
+        },
+        processStockfishOutput(output) {
+            console.log(output.data);
+        },
         startNewGame(startPosisitionStr) {
+            /////////////////////////////////////////////////////////
+            this.sendCommandToStockfish("go depth 15");
+            /////////////////////////////////////////////////////////
             this.cancelDnd();
             this.promotionDialogOpened = false;
             this.boardLogic = new Chess(startPosisitionStr || 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');

@@ -5,10 +5,6 @@
         </ActionBar>
 
         <StackLayout orientation="vertical">
-            <WebViewExt dock="top" src="~/stockfish/index.html"
-                width="0" height="0"
-                @loadFinished="onWebViewLoaded"
-            />
             <WrapLayout dock="top" orqientation="horizontal">
                 <Label  class="button" @tap="newGame()">
                     <FormattedString>
@@ -34,33 +30,10 @@
     export default {
         data() {
             return {
-                webview: undefined,
                 reversed: false,
             }
         },
         methods: {
-            onWebViewLoaded(args) {
-                this.webview = args.object;
-                try {
-                    this.webview.on('stockfishOutput', this.processStockfishOutput);
-                }
-                catch (error) {
-                    console.error(error);
-                }
-            },
-            sendCommandToStockfish(command) {
-                if (this.webview !== undefined) {
-                    try {
-                        this.webview.executeJavaScript(`stockfish.postMessage('${command}');`);
-                    }
-                    catch (error) {
-                        console.error(error);
-                    }
-                }
-            },
-            processStockfishOutput(output) {
-                console.log(output.data);
-            },
             newGame() {
                 this.$refs['board'].startNewGame();
             },
