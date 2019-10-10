@@ -404,6 +404,7 @@ export default {
         repaint() {
             this._drawBackground();
             this._drawCoordinates();
+            this._drawPlayerTurn();
             this._drawCells();
         },
         _drawBackground() {
@@ -435,6 +436,15 @@ export default {
                 this.webview.executeJavaScript(`ctx.fillText('${coordinate}', ${x}, ${top});`);
                 this.webview.executeJavaScript(`ctx.fillText('${coordinate}', ${x}, ${bottom});`);
             }
+        },
+        _drawPlayerTurn() {
+            const location = this.cellSize * 8.5;
+            const size = this.halfCellSize * 0.5;
+            
+            this.webview.executeJavaScript(`ctx.fillStyle = '${this.turnColor()}';`);
+            this.webview.executeJavaScript('ctx.beginPath();');
+            this.webview.executeJavaScript(`ctx.ellipse(${location}, ${location}, ${size}, ${size}, 0, 0, 2*Math.PI, true);`);
+            this.webview.executeJavaScript('ctx.fill();');
         },
         _drawCells() {
             for (let row of [0,1,2,3,4,5,6,7]) {
