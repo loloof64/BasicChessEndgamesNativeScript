@@ -428,7 +428,7 @@ export default {
                 const coordinate = this.fileCoords(col);
                 const x = this.cellSize * (0.85 + col);
                 const top = this.cellSize * 0.40;
-                const bottom = this.cellSize * 8.82;
+                const bottom = this.cellSize * 8.86;
 
                 this.webview.executeJavaScript(`ctx.fillStyle = '${this.coordsColor}';`);
                 this.webview.executeJavaScript(`ctx.font = '${this.fontSize}px Arial'`);
@@ -438,7 +438,7 @@ export default {
             }
         },
         _drawPlayerTurn() {
-            const location = this.cellSize * 8.5;
+            const location = this.cellSize * 8.75;
             const size = this.halfCellSize * 0.5;
             
             this.webview.executeJavaScript(`ctx.fillStyle = '${this.turnColor()}';`);
