@@ -1,13 +1,17 @@
 <html>
     <head>
         <script type="text/javascript">
-            var stockfish = new Worker("./stockfish.js.txt");
+            const stockfish = new Worker("./stockfish.js.txt");
             stockfish.onmessage = function onmessage(event) {
                 window.nsWebViewBridge.emit('stockfishOutput', event.data);
             };
         </script>
     </head>
     <body>
-
+        <canvas id="canvasElement"></canvas>
+        <script type="text/javascript">
+            const canvasElement = document.getElementById('canvasElement');
+            const ctx = canvasElement.getContext('2d');
+        </script>
     </body>
 </html>

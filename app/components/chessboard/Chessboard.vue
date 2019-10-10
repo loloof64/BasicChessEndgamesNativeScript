@@ -1,10 +1,9 @@
 <template>
     <WebViewExt src="~/components/chessboard/index.html"
-                row="0" col="0"
-                rowSpan="10" colSpan="10"
-                :width="size" :height="size"
-                @loadFinished="onWebViewLoaded"
-                opacity="0.2"
+        row="0" col="0"
+        rowSpan="10" colSpan="10"
+        :width="size" :height="size"
+        @loadFinished="onWebViewLoaded"
     />
 	<!--
     <GridLayout columns="*,2*,2*,2*,2*,2*,2*,2*,2*,*" rows="*,2*,2*,2*,2*,2*,2*,2*,2*,*"
@@ -137,6 +136,10 @@ export default {
             this.webview = args.object;
             try {
                 this.webview.on('stockfishOutput', this.processStockfishOutput);
+                this.webview.executeJavaScript(`canvasElement.width = ${this.size};`);
+                this.webview.executeJavaScript(`canvasElement.height = ${this.size};`);
+                this.webview.executeJavaScript(`ctx.fillStyle = '${this.backgroundColor}';`);
+                this.webview.executeJavaScript(`ctx.fillRect(0, 0, ${this.size}, ${this.size});`)
             }
             catch (error) {
                 console.error(error);
@@ -157,7 +160,7 @@ export default {
         },
         startNewGame(startPosisitionStr) {
             /////////////////////////////////////////////////////////
-            this.sendCommandToStockfish("go depth 15");
+            // this.sendCommandToStockfish("go depth 15");
             /////////////////////////////////////////////////////////
             this.cancelDnd();
             this.promotionDialogOpened = false;
