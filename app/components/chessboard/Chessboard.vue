@@ -131,6 +131,11 @@ export default {
             return this.cellSize * 0.4;
         },
     },
+    watch: {
+        reversed() {
+            this.repaint();
+        }
+    },
     methods: {
         onWebViewLoaded(args) {
             this.webview = args.object;
