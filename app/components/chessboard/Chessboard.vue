@@ -138,8 +138,8 @@ export default {
                 this.webview.on('stockfishOutput', this.processStockfishOutput);
                 this.webview.executeJavaScript(`canvasElement.width = ${this.size};`);
                 this.webview.executeJavaScript(`canvasElement.height = ${this.size};`);
-                this.webview.executeJavaScript(`ctx.fillStyle = '${this.backgroundColor}';`);
-                this.webview.executeJavaScript(`ctx.fillRect(0, 0, ${this.size}, ${this.size});`)
+
+                this.repaint();
             }
             catch (error) {
                 console.error(error);
@@ -396,6 +396,26 @@ export default {
                     }
             }
         },
+        repaint() {
+            this._drawBackground();
+            this._drawCells();
+        },
+        _drawBackground() {
+            this.webview.executeJavaScript(`ctx.fillStyle = '${this.backgroundColor}';`);
+            this.webview.executeJavaScript(`ctx.fillRect(0, 0, ${this.size}, ${this.size});`);
+        },
+        _drawCells() {
+            for (let row of [0,1,2,3,4,5,6,7]) {
+                for (let col of [0,1,2,3,4,5,6,7]) {
+                    const isBlackCell = (row + col) %2 !== 0;
+                    const cellColor = isBlackCell ? this.blackCellColor : this.whiteCellColor;
+                    const x = this.cellSize * (0.5 + row);
+                    const y = this.cellSize * (0.5 + col);
+                    this.webview.executeJavaScript(`ctx.fillStyle = '${cellColor}';`);
+                    this.webview.executeJavaScript(`ctx.fillRect(${x}, ${y}, ${this.cellSize}, ${this.cellSize});`);
+                }
+            }
+        }
     },
 }
 </script>
