@@ -8,12 +8,12 @@
             <WrapLayout dock="top" orqientation="horizontal">
                 <Label  class="button" @tap="newGame()">
                     <FormattedString>
-                        <Span class="fa button" text.decode="&#xf11e;" fontSize="50" />
+                        <Span class="fa button" text.decode="&#xf11e;" fontSize="30" />
                     </FormattedString>
                 </Label>
                 <Label  class="button" @tap="reverseBoard()">
                     <FormattedString>
-                        <Span class="fa button" text.decode="&#xf338;" fontSize="50" />
+                        <Span class="fa button" text.decode="&#xf338;" fontSize="30" />
                     </FormattedString>
                 </Label>
             </WrapLayout>
@@ -63,12 +63,12 @@
     }
 
     Label.button {
-        margin: 10 20;
+        margin: 10;
         border-color: $accent-dark;
         border-width: 2;
-        padding: 3;
         width: 60;
         height: 60;
         text-align: center;
+        vertical-align: middle;
     }
 </style>

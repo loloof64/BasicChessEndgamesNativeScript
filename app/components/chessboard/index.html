@@ -2,7 +2,7 @@
     <head>
         <script type="text/javascript">
             const stockfish = new Worker("./stockfish.js.txt");
-            stockfish.onmessage = function onmessage(event) {
+            stockfish.onmessage = function (event) {
                 window.nsWebViewBridge.emit('stockfishOutput', event.data);
             };
         </script>
