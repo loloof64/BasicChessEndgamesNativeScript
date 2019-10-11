@@ -399,12 +399,30 @@ export default {
             const { canvas } = event;
 
             this._drawBackground(canvas);
+            this._drawCells(canvas);
         },
         _drawBackground(canvas) {
             const paint = new Paint();
             paint.setColor(new Color(this.backgroundColor));
             paint.setStyle(Style.FILL);
             canvas.drawRect(createRect(0, 0, this.size, this.size), paint);
+        },
+        _drawCells(canvas) {
+            const paint = new Paint();
+            paint.setStyle(Style.FILL);
+
+            for (let row of [0,1,2,3,4,5,6,7]) {
+                for (let col of [0,1,2,3,4,5,6,7]) {
+                    const whiteCell = (row+col) %2 === 0;
+                    const color = whiteCell ? this.whiteCellColor : this.blackCellColor;
+
+                    const x = this.cellSize * (0.5 + col);
+                    const y = this.cellSize * (0.5 + row);
+
+                    paint.setColor(new Color(color));
+                    canvas.drawRect(createRect(x, y, this.cellSize, this.cellSize), paint);
+                }
+            }
         }
     },
 }
