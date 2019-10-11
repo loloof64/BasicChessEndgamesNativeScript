@@ -399,6 +399,7 @@ export default {
             const { canvas } = event;
 
             this._drawBackground(canvas);
+            this._drawCoordinates(canvas);
             this._drawCells(canvas);
         },
         _drawBackground(canvas) {
@@ -406,6 +407,32 @@ export default {
             paint.setColor(new Color(this.backgroundColor));
             paint.setStyle(Style.FILL);
             canvas.drawRect(createRect(0, 0, this.size, this.size), paint);
+        },
+        _drawCoordinates(canvas) {
+            const paint = new Paint();
+            paint.setColor(new Color(this.coordsColor));
+            paint.setTextSize(this.cellSize * 0.4);
+            paint.setAntiAlias(true);
+
+            for (let row of [0,1,2,3,4,5,6,7]) {
+                const text = this.rankCoords(row);
+                const y = this.cellSize * (1.15 + row);
+                const left = this.cellSize * 0.13;
+                const right = this.cellSize * 8.63;
+
+                canvas.drawText(text, left, y, paint);
+                canvas.drawText(text, right, y, paint);
+            }
+
+            for (let col of [0,1,2,3,4,5,6,7]) {
+                const text = this.fileCoords(col);
+                const x = this.cellSize * (0.9 + col);
+                const top = this.cellSize * 0.40;
+                const bottom = this.cellSize * 8.90;
+
+                canvas.drawText(text, x, top, paint);
+                canvas.drawText(text, x, bottom, paint);
+            }
         },
         _drawCells(canvas) {
             const paint = new Paint();
