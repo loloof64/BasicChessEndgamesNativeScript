@@ -78,6 +78,18 @@ import { localize } from "nativescript-localize";
 import { Color } from 'tns-core-modules/color/color';
 import { Canvas, Cap, drawRect, createRect, Paint, Style} from 'nativescript-canvas';
 
+import { knownFolders, path } from 'tns-core-modules/file-system/file-system';
+import { fromFile, ImageSource } from 'tns-core-modules/image-source/image-source';
+
+let piecesPictures = [];
+
+const loadPiecePicture = (refShortcut) => {
+    piecesPictures[refShortcut] = fromFile(path.join( knownFolders.currentApp().path, 'components/chessboard/chess_vectors/'+refShortcut+'.png'));
+}
+for (let shortcut of ['pl', 'nl', 'bl', 'rl', 'ql', 'kl', 'pd', 'nd', 'bd', 'rd', 'qd', 'kd']) {
+    loadPiecePicture(shortcut);
+}
+
 Vue.filter("L", localize);
 Vue.use(CanvasPlugin);
 
@@ -110,6 +122,7 @@ export default {
     },
     data() {
         return {
+            piecesPictures: piecesPictures,
             webview: undefined,
             boardLogic: new Chess('8/8/8/8/8/8/8/8 w - - 0 1'),
             dndActive: false,
@@ -172,13 +185,15 @@ export default {
             this.boardLogic = new Chess(startPosisitionStr || 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
             this.gameEndedReason = undefined;
             this.gameInProgress = true;
+            const canvas = this.$refs.canvas.nativeView;
+            canvas.redraw();
         },
         pieceAt(rank, file) {
             const square = `${String.fromCharCode('a'.charCodeAt(0) + file)}${String.fromCharCode('1'.charCodeAt(0) + rank)}`;
             const piece = this.boardLogic.get(square);
             return piece;
         },
-        pieceImageAtRankFile(rank, file) {
+        pieceImageShortcutAtRankFile(rank, file) {
             const row = this.reversed ? 7-rank : rank;
             const col = this.reversed ? 7-file : file;
             let isTheMovingPiece;
@@ -205,7 +220,7 @@ export default {
                 case 'k': imageBase = piece.color === 'b' ? 'kd' : 'kl'; break;
             }
             if (!imageBase) return null;
-            return `~/components/chessboard/chess_vectors/${imageBase}.png`;
+            return imageBase;
         },
         pieceImageAtRowCol(row, col) {
             const rank = this.reversed ? 7-row : row;
@@ -407,6 +422,7 @@ export default {
             this._drawBackground(canvas);
             this._drawCoordinates(canvas);
             this._drawCells(canvas);
+            this._drawPieces(canvas);
         },
         _drawBackground(canvas) {
             const paint = new Paint();
@@ -456,7 +472,24 @@ export default {
                     canvas.drawRect(createRect(x, y, this.cellSize, this.cellSize), paint);
                 }
             }
-        }
+        },
+        _drawPieces(canvas) {
+            for (let row of [0,1,2,3,4,5,6,7]) {
+                for (let col of [0,1,2,3,4,5,6,7]) {
+                    const rank = this.reversed ? row : 7-row;
+                    const file = this.reversed ? 7-col : col;
+
+                    const pieceImageShortcut = this.pieceImageShortcutAtRankFile(rank, file);
+                    if (pieceImageShortcut === null) continue;
+
+                    const image = this.piecesPictures[pieceImageShortcut];
+                    const x = this.cellSize * (0.5 + col);
+                    const y = this.cellSize * (0.5 + row);
+
+                    canvas.drawBitmap(image, null, createRect(x, y, this.cellSize, this.cellSize), null);
+                }
+            }
+        },
     },
 }
 </script>
