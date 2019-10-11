@@ -423,6 +423,7 @@ export default {
             this._drawCoordinates(canvas);
             this._drawCells(canvas);
             this._drawPieces(canvas);
+            this._drawPlayerTurn(canvas);
         },
         _drawBackground(canvas) {
             const paint = new Paint();
@@ -490,6 +491,14 @@ export default {
                 }
             }
         },
+        _drawPlayerTurn(canvas) {
+            const paint = new Paint();
+            paint.setStyle(Style.FILL);
+            paint.setColor(this.turnColor());
+
+            const x = this.cellSize * 8.5;
+            canvas.drawArc(createRect(x,x, this.halfCellSize, this.halfCellSize), 360, 360, true, paint);
+        }
     },
 }
 </script>
