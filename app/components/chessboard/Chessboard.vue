@@ -4,65 +4,37 @@
                 :width="0" :height="0"
                 @loadFinished="onWebViewLoaded"
             />
-        <!--
-        <GridLayout dock="center" columns="*,2*,2*,2*,2*,2*,2*,2*,2*,*" rows="*,2*,2*,2*,2*,2*,2*,2*,2*,*"
-            :width="size" :height="size"  :backgroundColor="backgroundColor"
-            >
-            <Label row="0" col="0"></Label>
-            <Label v-for="col in [0,1,2,3,4,5,6,7]" :key="'coord_top_' + col" coordinate :fontSize="fontSize" row="0" :col="col+1" :text="fileCoords(col)"
-                :color="coordsColor"></Label>
-            <Label row="0" col="9"></Label>
-
-            <template v-for="row in [0,1,2,3,4,5,6,7]">
-                <Label :key="'coord_left_'+row" :fontSize="fontSize" coordinate :row="row+1" col="0" :text="rankCoords(row)"
-                :color="coordsColor"></Label>
-                <StackLayout v-for="col in [0,1,2,3,4,5,6,7]" :key="'cell_'+(7-row)+col" :row="row+1" :col="col+1"
-                    :backgroundColor="cellBackgroundRowCol(7-row, col)">
-                        <Image :src="pieceImageAtRowCol(7-row, col)"/>
-                </StackLayout>
-                <Label :key="'coord_right_'+row" :fontSize="fontSize" coordinate :row="row+1" col="9" :text="rankCoords(row)"
-                    :color="coordsColor"></Label>
-            </template>
-
-            <Label row="9" col="0"></Label>
-            <Label v-for="col in [0,1,2,3,4,5,6,7]" :key="'coord_bottom_' + col" coordinate :fontSize="fontSize" row="9" :col="col+1" :text="fileCoords(col)"
-                :color="coordsColor"></Label>
-            <StackLayout row="9" col="9"><Label id="playerTurn" :backgroundColor="turnColor()" :borderRadius="halfCellSize / 2.0" :width="halfCellSize" :height="halfCellSize"/></StackLayout>
-            <AbsoluteLayout rowSpan="10" colSpan="10" row="0" col="0">
-                <Image :width="cellSize" :height="cellSize" :src="movedPieceImage()" :top="movedPieceTop()" :left="movedPieceLeft()" />
-            </AbsoluteLayout>
-            <StackLayout id="gameEndedText" orientation="vertical" rowSpan="10" colSpan="10"
-                row="0" col="0"
-                horizontalAlignment="center" verticalAlignment="center"
-                :class="{opened: !gameInProgress}">
-                <Label :text="gameEndedReason | L" :fontSize="cellSize * 0.8" textWrap="true" color="red" />
-            </StackLayout>
-        </GridLayout>
-        -->
         <CanvasView  dock="center" :width="size" :height="size" @draw="drawBoard" ref="canvas" />
         <StackLayout orientation="vertical" id="promotionDialog" dock="center"
                 :width="size" :height="size"
                 :class="{opened: promotionDialogOpened}"
                 :set="whiteTurn = this.boardLogic.turn() === 'w'"
             >
-                <Label id="title" :text="'choose_promotion_piece' | L" horizontalAlignment="center" :fontSize="cellSize * 0.5"/>
-                <StackLayout orientation="horizontal" @tap="commitPromotion('q')" horizontalAlignment="left" width="100%">
-                    <Label :text="queenFigurine(whiteTurn)" :fontSize="cellSize * 0.8" />
-                    <Label :text="'queen_promotion' | L" :fontSize="cellSize * 0.8" />
-                </StackLayout>
-                <StackLayout orientation="horizontal" @tap="commitPromotion('r')" horizontalAlignment="left" width="100%">
-                    <Label :text="rookFigurine(whiteTurn)" :fontSize="cellSize * 0.8" />
-                    <Label :text="'rook_promotion' | L" :fontSize="cellSize * 0.8" />
-                </StackLayout>
-                <StackLayout orientation="horizontal" @tap="commitPromotion('b')" horizontalAlignment="left" width="100%">
-                    <Label :text="bishopFigurine(whiteTurn)" :fontSize="cellSize * 0.8" />
-                    <Label :text="'bishop_promotion' | L" :fontSize="cellSize * 0.8" />
-                </StackLayout>
-                <StackLayout orientation="horizontal" @tap="commitPromotion('n')" horizontalAlignment="left" width="100%">
-                    <Label :text="knightFigurine(whiteTurn)" :fontSize="cellSize * 0.8" />
-                    <Label :text="'knight_promotion' | L" :fontSize="cellSize * 0.8" />
-                </StackLayout>
+            <Label id="title" :text="'choose_promotion_piece' | L" horizontalAlignment="center" :fontSize="cellSize * 0.5"/>
+            <StackLayout orientation="horizontal" @tap="commitPromotion('q')" horizontalAlignment="left" width="100%">
+                <Label :text="queenFigurine(whiteTurn)" :fontSize="cellSize * 0.8" />
+                <Label :text="'queen_promotion' | L" :fontSize="cellSize * 0.8" />
             </StackLayout>
+            <StackLayout orientation="horizontal" @tap="commitPromotion('r')" horizontalAlignment="left" width="100%">
+                <Label :text="rookFigurine(whiteTurn)" :fontSize="cellSize * 0.8" />
+                <Label :text="'rook_promotion' | L" :fontSize="cellSize * 0.8" />
+            </StackLayout>
+            <StackLayout orientation="horizontal" @tap="commitPromotion('b')" horizontalAlignment="left" width="100%">
+                <Label :text="bishopFigurine(whiteTurn)" :fontSize="cellSize * 0.8" />
+                <Label :text="'bishop_promotion' | L" :fontSize="cellSize * 0.8" />
+            </StackLayout>
+            <StackLayout orientation="horizontal" @tap="commitPromotion('n')" horizontalAlignment="left" width="100%">
+                <Label :text="knightFigurine(whiteTurn)" :fontSize="cellSize * 0.8" />
+                <Label :text="'knight_promotion' | L" :fontSize="cellSize * 0.8" />
+            </StackLayout>
+        </StackLayout>
+        <!--
+        <StackLayout id="gameEndedText" orientation="vertical" :width="size" :height="size"
+            horizontalAlignment="center" verticalAlignment="center" dock="center"
+            :class="{opened: !gameInProgress}">
+            <Label :text="gameEndedReason | L" :fontSize="cellSize * 0.8" textWrap="true" color="red" />
+        </StackLayout>
+        -->
     </DockLayout>
 </template>
 
@@ -226,7 +198,7 @@ export default {
             const rank = this.reversed ? 7-row : row;
             const file = this.reversed ? 7-col : col;
 
-            return this.pieceImageAtRankFile(rank, file);
+            return this.pieceImageShortcutAtRankFile(rank, file);
         },
         piecePresentAtRowCol(row, col) {
             return this.pieceImageAtRowCol(row, col) === null ? 'hidden' : 'visible';
@@ -341,6 +313,8 @@ export default {
             }
         },
         reactToTouch(event) {
+            const canvas = this.$refs.canvas.nativeView;
+
             const rankAndFileToCoordinate = function(rank, file) {
                 return `${String.fromCharCode('a'.charCodeAt(0) + file)}${String.fromCharCode('1'.charCodeAt(0) + rank)}`;
             }
@@ -374,6 +348,8 @@ export default {
                     this.dndDestRow = row;
                     this.dndMovedPieceLeft = event.getX() - this.halfCellSize;
                     this.dndMovedPieceTop = event.getY() - this.halfCellSize;
+
+                    canvas.redraw();
                     break;
                 case 'move':
                     if (! this.dndActive) return;
@@ -382,6 +358,8 @@ export default {
                     this.dndDestRow = row;
                     this.dndMovedPieceLeft = event.getX() - this.halfCellSize;
                     this.dndMovedPieceTop = event.getY() - this.halfCellSize;
+
+                    canvas.redraw();
 
                     break;
                 case 'up':
@@ -409,10 +387,12 @@ export default {
                             this.boardLogic.move({from: this.startCellStr, to: this.endCellStr});
                             this.cancelDnd();
                             this.checkGameEndedStateAndNotifyUser();
+                            canvas.redraw();
                         }
                     }
                     else {
                         this.cancelDnd();
+                        canvas.redraw();
                     }
             }
         },
@@ -424,6 +404,7 @@ export default {
             this._drawCells(canvas);
             this._drawPieces(canvas);
             this._drawPlayerTurn(canvas);
+            this._drawMovedPiece(canvas);
         },
         _drawBackground(canvas) {
             const paint = new Paint();
@@ -464,8 +445,10 @@ export default {
             for (let row of [0,1,2,3,4,5,6,7]) {
                 for (let col of [0,1,2,3,4,5,6,7]) {
                     const whiteCell = (row+col) %2 === 0;
-                    const color = whiteCell ? this.whiteCellColor : this.blackCellColor;
-
+                    let color = whiteCell ? this.whiteCellColor : this.blackCellColor;
+                    
+                    if (this.dndDestCol === col || this.dndDestRow === 7-row) color = 'green';
+                    if (this.dndOriginCol === col && this.dndOriginRow === 7-row) color = 'red';
                     const x = this.cellSize * (0.5 + col);
                     const y = this.cellSize * (0.5 + row);
 
@@ -498,6 +481,17 @@ export default {
 
             const x = this.cellSize * 8.5;
             canvas.drawArc(createRect(x,x, this.halfCellSize, this.halfCellSize), 360, 360, true, paint);
+        },
+        _drawMovedPiece(canvas) {
+            if (!this.dndActive) return;
+
+            const image = this.piecesPictures[this.movedPieceImage()];
+            if (image === null) return;
+
+            const x = this.movedPieceLeft();
+            const y = this.movedPieceTop();
+
+            canvas.drawBitmap(image, null, createRect(x, y, this.cellSize, this.cellSize), null);
         }
     },
 }
