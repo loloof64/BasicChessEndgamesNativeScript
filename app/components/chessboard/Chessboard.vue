@@ -1,63 +1,71 @@
 <template>
-	<GridLayout columns="*,2*,2*,2*,2*,2*,2*,2*,2*,*" rows="*,2*,2*,2*,2*,2*,2*,2*,2*,*"
-        :width="size" :height="size" :backgroundColor="backgroundColor" @touch="reactToTouch"
-        >
-        <Label row="0" col="0"></Label>
-        <Label v-for="col in [0,1,2,3,4,5,6,7]" :key="'coord_top_' + col" coordinate :fontSize="fontSize" row="0" :col="col+1" :text="fileCoords(col)"
-            :color="coordsColor"></Label>
-        <Label row="0" col="9"></Label>
-
-        <template v-for="row in [0,1,2,3,4,5,6,7]">
-             <Label :key="'coord_left_'+row" :fontSize="fontSize" coordinate :row="row+1" col="0" :text="rankCoords(row)"
-            :color="coordsColor"></Label>
-            <StackLayout v-for="col in [0,1,2,3,4,5,6,7]" :key="'cell_'+(7-row)+col" :row="row+1" :col="col+1"
-                :backgroundColor="cellBackgroundRowCol(7-row, col)">
-                    <Image :src="pieceImageAtRowCol(7-row, col)"/>
-            </StackLayout>
-            <Label :key="'coord_right_'+row" :fontSize="fontSize" coordinate :row="row+1" col="9" :text="rankCoords(row)"
+    <DockLayout @touch="reactToTouch">
+        <WebViewExt dock="center" src="~/components/chessboard/stockfish/index.html"
+                :width="size" :height="size"
+                @loadFinished="onWebViewLoaded"
+                opacity="0.3"
+            />
+        <GridLayout dock="center" columns="*,2*,2*,2*,2*,2*,2*,2*,2*,*" rows="*,2*,2*,2*,2*,2*,2*,2*,2*,*"
+            :width="size" :height="size" :backgroundColor="backgroundColor"
+            >
+            <Label row="0" col="0"></Label>
+            <Label v-for="col in [0,1,2,3,4,5,6,7]" :key="'coord_top_' + col" coordinate :fontSize="fontSize" row="0" :col="col+1" :text="fileCoords(col)"
                 :color="coordsColor"></Label>
-        </template>
+            <Label row="0" col="9"></Label>
 
-        <Label row="9" col="0"></Label>
-        <Label v-for="col in [0,1,2,3,4,5,6,7]" :key="'coord_bottom_' + col" coordinate :fontSize="fontSize" row="9" :col="col+1" :text="fileCoords(col)"
-            :color="coordsColor"></Label>
-        <StackLayout row="9" col="9"><Label id="playerTurn" :backgroundColor="turnColor()" :borderRadius="halfCellSize / 2.0" :width="halfCellSize" :height="halfCellSize"/></StackLayout>
-        <AbsoluteLayout rowSpan="10" colSpan="10" row="0" col="0">
-            <Image :width="cellSize" :height="cellSize" :src="movedPieceImage()" :top="movedPieceTop()" :left="movedPieceLeft()" />
-        </AbsoluteLayout>
+            <template v-for="row in [0,1,2,3,4,5,6,7]">
+                <Label :key="'coord_left_'+row" :fontSize="fontSize" coordinate :row="row+1" col="0" :text="rankCoords(row)"
+                :color="coordsColor"></Label>
+                <StackLayout v-for="col in [0,1,2,3,4,5,6,7]" :key="'cell_'+(7-row)+col" :row="row+1" :col="col+1"
+                    :backgroundColor="cellBackgroundRowCol(7-row, col)">
+                        <Image :src="pieceImageAtRowCol(7-row, col)"/>
+                </StackLayout>
+                <Label :key="'coord_right_'+row" :fontSize="fontSize" coordinate :row="row+1" col="9" :text="rankCoords(row)"
+                    :color="coordsColor"></Label>
+            </template>
 
-        <StackLayout orientation="vertical" id="promotionDialog" rowSpan="10" colSpan="10"
-            row="0" col="0" :class="{opened: promotionDialogOpened}"
-            :set="whiteTurn = this.boardLogic.turn() === 'w'"
-        >
-            <Label id="title" :text="'choose_promotion_piece' | L" horizontalAlignment="center" :fontSize="cellSize * 0.5"/>
-            <StackLayout orientation="horizontal" @tap="commitPromotion('q')" horizontalAlignment="left" width="100%">
-                <Label :text="queenFigurine(whiteTurn)" :fontSize="cellSize * 0.8" />
-                <Label :text="'queen_promotion' | L" :fontSize="cellSize * 0.8" />
+            <Label row="9" col="0"></Label>
+            <Label v-for="col in [0,1,2,3,4,5,6,7]" :key="'coord_bottom_' + col" coordinate :fontSize="fontSize" row="9" :col="col+1" :text="fileCoords(col)"
+                :color="coordsColor"></Label>
+            <StackLayout row="9" col="9"><Label id="playerTurn" :backgroundColor="turnColor()" :borderRadius="halfCellSize / 2.0" :width="halfCellSize" :height="halfCellSize"/></StackLayout>
+            <AbsoluteLayout rowSpan="10" colSpan="10" row="0" col="0">
+                <Image :width="cellSize" :height="cellSize" :src="movedPieceImage()" :top="movedPieceTop()" :left="movedPieceLeft()" />
+            </AbsoluteLayout>
+
+            <StackLayout orientation="vertical" id="promotionDialog" rowSpan="10" colSpan="10"
+                row="0" col="0" :class="{opened: promotionDialogOpened}"
+                :set="whiteTurn = this.boardLogic.turn() === 'w'"
+            >
+                <Label id="title" :text="'choose_promotion_piece' | L" horizontalAlignment="center" :fontSize="cellSize * 0.5"/>
+                <StackLayout orientation="horizontal" @tap="commitPromotion('q')" horizontalAlignment="left" width="100%">
+                    <Label :text="queenFigurine(whiteTurn)" :fontSize="cellSize * 0.8" />
+                    <Label :text="'queen_promotion' | L" :fontSize="cellSize * 0.8" />
+                </StackLayout>
+                <StackLayout orientation="horizontal" @tap="commitPromotion('r')" horizontalAlignment="left" width="100%">
+                    <Label :text="rookFigurine(whiteTurn)" :fontSize="cellSize * 0.8" />
+                    <Label :text="'rook_promotion' | L" :fontSize="cellSize * 0.8" />
+                </StackLayout>
+                <StackLayout orientation="horizontal" @tap="commitPromotion('b')" horizontalAlignment="left" width="100%">
+                    <Label :text="bishopFigurine(whiteTurn)" :fontSize="cellSize * 0.8" />
+                    <Label :text="'bishop_promotion' | L" :fontSize="cellSize * 0.8" />
+                </StackLayout>
+                <StackLayout orientation="horizontal" @tap="commitPromotion('n')" horizontalAlignment="left" width="100%">
+                    <Label :text="knightFigurine(whiteTurn)" :fontSize="cellSize * 0.8" />
+                    <Label :text="'knight_promotion' | L" :fontSize="cellSize * 0.8" />
+                </StackLayout>
             </StackLayout>
-            <StackLayout orientation="horizontal" @tap="commitPromotion('r')" horizontalAlignment="left" width="100%">
-                <Label :text="rookFigurine(whiteTurn)" :fontSize="cellSize * 0.8" />
-                <Label :text="'rook_promotion' | L" :fontSize="cellSize * 0.8" />
+            <StackLayout id="gameEndedText" orientation="vertical" rowSpan="10" colSpan="10"
+                row="0" col="0"
+                horizontalAlignment="center" verticalAlignment="center"
+                :class="{opened: !gameInProgress}">
+                <Label :text="gameEndedReason | L" :fontSize="cellSize * 0.8" textWrap="true" color="red" />
             </StackLayout>
-            <StackLayout orientation="horizontal" @tap="commitPromotion('b')" horizontalAlignment="left" width="100%">
-                <Label :text="bishopFigurine(whiteTurn)" :fontSize="cellSize * 0.8" />
-                <Label :text="'bishop_promotion' | L" :fontSize="cellSize * 0.8" />
-            </StackLayout>
-            <StackLayout orientation="horizontal" @tap="commitPromotion('n')" horizontalAlignment="left" width="100%">
-                <Label :text="knightFigurine(whiteTurn)" :fontSize="cellSize * 0.8" />
-                <Label :text="'knight_promotion' | L" :fontSize="cellSize * 0.8" />
-            </StackLayout>
-        </StackLayout>
-        <StackLayout id="gameEndedText" orientation="vertical" rowSpan="10" colSpan="10"
-            row="0" col="0"
-            horizontalAlignment="center" verticalAlignment="center"
-            :class="{opened: !gameInProgress}">
-            <Label :text="gameEndedReason | L" :fontSize="cellSize * 0.8" textWrap="true" color="red" />
-        </StackLayout>
-    </GridLayout>
+        </GridLayout>
+    </DockLayout>
 </template>
 
 <script>
+import "@nota/nativescript-webview-ext/vue";
 import Chess from 'chess.js';
 
 const dialogs = require("tns-core-modules/ui/dialogs");
@@ -96,6 +104,7 @@ export default {
     },
     data() {
         return {
+            webview: undefined,
             boardLogic: new Chess('8/8/8/8/8/8/8/8 w - - 0 1'),
             dndActive: false,
             dndOriginCol: undefined,
@@ -120,7 +129,32 @@ export default {
         },
     },
     methods: {
+        onWebViewLoaded(args) {
+            this.webview = args.object;
+            try {
+                this.webview.on('stockfishOutput', this.processStockfishOutput);
+            }
+            catch (error) {
+                console.error(error);
+            }
+        },
+        sendCommandToStockfish(command) {
+            if (this.webview !== undefined) {
+                try {
+                    this.webview.executeJavaScript(`stockfish.postMessage('${command}');`);
+                }
+                catch (error) {
+                    console.error(error);
+                }
+            }
+        },
+        processStockfishOutput(output) {
+            console.log(output.data);
+        },
         startNewGame(startPosisitionStr) {
+            ////////////////////////////////////////////
+            this.sendCommandToStockfish("go depth 12")
+            ////////////////////////////////////////////
             this.cancelDnd();
             this.promotionDialogOpened = false;
             this.boardLogic = new Chess(startPosisitionStr || 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
