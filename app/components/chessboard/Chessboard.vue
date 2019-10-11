@@ -1,12 +1,12 @@
 <template>
     <DockLayout @touch="reactToTouch">
         <WebViewExt dock="center" src="~/components/chessboard/stockfish/index.html"
-                :width="size" :height="size"
+                :width="0" :height="0"
                 @loadFinished="onWebViewLoaded"
-                opacity="0.3"
             />
+        <!--
         <GridLayout dock="center" columns="*,2*,2*,2*,2*,2*,2*,2*,2*,*" rows="*,2*,2*,2*,2*,2*,2*,2*,2*,*"
-            :width="size" :height="size" :backgroundColor="backgroundColor"
+            :width="size" :height="size"  :backgroundColor="backgroundColor"
             >
             <Label row="0" col="0"></Label>
             <Label v-for="col in [0,1,2,3,4,5,6,7]" :key="'coord_top_' + col" coordinate :fontSize="fontSize" row="0" :col="col+1" :text="fileCoords(col)"
@@ -31,9 +31,18 @@
             <AbsoluteLayout rowSpan="10" colSpan="10" row="0" col="0">
                 <Image :width="cellSize" :height="cellSize" :src="movedPieceImage()" :top="movedPieceTop()" :left="movedPieceLeft()" />
             </AbsoluteLayout>
-
-            <StackLayout orientation="vertical" id="promotionDialog" rowSpan="10" colSpan="10"
-                row="0" col="0" :class="{opened: promotionDialogOpened}"
+            <StackLayout id="gameEndedText" orientation="vertical" rowSpan="10" colSpan="10"
+                row="0" col="0"
+                horizontalAlignment="center" verticalAlignment="center"
+                :class="{opened: !gameInProgress}">
+                <Label :text="gameEndedReason | L" :fontSize="cellSize * 0.8" textWrap="true" color="red" />
+            </StackLayout>
+        </GridLayout>
+        -->
+        <CanvasView  dock="center" :width="size" :height="size" @draw="drawBoard" />
+        <StackLayout orientation="vertical" id="promotionDialog" dock="center"
+                :width="size" :height="size"
+                :class="{opened: promotionDialogOpened}"
                 :set="whiteTurn = this.boardLogic.turn() === 'w'"
             >
                 <Label id="title" :text="'choose_promotion_piece' | L" horizontalAlignment="center" :fontSize="cellSize * 0.5"/>
@@ -54,26 +63,23 @@
                     <Label :text="'knight_promotion' | L" :fontSize="cellSize * 0.8" />
                 </StackLayout>
             </StackLayout>
-            <StackLayout id="gameEndedText" orientation="vertical" rowSpan="10" colSpan="10"
-                row="0" col="0"
-                horizontalAlignment="center" verticalAlignment="center"
-                :class="{opened: !gameInProgress}">
-                <Label :text="gameEndedReason | L" :fontSize="cellSize * 0.8" textWrap="true" color="red" />
-            </StackLayout>
-        </GridLayout>
     </DockLayout>
 </template>
 
 <script>
 import "@nota/nativescript-webview-ext/vue";
+import CanvasPlugin from 'nativescript-canvas/vue';
 import Chess from 'chess.js';
 
 const dialogs = require("tns-core-modules/ui/dialogs");
 
 import Vue from "nativescript-vue";
 import { localize } from "nativescript-localize";
+import { Color } from 'tns-core-modules/color/color';
+import { Canvas, Cap, drawRect, createRect, Paint, Style} from 'nativescript-canvas';
 
 Vue.filter("L", localize);
+Vue.use(CanvasPlugin);
 
 export default {
     props: {
@@ -389,6 +395,17 @@ export default {
                     }
             }
         },
+        drawBoard(event) {
+            const { canvas } = event;
+
+            this._drawBackground(canvas);
+        },
+        _drawBackground(canvas) {
+            const paint = new Paint();
+            paint.setColor(new Color(this.backgroundColor));
+            paint.setStyle(Style.FILL);
+            canvas.drawRect(createRect(0, 0, this.size, this.size), paint);
+        }
     },
 }
 </script>
