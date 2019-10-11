@@ -39,7 +39,7 @@
             </StackLayout>
         </GridLayout>
         -->
-        <CanvasView  dock="center" :width="size" :height="size" @draw="drawBoard" />
+        <CanvasView  dock="center" :width="size" :height="size" @draw="drawBoard" ref="canvas" />
         <StackLayout orientation="vertical" id="promotionDialog" dock="center"
                 :width="size" :height="size"
                 :class="{opened: promotionDialogOpened}"
@@ -133,6 +133,12 @@ export default {
         fontSize() {
             return this.cellSize * 0.4;
         },
+    },
+    watch: {
+        reversed: function (newVal, oldVal) {
+            const canvas = this.$refs.canvas.nativeView;
+            canvas.redraw();
+        }
     },
     methods: {
         onWebViewLoaded(args) {
