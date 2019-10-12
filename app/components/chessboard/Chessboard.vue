@@ -100,14 +100,15 @@ export default {
             webview: undefined,
             boardLogic: new Chess('8/8/8/8/8/8/8/8 w - - 0 1'),
             dndActive: false,
-            dndOriginCol: undefined,
-            dndOriginRow: undefined,
-            dndDestCol: undefined,
-            dndDestRow: undefined,
+            dndOriginFile: undefined,
+            dndOriginRank: undefined,
+            dndDestFile: undefined,
+            dndDestRank: undefined,
             promotionDialogOpened: false,
             boardOrientationBeforePromotionDialog: undefined,
             gameInProgress: false,
             gameEndedReason: undefined,
+            lastMove: undefined,
         };
     },
     computed: {
@@ -159,6 +160,7 @@ export default {
             this.boardLogic = new Chess(startPosisitionStr || 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
             this.gameEndedReason = undefined;
             this.gameInProgress = true;
+            this.lastMove = undefined;
             const canvas = this.$refs.canvas.nativeView;
             canvas.redraw();
         },
@@ -168,17 +170,7 @@ export default {
             return piece;
         },
         pieceImageShortcutAtRankFile(rank, file) {
-            const row = this.reversed ? 7-rank : rank;
-            const col = this.reversed ? 7-file : file;
-            let isTheMovingPiece;
-            if (this.promotionDialogOpened) {
-                const boardReversedSincePromotionDialog = this.boardOrientationBeforePromotionDialog !== this.reversed;
-                let realCol = boardReversedSincePromotionDialog ? 7-col : col;
-                let realRow = boardReversedSincePromotionDialog ? 7-row : row;
-                isTheMovingPiece = this.dndOriginRow === realRow && this.dndOriginCol === realCol;
-            } else {
-                isTheMovingPiece = this.dndOriginRow === row && this.dndOriginCol === col;
-            }
+            let isTheMovingPiece = this.dndOriginRank === rank && this.dndOriginFile === file;
 
             if (isTheMovingPiece) return null;
 
@@ -195,15 +187,6 @@ export default {
             }
             if (!imageBase) return null;
             return imageBase;
-        },
-        pieceImageAtRowCol(row, col) {
-            const rank = this.reversed ? 7-row : row;
-            const file = this.reversed ? 7-col : col;
-
-            return this.pieceImageShortcutAtRankFile(rank, file);
-        },
-        piecePresentAtRowCol(row, col) {
-            return this.pieceImageAtRowCol(row, col) === null ? 'hidden' : 'visible';
         },
         fileCoords(index) {
             return this.reversed ? ['H', 'G', 'F', 'E', 'D', 'C', 'B', 'A'][index] : ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'][index];
@@ -261,16 +244,26 @@ export default {
             this.boardOrientationBeforePromotionDialog = undefined;
             this.boardLogic.move({from: this.startCellStr, to: this.endCellStr, promotion: typeStr});
             this.cancelDnd();
+            this.lastMove = {
+                origin: {
+                    file: this.dndOriginFile,
+                    rank: this.dndOriginRank,
+                },
+                dest: {
+                    file: this.dndDestFile,
+                    rank: this.dndDestRank,
+                }
+            };
             const canvas = this.$refs.canvas.nativeView;
             canvas.redraw();
             this.checkGameEndedStateAndNotifyUser();
         },
         cancelDnd() {
             this.dndActive = false;
-            this.dndOriginCol = undefined;
-            this.dndOriginRow = undefined;
-            this.dndDestCol = undefined;
-            this.dndDestRow = undefined;
+            this.dndOriginFile = undefined;
+            this.dndOriginRank = undefined;
+            this.dndDestFile = undefined;
+            this.dndDestRank = undefined;
             this.dndMovedPieceTop = undefined;
             this.dndMovedPieceLeft = undefined;
             this.dndMovedPieceImage = undefined;
@@ -308,7 +301,7 @@ export default {
             if (this.promotionDialogOpened) return;
 
             const col = Math.floor((event.getX() - this.halfCellSize) / this.cellSize);
-            const row = 7 - Math.floor((event.getY() - this.halfCellSize) / this.cellSize);
+            const row = Math.floor((event.getY() - this.halfCellSize) / this.cellSize);
             const outsideZone = col < 0 || col > 7 || row < 0 || row > 7;
 
             if (outsideZone) {
@@ -316,21 +309,22 @@ export default {
             }
 
             const file = this.reversed ? 7-col : col;
-            const rank = this.reversed ? 7-row : row;
+            const rank = this.reversed ? row : 7-row;
             const pieceAtClickedSquare = this.boardLogic.get(rankAndFileToCoordinate(rank, file));
 
             switch(event.action) {
                 case 'down':
-                    const isAnEmptyCell = this.pieceImageAtRowCol(row, col) === null;
+                    const pieceImageShortcut = this.pieceImageShortcutAtRankFile(rank, file);
+                    const isAnEmptyCell = pieceImageShortcut === null;
                     if (isAnEmptyCell) return;
                     const notOurPiece = this.boardLogic.turn() !== pieceAtClickedSquare.color;
                     if (notOurPiece) return;
-                    this.dndMovedPieceImage = this.pieceImageAtRowCol(row, col);
+                    this.dndMovedPieceImage = this.piecesPictures[pieceImageShortcut];
                     this.dndActive = true;
-                    this.dndOriginCol = col;
-                    this.dndOriginRow = row;
-                    this.dndDestCol = col;
-                    this.dndDestRow = row;
+                    this.dndOriginFile = file;
+                    this.dndOriginRank = rank;
+                    this.dndDestFile = file;
+                    this.dndDestRank = rank;
                     this.dndMovedPieceLeft = event.getX() - this.halfCellSize;
                     this.dndMovedPieceTop = event.getY() - this.halfCellSize;
 
@@ -339,8 +333,8 @@ export default {
                 case 'move':
                     if (! this.dndActive) return;
 
-                    this.dndDestCol = col;
-                    this.dndDestRow = row;
+                    this.dndDestFile = file;
+                    this.dndDestRank = rank;
                     this.dndMovedPieceLeft = event.getX() - this.halfCellSize;
                     this.dndMovedPieceTop = event.getY() - this.halfCellSize;
 
@@ -350,13 +344,8 @@ export default {
                 case 'up':
                     if (!this.dndActive) return;
 
-                    const originRank = this.reversed ? 7 - this.dndOriginRow : this.dndOriginRow;
-                    const originFile = this.reversed ? 7 - this.dndOriginCol : this.dndOriginCol;
-                    const destRank = this.reversed ? 7-row : row;
-                    const destFile = this.reversed ? 7-col : col;
-
-                    this.startCellStr = rankAndFileToCoordinate(originRank, originFile);
-                    this.endCellStr = rankAndFileToCoordinate(destRank, destFile);
+                    this.startCellStr = rankAndFileToCoordinate(this.dndOriginRank, this.dndOriginFile);
+                    this.endCellStr = rankAndFileToCoordinate(rank, file);
 
                     const boardLogicClone = new Chess(this.boardLogic.fen());
                     const moveResult = boardLogicClone.move({from: this.startCellStr, to: this.endCellStr, promotion: 'q'}) ;
@@ -370,6 +359,16 @@ export default {
                         }
                         else {
                             this.boardLogic.move({from: this.startCellStr, to: this.endCellStr});
+                            this.lastMove = {
+                                origin: {
+                                    file: this.dndOriginFile,
+                                    rank: this.dndOriginRank,
+                                },
+                                dest: {
+                                    file: file,
+                                    rank: rank,
+                                }
+                            };
                             this.cancelDnd();
                             this.checkGameEndedStateAndNotifyUser();
                             canvas.redraw();
@@ -388,6 +387,7 @@ export default {
             this._drawCoordinates(canvas);
             this._drawCells(canvas);
             this._drawPieces(canvas);
+            this._drawLastMoveArrow(canvas);
             this._drawPlayerTurn(canvas);
             this._drawMovedPiece(canvas);
         },
@@ -431,9 +431,11 @@ export default {
                 for (let col of [0,1,2,3,4,5,6,7]) {
                     const whiteCell = (row+col) %2 === 0;
                     let color = whiteCell ? this.whiteCellColor : this.blackCellColor;
+                    const file = this.reversed ? 7-col : col;
+                    const rank = this.reversed ? row : 7-row;
                     
-                    if (this.dndDestCol === col || this.dndDestRow === 7-row) color = 'green';
-                    if (this.dndOriginCol === col && this.dndOriginRow === 7-row) color = 'red';
+                    if (this.dndDestFile === file || this.dndDestRank === rank) color = 'green';
+                    if (this.dndOriginFile === file && this.dndOriginRank === rank) color = 'red';
                     const x = this.cellSize * (0.5 + col);
                     const y = this.cellSize * (0.5 + row);
 
@@ -445,8 +447,8 @@ export default {
         _drawPieces(canvas) {
             for (let row of [0,1,2,3,4,5,6,7]) {
                 for (let col of [0,1,2,3,4,5,6,7]) {
-                    const rank = this.reversed ? row : 7-row;
                     const file = this.reversed ? 7-col : col;
+                    const rank = this.reversed ? row : 7-row;
 
                     const pieceImageShortcut = this.pieceImageShortcutAtRankFile(rank, file);
                     if (pieceImageShortcut === null) continue;
@@ -470,13 +472,49 @@ export default {
         _drawMovedPiece(canvas) {
             if (!this.dndActive) return;
 
-            const image = this.piecesPictures[this.movedPieceImage()];
+            const image = this.dndMovedPieceImage;
             if (image === null) return;
 
             const x = this.movedPieceLeft();
             const y = this.movedPieceTop();
 
             canvas.drawBitmap(image, null, createRect(x, y, this.cellSize, this.cellSize), null);
+        },
+        _drawLastMoveArrow(canvas) {
+            if (this.lastMove === undefined) return;
+
+            const realOriginCol = this.reversed ? 7-this.lastMove.origin.col: this.lastMove.origin.col;
+            const realOriginRow = this.reversed ? this.lastMove.origin.row: 7-this.lastMove.origin.row;
+
+            const realDestCol = this.reversed ? 7 - this.lastMove.dest.col : this.lastMove.dest.col;
+            const realDestRow = this.reversed ? this.lastMove.dest.row : 7-this.lastMove.dest.row;
+
+            const baseStartX = this.cellSize * (1.0 + realOriginCol);
+            const baseStartY = this.cellSize * (1.0 + realOriginRow);
+            const baseStopX = this.cellSize * (1.0 + realDestCol);
+            const baseStopY = this.cellSize * (1.0 + realDestRow);
+
+            const deltaX = baseStopX - baseStartX;
+            const deltaY = baseStopY - baseStartY;
+            const angleRad = Math.abs(Math.atan2(deltaY, deltaX));
+
+            const edge1StartX = baseStopX;
+            const edge1StartY = baseStopY;
+            const edge1StopX = baseStopX + this.cellSize * (this.reversed ? Math.cos(angleRad) : -Math.cos(angleRad));
+            const edge1StopY = baseStopY + this.cellSize * Math.sin(angleRad);
+            
+            const edge2StartX = baseStopX;
+            const edge2StartY = baseStopY;
+            const edge2StopX = baseStopX - this.cellSize * Math.cos(angleRad);
+            const edge2StopY = baseStopY + this.cellSize * Math.sin(angleRad);
+
+            const paint = new Paint();
+            paint.setColor(new Color('#22AAFF'));
+            paint.setStrokeWidth(this.cellSize * 0.3);
+
+            canvas.drawLine(baseStartX, baseStartY, baseStopX, baseStopY, paint);
+            canvas.drawLine(edge1StartX, edge1StartY, edge1StopX, edge1StopY, paint);
+            //canvas.drawLine(edge2StartX, edge2StartY, edge2StopX, edge2StopY, paint);
         }
     },
 }
