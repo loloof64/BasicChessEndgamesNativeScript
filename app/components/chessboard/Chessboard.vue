@@ -1,12 +1,15 @@
 <template>
-    <DockLayout @touch="reactToTouch">
+    <GridLayout @touch="reactToTouch" columns="*" rows="*" :width="size" :height="size" background="red">
         <WebViewExt dock="center" src="~/components/chessboard/stockfish/index.html"
-                :width="0" :height="0"
+                width="0" height="0"
+                row="0" col="0"
                 @loadFinished="onWebViewLoaded"
             />
-        <CanvasView  dock="center" :width="size" :height="size" @draw="drawBoard" ref="canvas" />
-        <StackLayout orientation="vertical" id="promotionDialog" dock="center"
+        <CanvasView  dock="center" :width="size" :height="size" @draw="drawBoard" ref="canvas" row="0" col="0"
+        />
+        <StackLayout dock="center" orientation="vertical" id="promotionDialog"
                 :width="size" :height="size"
+                row="0" col="0"
                 :class="{opened: promotionDialogOpened}"
                 :set="whiteTurn = this.boardLogic.turn() === 'w'"
             >
@@ -35,7 +38,7 @@
             <Label :text="gameEndedReason | L" :fontSize="cellSize * 0.8" textWrap="true" color="red" />
         </StackLayout>
         -->
-    </DockLayout>
+    </GridLayout>
 </template>
 
 <script>
@@ -216,27 +219,6 @@ export default {
                 default: return 'transparent';
             }
         },
-        cellBackgroundRowCol(row, col) {
-            let isTheDndOriginCell;
-            let isADndCellToHighlight;
-            if (this.promotionDialogOpened) {
-                const boardReversedSincePromotionDialog = this.boardOrientationBeforePromotionDialog !== this.reversed;
-                const realCol = boardReversedSincePromotionDialog ? 7 - col : col;
-                const realRow = boardReversedSincePromotionDialog ? 7 - row : row;
-
-                isTheDndOriginCell = realRow === this.dndOriginRow && realCol === this.dndOriginCol;
-                isADndCellToHighlight = realRow === this.dndDestRow || realCol === this.dndDestCol;
-            } else {
-                isTheDndOriginCell = row === this.dndOriginRow && col === this.dndOriginCol;
-                isADndCellToHighlight = row === this.dndDestRow || col === this.dndDestCol;
-            }
-            const isWhiteCell = (row+col) % 2 === 0;
-
-            if (isTheDndOriginCell) return 'red';
-            if (isADndCellToHighlight) return 'green';
-
-            return isWhiteCell ? this.whiteCellColor : this.blackCellColor;
-        },
         movedPieceImage() {
             if (!this.dndActive) return null;
             return this.dndMovedPieceImage;
@@ -280,6 +262,8 @@ export default {
             this.boardOrientationBeforePromotionDialog = undefined;
             this.boardLogic.move({from: this.startCellStr, to: this.endCellStr, promotion: typeStr});
             this.cancelDnd();
+            const canvas = this.$refs.canvas.nativeView;
+            canvas.redraw();
             this.checkGameEndedStateAndNotifyUser();
         },
         cancelDnd() {
