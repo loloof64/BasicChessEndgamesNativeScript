@@ -277,6 +277,8 @@ export default {
             this.dndMovedPieceImage = undefined;
             this.startCellStr = undefined;
             this.endCellStr = undefined;
+            const canvas = this.$refs.canvas.nativeView;
+            canvas.redraw();
         },
         checkGameEndedStateAndNotifyUser() {
             if (this.boardLogic.in_checkmate()) {
