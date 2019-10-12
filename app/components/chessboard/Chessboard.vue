@@ -483,11 +483,11 @@ export default {
         _drawLastMoveArrow(canvas) {
             if (this.lastMove === undefined) return;
 
-            const realOriginCol = this.reversed ? 7-this.lastMove.origin.col: this.lastMove.origin.col;
-            const realOriginRow = this.reversed ? this.lastMove.origin.row: 7-this.lastMove.origin.row;
+            const realOriginCol = this.reversed ? 7-this.lastMove.origin.file: this.lastMove.origin.file;
+            const realOriginRow = this.reversed ? this.lastMove.origin.rank: 7-this.lastMove.origin.rank;
 
-            const realDestCol = this.reversed ? 7 - this.lastMove.dest.col : this.lastMove.dest.col;
-            const realDestRow = this.reversed ? this.lastMove.dest.row : 7-this.lastMove.dest.row;
+            const realDestCol = this.reversed ? 7 - this.lastMove.dest.file : this.lastMove.dest.file;
+            const realDestRow = this.reversed ? this.lastMove.dest.rank : 7-this.lastMove.dest.rank;
 
             const baseStartX = this.cellSize * (1.0 + realOriginCol);
             const baseStartY = this.cellSize * (1.0 + realOriginRow);
@@ -496,25 +496,27 @@ export default {
 
             const deltaX = baseStopX - baseStartX;
             const deltaY = baseStopY - baseStartY;
-            const angleRad = Math.abs(Math.atan2(deltaY, deltaX));
+            const baseLineAngleRad = Math.atan2(deltaY, deltaX);
+            const edge1AngleRad = baseLineAngleRad + 2.618;
+            const edge2AngleRad = baseLineAngleRad + 3.665;
 
             const edge1StartX = baseStopX;
             const edge1StartY = baseStopY;
-            const edge1StopX = baseStopX + this.cellSize * (this.reversed ? Math.cos(angleRad) : -Math.cos(angleRad));
-            const edge1StopY = baseStopY + this.cellSize * Math.sin(angleRad);
+            const edge1StopX = baseStopX + this.cellSize * Math.cos(edge1AngleRad) * 0.6;
+            const edge1StopY = baseStopY + this.cellSize * Math.sin(edge1AngleRad) * 0.6;
             
             const edge2StartX = baseStopX;
             const edge2StartY = baseStopY;
-            const edge2StopX = baseStopX - this.cellSize * Math.cos(angleRad);
-            const edge2StopY = baseStopY + this.cellSize * Math.sin(angleRad);
+            const edge2StopX = baseStopX + this.cellSize * Math.cos(edge2AngleRad) * 0.6;
+            const edge2StopY = baseStopY + this.cellSize * Math.sin(edge2AngleRad) * 0.6;
 
             const paint = new Paint();
             paint.setColor(new Color('#22AAFF'));
-            paint.setStrokeWidth(this.cellSize * 0.3);
-
+            paint.setStrokeWidth(this.cellSize * 0.1);
+            
             canvas.drawLine(baseStartX, baseStartY, baseStopX, baseStopY, paint);
             canvas.drawLine(edge1StartX, edge1StartY, edge1StopX, edge1StopY, paint);
-            //canvas.drawLine(edge2StartX, edge2StartY, edge2StopX, edge2StopY, paint);
+            canvas.drawLine(edge2StartX, edge2StartY, edge2StopX, edge2StopY, paint);
         }
     },
 }
