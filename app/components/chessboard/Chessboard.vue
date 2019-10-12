@@ -7,6 +7,12 @@
             />
         <CanvasView  dock="center" :width="size" :height="size" @draw="drawBoard" ref="canvas" row="0" col="0"
         />
+        <StackLayout id="gameEndedText" orientation="vertical" :width="size" :height="size"
+            verticalAlignment="center" dock="center"
+            :class="{opened: !gameInProgress}">
+            <Label :text="gameEndedReason | L" :fontSize="cellSize * 0.8" textWrap="true" color="red"
+             />
+        </StackLayout>
         <StackLayout dock="center" orientation="vertical" id="promotionDialog"
                 :width="size" :height="size"
                 row="0" col="0"
@@ -31,13 +37,6 @@
                 <Label :text="'knight_promotion' | L" :fontSize="cellSize * 0.8" />
             </StackLayout>
         </StackLayout>
-        <!--
-        <StackLayout id="gameEndedText" orientation="vertical" :width="size" :height="size"
-            horizontalAlignment="center" verticalAlignment="center" dock="center"
-            :class="{opened: !gameInProgress}">
-            <Label :text="gameEndedReason | L" :fontSize="cellSize * 0.8" textWrap="true" color="red" />
-        </StackLayout>
-        -->
     </GridLayout>
 </template>
 
