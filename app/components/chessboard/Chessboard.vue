@@ -279,7 +279,7 @@ export default {
             this.checkGameEndedStateAndNotifyUser();
             const canvas = this.$refs.canvas.nativeView;
             canvas.redraw();
-            this.makeComputerPlayIfComputerTurn();
+            if (this.gameInProgress) this.makeComputerPlayIfComputerTurn();
         },
         cancelDnd() {
             this.dndActive = false;
@@ -405,7 +405,7 @@ export default {
                             this.cancelDnd();
                             this.checkGameEndedStateAndNotifyUser();
                             canvas.redraw();
-                            this.makeComputerPlayIfComputerTurn();
+                            if (this.gameInProgress) this.makeComputerPlayIfComputerTurn();
                         }
                     }
                     else {
@@ -588,7 +588,7 @@ export default {
             this.checkGameEndedStateAndNotifyUser();
             const canvas = this.$refs.canvas.nativeView;
             canvas.redraw();
-            this.makeComputerPlayIfComputerTurn();
+            if (this.gameInProgress) this.makeComputerPlayIfComputerTurn();
         }
     },
 }
