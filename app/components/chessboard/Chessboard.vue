@@ -7,6 +7,7 @@
             />
         <CanvasView  dock="center" :width="size" :height="size" @draw="drawBoard" ref="canvas" row="0" col="0"
         />
+        <ActivityIndicator :busy="computerIsThinking" />
         <StackLayout id="gameEndedText" orientation="vertical" :width="size" :height="size"
             verticalAlignment="center" dock="center"
             :class="{opened: !gameInProgress}">
@@ -112,6 +113,7 @@ export default {
             lastMove: undefined,
             whitePlayerType: undefined,
             blackPlayerType: undefined,
+            computerIsThinking: false,
         };
     },
     computed: {
@@ -167,6 +169,8 @@ export default {
                  this.blackPlayerType === PlayerType.Computer;
 
             if (!computerToPlay) return;
+
+            this.computerIsThinking = true;
 
             const currentPositionFEN = this.boardLogic.fen();
             this.sendCommandToStockfish(`position fen ${currentPositionFEN}`);
@@ -588,6 +592,8 @@ export default {
             this.checkGameEndedStateAndNotifyUser();
             const canvas = this.$refs.canvas.nativeView;
             canvas.redraw();
+            
+            this.computerIsThinking = false;
             if (this.gameInProgress) this.makeComputerPlayIfComputerTurn();
         }
     },
