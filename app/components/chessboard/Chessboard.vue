@@ -152,9 +152,6 @@ export default {
             console.log(output.data);
         },
         startNewGame(startPosisitionStr) {
-            ////////////////////////////////////////////
-            this.sendCommandToStockfish("go depth 12")
-            ////////////////////////////////////////////
             this.cancelDnd();
             this.promotionDialogOpened = false;
             this.boardLogic = new Chess(startPosisitionStr || 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
@@ -243,7 +240,6 @@ export default {
             this.promotionDialogOpened = false;
             this.boardOrientationBeforePromotionDialog = undefined;
             this.boardLogic.move({from: this.startCellStr, to: this.endCellStr, promotion: typeStr});
-            this.cancelDnd();
             this.lastMove = {
                 origin: {
                     file: this.dndOriginFile,
@@ -254,9 +250,11 @@ export default {
                     rank: this.dndDestRank,
                 }
             };
+            this.cancelDnd();
+
+            this.checkGameEndedStateAndNotifyUser();
             const canvas = this.$refs.canvas.nativeView;
             canvas.redraw();
-            this.checkGameEndedStateAndNotifyUser();
         },
         cancelDnd() {
             this.dndActive = false;
@@ -344,6 +342,9 @@ export default {
                 case 'up':
                     if (!this.dndActive) return;
 
+                    this.dndDestFile = file;
+                    this.dndDestRank = rank;
+
                     this.startCellStr = rankAndFileToCoordinate(this.dndOriginRank, this.dndOriginFile);
                     this.endCellStr = rankAndFileToCoordinate(rank, file);
 
@@ -365,8 +366,8 @@ export default {
                                     rank: this.dndOriginRank,
                                 },
                                 dest: {
-                                    file: file,
-                                    rank: rank,
+                                    file: this.dndDestFile,
+                                    rank: this.dndDestRank,
                                 }
                             };
                             this.cancelDnd();
