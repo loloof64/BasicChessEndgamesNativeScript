@@ -567,7 +567,7 @@ export default {
             
             let promotion = 'q';
             if (moveStr.length >= 5) {
-                promotion = moveStr.chartAt(4);
+                promotion = moveStr.slice(4, 5);
             } 
             return {
                 startCellStr: startCellStr,
@@ -592,7 +592,7 @@ export default {
             this.checkGameEndedStateAndNotifyUser();
             const canvas = this.$refs.canvas.nativeView;
             canvas.redraw();
-            
+
             this.computerIsThinking = false;
             if (this.gameInProgress) this.makeComputerPlayIfComputerTurn();
         }

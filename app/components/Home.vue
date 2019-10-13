@@ -36,6 +36,7 @@
         methods: {
             newGame() {
                 this.$refs['board'].startNewGame({
+                    startPositionStr: 'bb6/krP5/pp6/8/8/8/8/4K3 w - - 0 1',
                     whitePlayerType: PlayerType.Computer,
                     blackPlayerType: PlayerType.Human,
                 });
