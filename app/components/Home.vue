@@ -24,6 +24,7 @@
 
 <script>
     import Chessboard from './chessboard/Chessboard.vue';
+    import PlayerType from './chessboard/PlayerType';
     const platformModule = require("tns-core-modules/platform");
 
     export default {
@@ -34,7 +35,10 @@
         },
         methods: {
             newGame() {
-                this.$refs['board'].startNewGame();
+                this.$refs['board'].startNewGame({
+                    whitePlayerType: PlayerType.Computer,
+                    blackPlayerType: PlayerType.Human,
+                });
             },
             reverseBoard() {
                 this.reversed = ! this.reversed;

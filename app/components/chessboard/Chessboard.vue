@@ -44,6 +44,7 @@
 import "@nota/nativescript-webview-ext/vue";
 import CanvasPlugin from 'nativescript-canvas/vue';
 import Chess from 'chess.js';
+import PlayerType from "./PlayerType";
 
 const dialogs = require("tns-core-modules/ui/dialogs");
 
@@ -109,6 +110,8 @@ export default {
             gameInProgress: false,
             gameEndedReason: undefined,
             lastMove: undefined,
+            whitePlayerType: undefined,
+            blackPlayerType: undefined,
         };
     },
     computed: {
@@ -149,17 +152,38 @@ export default {
             }
         },
         processStockfishOutput(output) {
-            console.log(output.data);
+            const result = output.data;
+            if (!result.startsWith("bestmove")) return;
+
+            const parts = result.split(" ");
+            const moveString = parts[1];
+            const moveData = this._moveStringFromEngineToMoveData(moveString);
+            this._commitComputerMove(moveData);
         },
-        startNewGame(startPosisitionStr) {
+        makeComputerPlayIfComputerTurn() {
+            const whiteTurn = this.boardLogic.turn() === 'w';
+            const computerToPlay = whiteTurn ?
+                 this.whitePlayerType === PlayerType.Computer :
+                 this.blackPlayerType === PlayerType.Computer;
+
+            if (!computerToPlay) return;
+
+            const currentPositionFEN = this.boardLogic.fen();
+            this.sendCommandToStockfish(`position fen ${currentPositionFEN}`);
+            this.sendCommandToStockfish("go depth 12");
+        },
+        startNewGame({whitePlayerType, blackPlayerType, startPositionStr}) {
             this.cancelDnd();
             this.promotionDialogOpened = false;
-            this.boardLogic = new Chess(startPosisitionStr || 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
+            this.boardLogic = new Chess(startPositionStr || 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
+            this.whitePlayerType = whitePlayerType || PlayerType.Human;
+            this.blackPlayerType = blackPlayerType || PlayerType.Human;
             this.gameEndedReason = undefined;
             this.gameInProgress = true;
             this.lastMove = undefined;
             const canvas = this.$refs.canvas.nativeView;
             canvas.redraw();
+            this.makeComputerPlayIfComputerTurn();
         },
         pieceAt(rank, file) {
             const square = `${String.fromCharCode('a'.charCodeAt(0) + file)}${String.fromCharCode('1'.charCodeAt(0) + rank)}`;
@@ -255,6 +279,7 @@ export default {
             this.checkGameEndedStateAndNotifyUser();
             const canvas = this.$refs.canvas.nativeView;
             canvas.redraw();
+            this.makeComputerPlayIfComputerTurn();
         },
         cancelDnd() {
             this.dndActive = false;
@@ -289,6 +314,13 @@ export default {
             }
         },
         reactToTouch(event) {
+            const whiteTurn = this.boardLogic.turn() === 'w';
+            const humanToPlay = whiteTurn ?
+                 this.whitePlayerType === PlayerType.Human :
+                 this.blackPlayerType === PlayerType.Human;
+
+            if (!humanToPlay) return;
+
             const canvas = this.$refs.canvas.nativeView;
 
             const rankAndFileToCoordinate = function(rank, file) {
@@ -373,6 +405,7 @@ export default {
                             this.cancelDnd();
                             this.checkGameEndedStateAndNotifyUser();
                             canvas.redraw();
+                            this.makeComputerPlayIfComputerTurn();
                         }
                     }
                     else {
@@ -518,6 +551,44 @@ export default {
             canvas.drawLine(baseStartX, baseStartY, baseStopX, baseStopY, paint);
             canvas.drawLine(edge1StartX, edge1StartY, edge1StopX, edge1StopY, paint);
             canvas.drawLine(edge2StartX, edge2StartY, edge2StopX, edge2StopY, paint);
+        },
+        _moveStringFromEngineToMoveData(moveStr) {
+            const originFile = moveStr.charCodeAt(0) - "a".charCodeAt(0);
+            const originRank = moveStr.charCodeAt(1) - "1".charCodeAt(0);
+            const destFile = moveStr.charCodeAt(2) - "a".charCodeAt(0);
+            const destRank = moveStr.charCodeAt(3) - "1".charCodeAt(0);
+
+            const startCellStr = moveStr.slice(0, 2);
+            const endCellStr = moveStr.slice(2, 4);
+            
+            let promotion = 'q';
+            if (moveStr.length >= 5) {
+                promotion = moveStr.chartAt(4);
+            } 
+            return {
+                startCellStr: startCellStr,
+                endCellStr: endCellStr,
+                origin: {
+                    file: originFile,
+                    rank: originRank,
+                },
+                destination: {
+                    file: destFile,
+                    rank: destRank,
+                },
+                promotion: promotion,
+            };
+        },
+        _commitComputerMove(moveData) {
+            this.boardLogic.move({from: moveData.startCellStr, to: moveData.endCellStr, promotion: moveData.promotion});
+            this.lastMove = {
+                origin: moveData.origin,
+                dest: moveData.destination,
+            };
+            this.checkGameEndedStateAndNotifyUser();
+            const canvas = this.$refs.canvas.nativeView;
+            canvas.redraw();
+            this.makeComputerPlayIfComputerTurn();
         }
     },
 }
