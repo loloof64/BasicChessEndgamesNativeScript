@@ -17,7 +17,10 @@
                     </FormattedString>
                 </Label>
             </WrapLayout>
-            <Chessboard ref="board" :size="boardWidth" :reversed="reversed"></Chessboard>
+            <GridLayout :width="boardWidth" :height="boardWidth" columns="*" rows="*" >
+                <Chessboard ref="board" :size="boardWidth" :reversed="reversed" row="0" col="0" />
+                <History :size="boardWidth" row="0" col="0" />
+            </GridLayout>
         </StackLayout>
     </Page>
 </template>
@@ -25,6 +28,7 @@
 <script>
     import Chessboard from './chessboard/Chessboard.vue';
     import PlayerType from './chessboard/PlayerType';
+    import History from './History';
     const platformModule = require("tns-core-modules/platform");
 
     export default {
@@ -36,8 +40,7 @@
         methods: {
             newGame() {
                 this.$refs['board'].startNewGame({
-                    startPositionStr: 'bb6/krP5/pp6/8/8/8/8/4K3 w - - 0 1',
-                    whitePlayerType: PlayerType.Computer,
+                    whitePlayerType: PlayerType.Human,
                     blackPlayerType: PlayerType.Human,
                 });
             },
@@ -55,6 +58,7 @@
         },
         components: {
             Chessboard,
+            History,
         }
     };
 </script>
