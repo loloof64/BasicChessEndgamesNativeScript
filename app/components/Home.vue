@@ -8,18 +8,23 @@
             <WrapLayout dock="top" orientation="horizontal">
                 <Label  class="button" @tap="newGame()">
                     <FormattedString>
-                        <Span class="fa button" text.decode="&#xf11e;" fontSize="50" />
+                        <Span class="fa button" text.decode="&#xf11e;" fontSize="30" />
                     </FormattedString>
                 </Label>
                 <Label  class="button" @tap="reverseBoard()">
                     <FormattedString>
-                        <Span class="fa button" text.decode="&#xf338;" fontSize="50" />
+                        <Span class="fa button" text.decode="&#xf338;" fontSize="30" />
                     </FormattedString>
                 </Label>
                 <Label  class="button" @tap="toggleHistoryVisibility()">
                     <FormattedString>
-                        <Span v-if="historyVisible" class="fa button" text.decode="&#xf43c;" fontSize="50" />
-                        <Span v-else class="fa button" text.decode="&#xf1da;" fontSize="50" />
+                        <Span v-if="historyVisible" class="fa button" text.decode="&#xf43c;" fontSize="30" />
+                        <Span v-else class="fa button" text.decode="&#xf1da;" fontSize="30" />
+                    </FormattedString>
+                </Label>
+                <Label  class="button" @tap="requestGameStop()">
+                    <FormattedString>
+                        <Span class="fa button" text.decode="&#xf28d;" fontSize="30" />
                     </FormattedString>
                 </Label>
             </WrapLayout>
@@ -42,6 +47,10 @@
     import PlayerType from './chessboard/PlayerType';
     import History from './History';
     const platformModule = require("tns-core-modules/platform");
+    import { localize } from "nativescript-localize";
+    import Vue from "nativescript-vue";
+
+    Vue.filter("L", localize);
 
     export default {
         data() {
@@ -72,7 +81,17 @@
             },
             toggleHistoryVisibility() {
                 this.historyVisible = !this.historyVisible;
-            }
+            },
+            requestGameStop() {
+                const board = this.$refs['board'];
+                if (!board.gameIsRunning()) return;
+
+                confirm(localize('confirm_stop_game')).then(result => {
+                    if (result) {
+                        board.stopGame();
+                    }
+                });
+            },
         },
         computed: {
             boardWidth() {
@@ -97,12 +116,12 @@
     }
 
     Label.button {
-        margin: 10 20;
+        margin: 10;
         border-color: $accent-dark;
         border-width: 2;
         padding: 3;
-        width: 60;
-        height: 60;
+        width: 40;
+        height: 40;
         text-align: center;
     }
 </style>

@@ -177,6 +177,12 @@ export default {
             this.sendCommandToStockfish(`position fen ${currentPositionFEN}`);
             this.sendCommandToStockfish("go depth 12");
         },
+        gameIsRunning() {
+            return this.gameInProgress;
+        },
+        stopGame() {
+            this.gameInProgress = false;
+        },
         startNewGame({whitePlayerType, blackPlayerType, startPositionStr}) {
             this.cancelDnd();
             this.promotionDialogOpened = false;
