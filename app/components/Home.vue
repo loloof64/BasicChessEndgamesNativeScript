@@ -28,7 +28,10 @@
                     @movesan="addMoveSanToHistory($event)"
                     @newgame="resetHistoryForNewGame($event)"
                 />
-                <History ref="history" :size="boardWidth" row="0" col="0" :visibility="historyVisible ? 'visible' : 'hidden'" />
+                <History ref="history" :size="boardWidth" row="0" col="0" 
+                    :visibility="historyVisible ? 'visible' : 'hidden'" 
+                    @gotohistory="gotoHistory($event)"
+                />
             </GridLayout>
         </StackLayout>
     </Page>
@@ -62,6 +65,10 @@
             },
             resetHistoryForNewGame(eventObject) {
                 this.$refs['history'].startHistory(eventObject);
+            },
+            gotoHistory(eventObject) {
+                this.$refs['board'].gotoHistory(eventObject);
+                this.historyVisible = false;
             },
             toggleHistoryVisibility() {
                 this.historyVisible = !this.historyVisible;

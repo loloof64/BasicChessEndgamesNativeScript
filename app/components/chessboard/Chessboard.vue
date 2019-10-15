@@ -114,6 +114,7 @@ export default {
             whitePlayerType: undefined,
             blackPlayerType: undefined,
             computerIsThinking: false,
+            playedMoves: [],
         };
     },
     computed: {
@@ -185,6 +186,8 @@ export default {
             this.gameEndedReason = undefined;
             this.gameInProgress = true;
             this.lastMove = undefined;
+            this.playedMoves = [];
+
             const currentFen = this.boardLogic.fen();
             const moveNumber = parseInt(currentFen.split(" ")[5]);
             this.$emit('newgame', {
@@ -293,6 +296,11 @@ export default {
                 }
             };
             this.cancelDnd();
+            this.playedMoves.push({
+                positionFen: this.boardLogic.fen(),
+                lastMove: this.lastMove,
+            });
+
             this.checkGameEndedStateAndNotifyUser();
             this.$emit('movesan', {
                 san: lastMoveSan,
@@ -433,6 +441,12 @@ export default {
                                 }
                             };
                             this.cancelDnd();
+
+                            this.playedMoves.push({
+                                positionFen: this.boardLogic.fen(),
+                                lastMove: this.lastMove,
+                            });
+
                             this.checkGameEndedStateAndNotifyUser();
                             this.$emit('movesan', {
                                 san: lastMoveSan,
@@ -447,6 +461,20 @@ export default {
                         this.cancelDnd();
                         canvas.redraw();
                     }
+            }
+        },
+        gotoHistory(positionIndex) {
+            if (this.gameInProgress) return;
+
+            const canvas = this.$refs.canvas.nativeView;
+
+            if (positionIndex === -1) {
+
+            }
+            else if (positionIndex >= 0) {
+                this.boardLogic.load(this.playedMoves[positionIndex].positionFen);
+                this.lastMove = this.playedMoves[positionIndex].lastMove;
+                canvas.redraw();
             }
         },
         drawBoard(event) {
@@ -628,6 +656,12 @@ export default {
                 origin: moveData.origin,
                 dest: moveData.destination,
             };
+
+            this.playedMoves.push({
+                positionFen: this.boardLogic.fen(),
+                lastMove: this.lastMove,
+            });
+
             this.checkGameEndedStateAndNotifyUser();
             this.$emit('movesan', {
                 san: lastMoveSan,

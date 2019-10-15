@@ -7,7 +7,7 @@
                 />
                 <Label v-if="child.type === 'moveSan'" :key="child.san" :text="child.san"
                     :fontSize="size * 0.065" :margin="size * 0.0125" class="moveSan"
-                    @tap="$emit('setposition', childIndex)"
+                    @tap="() => sendGotoHistoryEvent(childIndex)"
                 />
             </template>
         </WrapLayout>
@@ -27,6 +27,7 @@ export default {
             children: [],
             firstSanMove: false,
             moveNumber: 1,
+            historyIndex: 0,
         }
     },
     methods: {
@@ -45,6 +46,7 @@ export default {
 
             this.firstSanMove = true;
             this.moveNumber = number;
+            this.historyIndex = 0;
         },
         addSanMove({san, whiteMove}) {
             const white = whiteMove === undefined ? true : whiteMove;
@@ -61,12 +63,20 @@ export default {
             this.children.push({
                 type: 'moveSan',
                 san: san,
+                historyIndex: this.historyIndex,
             });
+            this.historyIndex++;
 
             this.firstSanMove = false;
             // Move the scrollview to the bottom
-            const scrollView = this.$refs['scrollview']._nativeView;
+            const scrollView = this.$refs.scrollview.nativeView;
             scrollView.scrollToVerticalOffset(scrollView.scrollableHeight, false);
+        },
+        sendGotoHistoryEvent(childIndex) {
+            const historyObject = this.children[childIndex];
+            if (!historyObject.historyIndex) return;
+
+            this.$emit('gotohistory', historyObject.historyIndex);
         }
     },
 }
