@@ -44,6 +44,7 @@ export default {
             });
 
             this.firstSanMove = true;
+            this.moveNumber = number;
         },
         addSanMove({san, whiteMove}) {
             const white = whiteMove === undefined ? true : whiteMove;
