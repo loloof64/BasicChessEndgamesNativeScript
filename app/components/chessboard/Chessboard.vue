@@ -115,6 +115,8 @@ export default {
             blackPlayerType: undefined,
             computerIsThinking: false,
             playedMoves: [],
+            startPosition: undefined,
+            historyCursorIndex: undefined,
         };
     },
     computed: {
@@ -182,17 +184,21 @@ export default {
         },
         stopGame() {
             this.gameInProgress = false;
+            this.historyCursorIndex = this.playedMoves.length - 1;
         },
         startNewGame({whitePlayerType, blackPlayerType, startPositionStr}) {
             this.cancelDnd();
             this.promotionDialogOpened = false;
-            this.boardLogic = new Chess(startPositionStr || 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
+            const startPosition = startPositionStr || 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+            this.boardLogic = new Chess(startPosition);
             this.whitePlayerType = whitePlayerType || PlayerType.Human;
             this.blackPlayerType = blackPlayerType || PlayerType.Human;
             this.gameEndedReason = undefined;
             this.gameInProgress = true;
             this.lastMove = undefined;
+            this.startPosition = startPosition;
             this.playedMoves = [];
+            this.historyCursorIndex = undefined;
 
             const currentFen = this.boardLogic.fen();
             const moveNumber = parseInt(currentFen.split(" ")[5]);
@@ -335,18 +341,28 @@ export default {
             if (this.boardLogic.in_checkmate()) {
                 this.gameInProgress = false;
                 this.gameEndedReason = 'game_ending_mate';
+                this.historyCursorIndex = this.playedMoves.length - 1;
+                this.$emit('gameended');
             } else if (this.boardLogic.in_stalemate()) {
                 this.gameInProgress = false;
                 this.gameEndedReason = 'game_ending_draw_stalemate';
+                this.historyCursorIndex = this.playedMoves.length - 1;
+                this.$emit('gameended');
             } else if (this.boardLogic.in_threefold_repetition()) {
                 this.gameInProgress = false;
                 this.gameEndedReason = 'game_ending_draw_three_fold_repetitions';
+                this.historyCursorIndex = this.playedMoves.length - 1;
+                this.$emit('gameended');
             } else if (this.boardLogic.insufficient_material()) {
                 this.gameInProgress = false;
                 this.gameEndedReason = 'game_ending_draw_missing_material';
+                this.historyCursorIndex = this.playedMoves.length - 1;
+                this.$emit('gameended');
             } else if (this.boardLogic.in_draw()) {
                 this.gameInProgress = false;
                 this.gameEndedReason = 'game_ending_draw_fifty_moves_rule';
+                this.historyCursorIndex = this.playedMoves.length - 1;
+                this.$emit('gameended');
             }
         },
         reactToTouch(event) {
@@ -474,12 +490,47 @@ export default {
 
             const canvas = this.$refs.canvas.nativeView;
 
-            if (positionIndex === -1) {
-
+            if (positionIndex === 'first') {
+                this.boardLogic.load(this.startPosition);
+                this.lastMove = undefined;
+                this.historyCursorIndex = -1;
+                canvas.redraw();
+            }
+            else if (positionIndex === 'last') {
+                const lastPlayedMoveIndex = this.playedMoves.length - 1;
+                this.historyCursorIndex = lastPlayedMoveIndex;
+                this.boardLogic.load(this.playedMoves[this.historyCursorIndex].positionFen);
+                this.lastMove = this.playedMoves[this.historyCursorIndex].lastMove;
+                canvas.redraw();
+            }
+            else if (positionIndex === 'previous') {
+                if (this.historyCursorIndex !== undefined && this.historyCursorIndex > -1) {
+                    this.historyCursorIndex--;
+                    if (this.historyCursorIndex < 0) {
+                        this.boardLogic.load(this.startPosition);
+                        this.lastMove = undefined;
+                        this.historyCursorIndex = -1;
+                        canvas.redraw();
+                    } else {
+                        this.boardLogic.load(this.playedMoves[this.historyCursorIndex].positionFen);
+                        this.lastMove = this.playedMoves[this.historyCursorIndex].lastMove;
+                        canvas.redraw();
+                    }
+                }
+            }
+            else if (positionIndex === 'next') {
+                if (this.historyCursorIndex !== undefined && this.historyCursorIndex < this.playedMoves.length - 1) {
+                    this.historyCursorIndex++;
+                    this.boardLogic.load(this.playedMoves[this.historyCursorIndex].positionFen);
+                    this.lastMove = this.playedMoves[this.historyCursorIndex].lastMove;
+                    canvas.redraw();
+                }
             }
             else if (positionIndex >= 0) {
-                this.boardLogic.load(this.playedMoves[positionIndex].positionFen);
-                this.lastMove = this.playedMoves[positionIndex].lastMove;
+                if (positionIndex >= this.playedMoves.length) return;
+                this.historyCursorIndex = positionIndex;
+                this.boardLogic.load(this.playedMoves[this.historyCursorIndex].positionFen);
+                this.lastMove = this.playedMoves[this.historyCursorIndex].lastMove;
                 canvas.redraw();
             }
         },

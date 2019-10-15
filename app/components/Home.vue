@@ -32,12 +32,35 @@
                 <Chessboard ref="board" :size="boardWidth" :reversed="reversed" row="0" col="0" 
                     @movesan="addMoveSanToHistory($event)"
                     @newgame="resetHistoryForNewGame($event)"
+                    @gameended="() => historyAvailable = true"
                 />
                 <History ref="history" :size="boardWidth" row="0" col="0" 
                     :visibility="historyVisible ? 'visible' : 'hidden'" 
                     @gotohistory="gotoHistory($event)"
                 />
             </GridLayout>
+            <WrapLayout dock="bottom" orientation="horizontal" :visibility="historyAvailable ? 'visible' : 'hidden'">
+                <Label class="button" @tap="gotoHistory('first')">
+                    <FormattedString>
+                        <Span class="fa button" text.decode="&#xf04a;" fontSize="30" />
+                    </FormattedString>
+                </Label>
+                <Label class="button" @tap="gotoHistory('previous')">
+                    <FormattedString>
+                        <Span class="fa button" text.decode="&#xf048;" fontSize="30" />
+                    </FormattedString>
+                </Label>
+                <Label class="button" @tap="gotoHistory('next')">
+                    <FormattedString>
+                        <Span class="fa button" text.decode="&#xf051;" fontSize="30" />
+                    </FormattedString>
+                </Label>
+                <Label class="button" @tap="gotoHistory('last')">
+                    <FormattedString>
+                        <Span class="fa button" text.decode="&#xf04e;" fontSize="30" />
+                    </FormattedString>
+                </Label>
+            </WrapLayout>
         </StackLayout>
     </Page>
 </template>
@@ -57,6 +80,7 @@
             return {
                 reversed: false,
                 historyVisible: false,
+                historyAvailable: false,
             }
         },
         methods: {
@@ -74,11 +98,14 @@
             },
             resetHistoryForNewGame(eventObject) {
                 this.$refs['history'].startHistory(eventObject);
+                this.historyAvailable = false;
             },
             gotoHistory(eventObject) {
                 const board = this.$refs['board'];
+                if (board.gameIsRunning()) return;
+
                 board.gotoHistory(eventObject);
-                if (!board.gameIsRunning()) this.historyVisible = false;
+                this.historyVisible = false;
             },
             toggleHistoryVisibility() {
                 this.historyVisible = !this.historyVisible;
@@ -95,6 +122,7 @@
                 }).then(result => {
                     if (result) {
                         board.stopGame();
+                        this.historyAvailable = true;
                     }
                 });
             },
