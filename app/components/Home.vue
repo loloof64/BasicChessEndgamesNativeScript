@@ -87,7 +87,12 @@
                 const board = this.$refs['board'];
                 if (!board.gameIsRunning()) return;
 
-                confirm(localize('confirm_stop_game')).then(result => {
+                confirm({
+                    title: localize('stop_game_title'),
+                    message: localize('confirm_stop_game'),
+                    okButtonText: localize('ok_button'),
+                    cancelButtonText: localize('cancel_button'),
+                }).then(result => {
                     if (result) {
                         board.stopGame();
                     }

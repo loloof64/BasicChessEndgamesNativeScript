@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="stop_game_title">"Arrêter la partie ?"</string>
   <string name="confirm_stop_game">"Voulez-vous vraiment arrêter la partie ?"</string>
   <string name="game_ending_draw_fifty_moves_rule">"Nulle par la règle des 50 coups"</string>
   <string name="game_ending_draw_three_fold_repetitions">"Nulle par triple répétition"</string>
@@ -11,6 +12,8 @@
   <string name="rook_promotion">"Tour"</string>
   <string name="queen_promotion">"Dame"</string>
   <string name="choose_promotion_piece">"Choisissez la pièce de promotion :"</string>
+  <string name="cancel_button">"Annuler"</string>
+  <string name="ok_button">"D\'accord"</string>
   <string name="_app_name_1k3Sbz">"Finales d\'échecs basiques"</string>
   <string name="app_name">"Finales d\'échecs basiques"</string>
   <string name="title_activity_kimera">"Finales d\'échecs basiques"</string>
