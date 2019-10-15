@@ -185,6 +185,12 @@ export default {
             this.gameEndedReason = undefined;
             this.gameInProgress = true;
             this.lastMove = undefined;
+            const currentFen = this.boardLogic.fen();
+            const moveNumber = parseInt(currentFen.split(" ")[5]);
+            this.$emit('newgame', {
+                moveNumber: moveNumber,
+                whiteMove: this.boardLogic.turn() === 'w',
+            });
             const canvas = this.$refs.canvas.nativeView;
             canvas.redraw();
             this.makeComputerPlayIfComputerTurn();

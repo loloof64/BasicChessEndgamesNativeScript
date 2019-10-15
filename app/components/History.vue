@@ -24,20 +24,7 @@ export default {
     },
     data() {
         return {
-            children: [
-                {
-                    type: 'moveNumber',
-                    number: '1...',
-                },
-                {
-                    type: 'moveSan',
-                    san: '\u2655xf6+'
-                },
-                {
-                    type: 'moveSan',
-                    san: '\u2655d2'
-                },
-            ],
+            children: [],
             firstSanMove: false,
             moveNumber: 1,
         }
@@ -60,11 +47,6 @@ export default {
         },
         addSanMove({san, whiteMove}) {
             const white = whiteMove === undefined ? true : whiteMove;
-
-            //////////////////////////////////////////
-            console.log('whiteMove', whiteMove);
-            console.log('white', white);
-            //////////////////////////////////////////
 
             if (!this.firstSanMove && white) {
                 this.moveNumber++;

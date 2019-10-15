@@ -25,6 +25,7 @@
             <GridLayout :width="boardWidth" :height="boardWidth" columns="*" rows="*">
                 <Chessboard ref="board" :size="boardWidth" :reversed="reversed" row="0" col="0" 
                     @movesan="addMoveSanToHistory($event)"
+                    @newgame="resetHistoryForNewGame($event)"
                 />
                 <History ref="history" :size="boardWidth" row="0" col="0" :visibility="historyVisible ? 'visible' : 'hidden'" />
             </GridLayout>
@@ -56,10 +57,10 @@
                 this.reversed = ! this.reversed;
             },
             addMoveSanToHistory(eventObject) {
-                this.$refs['history'].addSanMove({
-                    san: eventObject.san,
-                    whiteMove: eventObject.whiteMove,
-                });
+                this.$refs['history'].addSanMove(eventObject);
+            },
+            resetHistoryForNewGame(eventObject) {
+                this.$refs['history'].startHistory(eventObject);
             },
             toggleHistoryVisibility() {
                 this.historyVisible = !this.historyVisible;
