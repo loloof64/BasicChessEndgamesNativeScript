@@ -43,14 +43,14 @@ export default {
         }
     },
     methods: {
-        startHistory({moveNumber, whiteTurn}) {
-            const white = whiteTurn || true;
+        startHistory({moveNumber, whiteMove}) {
+            const white = whiteMove || true;
             const number = moveNumber || 1;
 
             // clear array content
             this.children.splice(0, this.children.length);
 
-            const numberStr = `${moveNumber}.${whiteTurn ? '' : '..'}`;
+            const numberStr = `${moveNumber}.${whiteMove ? '' : '..'}`;
             this.children.push({
                 type: 'moveNumber',
                 number: numberStr,
@@ -58,8 +58,13 @@ export default {
 
             this.firstSanMove = true;
         },
-        addSanMove({san, whiteTurn}) {
-            const white = whiteTurn || true;
+        addSanMove({san, whiteMove}) {
+            const white = whiteMove === undefined ? true : whiteMove;
+
+            //////////////////////////////////////////
+            console.log('whiteMove', whiteMove);
+            console.log('white', white);
+            //////////////////////////////////////////
 
             if (!this.firstSanMove && white) {
                 this.moveNumber++;

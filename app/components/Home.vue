@@ -58,7 +58,7 @@
             addMoveSanToHistory(eventObject) {
                 this.$refs['history'].addSanMove({
                     san: eventObject.san,
-                    whiteTurn: eventObject.whiteTurn,
+                    whiteMove: eventObject.whiteMove,
                 });
             },
             toggleHistoryVisibility() {

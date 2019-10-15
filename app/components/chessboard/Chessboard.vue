@@ -284,7 +284,7 @@ export default {
             this.checkGameEndedStateAndNotifyUser();
             this.$emit('movesan', {
                 san: lastMoveSan,
-                whiteTurn: this.boardLogic.turn() === 'w',
+                whiteMove: this.boardLogic.turn() === 'b',
             });
 
             const canvas = this.$refs.canvas.nativeView;
@@ -418,7 +418,7 @@ export default {
                             this.checkGameEndedStateAndNotifyUser();
                             this.$emit('movesan', {
                                 san: lastMoveSan,
-                                whiteTurn: this.boardLogic.turn() === 'w',
+                                whiteMove: this.boardLogic.turn() === 'b',
                             });
 
                             canvas.redraw();
@@ -607,7 +607,7 @@ export default {
             this.checkGameEndedStateAndNotifyUser();
             this.$emit('movesan', {
                 san: lastMoveSan,
-                whiteTurn: this.boardLogic.turn() === 'w',
+                whiteMove: this.boardLogic.turn() === 'b',
             });
 
             const canvas = this.$refs.canvas.nativeView;
