@@ -49,6 +49,7 @@ export default {
             this.firstSanMove = true;
             this.moveNumber = number;
             this.historyIndex = 0;
+            this.hightlightedHistoryIndex = undefined;
         },
         addSanMove({san, whiteMove}) {
             const white = whiteMove === undefined ? true : whiteMove;
