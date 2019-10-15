@@ -1,5 +1,5 @@
 <template>
-    <ScrollView :width="size" :height="size" backgroundColor="#fdc">
+    <ScrollView ref="scrollview" :width="size" :height="size" backgroundColor="#fdc">
         <WrapLayout orientation="horizontal">
             <template v-for="(child, childIndex) in children">
                 <Label v-if="child.type === 'moveNumber'" :key="child.number" :text="child.number"
@@ -64,6 +64,9 @@ export default {
             });
 
             this.firstSanMove = false;
+            // Move the scrollview to the bottom
+            const scrollView = this.$refs['scrollview']._nativeView;
+            scrollView.scrollToVerticalOffset(scrollView.scrollableHeight, false);
         }
     },
 }
