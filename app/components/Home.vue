@@ -76,8 +76,9 @@
                 this.$refs['history'].startHistory(eventObject);
             },
             gotoHistory(eventObject) {
-                this.$refs['board'].gotoHistory(eventObject);
-                this.historyVisible = false;
+                const board = this.$refs['board'];
+                board.gotoHistory(eventObject);
+                if (!board.gameIsRunning()) this.historyVisible = false;
             },
             toggleHistoryVisibility() {
                 this.historyVisible = !this.historyVisible;
