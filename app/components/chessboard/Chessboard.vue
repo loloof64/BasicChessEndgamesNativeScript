@@ -274,8 +274,14 @@ export default {
             this.promotionDialogOpened = false;
             this.boardOrientationBeforePromotionDialog = undefined;
             this.boardLogic.move({from: this.startCellStr, to: this.endCellStr, promotion: typeStr});
+            const lastMoveIsWhite = this.boardLogic.turn() === 'b'; 
             const history = this.boardLogic.history();
-            const lastMoveSan = history[history.length - 1];
+            let lastMoveSan = history[history.length - 1];
+            lastMoveSan = lastMoveSan.replace('K', lastMoveIsWhite ? '\u2654' : '\u265A');
+            lastMoveSan = lastMoveSan.replace('Q', lastMoveIsWhite ? '\u2655' : '\u265B');
+            lastMoveSan = lastMoveSan.replace('R', lastMoveIsWhite ? '\u2656' : '\u265C');
+            lastMoveSan = lastMoveSan.replace('B', lastMoveIsWhite ? '\u2657' : '\u265D');
+            lastMoveSan = lastMoveSan.replace('N', lastMoveIsWhite ? '\u2658' : '\u265E');
             this.lastMove = {
                 origin: {
                     file: this.dndOriginFile,
@@ -290,7 +296,7 @@ export default {
             this.checkGameEndedStateAndNotifyUser();
             this.$emit('movesan', {
                 san: lastMoveSan,
-                whiteMove: this.boardLogic.turn() === 'b',
+                whiteMove: lastMoveIsWhite,
             });
 
             const canvas = this.$refs.canvas.nativeView;
@@ -408,8 +414,14 @@ export default {
                         }
                         else {
                             this.boardLogic.move({from: this.startCellStr, to: this.endCellStr});
+                            const lastMoveIsWhite = this.boardLogic.turn() === 'b'; 
                             const history = this.boardLogic.history();
-                            const lastMoveSan = history[history.length - 1];
+                            let lastMoveSan = history[history.length - 1];
+                            lastMoveSan = lastMoveSan.replace('K', lastMoveIsWhite ? '\u2654' : '\u265A');
+                            lastMoveSan = lastMoveSan.replace('Q', lastMoveIsWhite ? '\u2655' : '\u265B');
+                            lastMoveSan = lastMoveSan.replace('R', lastMoveIsWhite ? '\u2656' : '\u265C');
+                            lastMoveSan = lastMoveSan.replace('B', lastMoveIsWhite ? '\u2657' : '\u265D');
+                            lastMoveSan = lastMoveSan.replace('N', lastMoveIsWhite ? '\u2658' : '\u265E');
                             this.lastMove = {
                                 origin: {
                                     file: this.dndOriginFile,
@@ -424,7 +436,7 @@ export default {
                             this.checkGameEndedStateAndNotifyUser();
                             this.$emit('movesan', {
                                 san: lastMoveSan,
-                                whiteMove: this.boardLogic.turn() === 'b',
+                                whiteMove: lastMoveIsWhite,
                             });
 
                             canvas.redraw();
@@ -604,8 +616,14 @@ export default {
         },
         _commitComputerMove(moveData) {
             this.boardLogic.move({from: moveData.startCellStr, to: moveData.endCellStr, promotion: moveData.promotion});
+            const lastMoveIsWhite = this.boardLogic.turn() === 'b'; 
             const history = this.boardLogic.history();
-            const lastMoveSan = history[history.length - 1];
+            let lastMoveSan = history[history.length - 1];
+            lastMoveSan = lastMoveSan.replace('K', lastMoveIsWhite ? '\u2654' : '\u265A');
+            lastMoveSan = lastMoveSan.replace('Q', lastMoveIsWhite ? '\u2655' : '\u265B');
+            lastMoveSan = lastMoveSan.replace('R', lastMoveIsWhite ? '\u2656' : '\u265C');
+            lastMoveSan = lastMoveSan.replace('B', lastMoveIsWhite ? '\u2657' : '\u265D');
+            lastMoveSan = lastMoveSan.replace('N', lastMoveIsWhite ? '\u2658' : '\u265E');
             this.lastMove = {
                 origin: moveData.origin,
                 dest: moveData.destination,
@@ -613,7 +631,7 @@ export default {
             this.checkGameEndedStateAndNotifyUser();
             this.$emit('movesan', {
                 san: lastMoveSan,
-                whiteMove: this.boardLogic.turn() === 'b',
+                whiteMove: lastMoveIsWhite,
             });
 
             const canvas = this.$refs.canvas.nativeView;

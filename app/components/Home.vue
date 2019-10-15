@@ -50,8 +50,8 @@
         methods: {
             newGame() {
                 this.$refs['board'].startNewGame({
-                    whitePlayerType: PlayerType.Human,
-                    blackPlayerType: PlayerType.Human,
+                    whitePlayerType: PlayerType.Computer,
+                    blackPlayerType: PlayerType.Computer,
                 });
             },
             reverseBoard() {
