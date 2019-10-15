@@ -18,7 +18,8 @@
                 </Label>
                 <Label  class="button" @tap="toggleHistoryVisibility()">
                     <FormattedString>
-                        <Span class="fa button" text.decode="&#xf43c;" fontSize="50" />
+                        <Span v-if="historyVisible" class="fa button" text.decode="&#xf43c;" fontSize="50" />
+                        <Span v-else class="fa button" text.decode="&#xf1da;" fontSize="50" />
                     </FormattedString>
                 </Label>
             </WrapLayout>
