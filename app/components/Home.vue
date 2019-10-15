@@ -17,9 +17,11 @@
                     </FormattedString>
                 </Label>
             </WrapLayout>
-            <GridLayout :width="boardWidth" :height="boardWidth" columns="*" rows="*" >
-                <Chessboard ref="board" :size="boardWidth" :reversed="reversed" row="0" col="0" />
-                <History :size="boardWidth" row="0" col="0" />
+            <GridLayout :width="boardWidth" :height="boardWidth" columns="*" rows="*">
+                <Chessboard ref="board" :size="boardWidth" :reversed="reversed" row="0" col="0" 
+                    @movesan="addMoveSanToHistory($event)"
+                />
+                <History ref="history" :size="boardWidth" row="0" col="0" visibility="hidden" />
             </GridLayout>
         </StackLayout>
     </Page>
@@ -46,6 +48,12 @@
             },
             reverseBoard() {
                 this.reversed = ! this.reversed;
+            },
+            addMoveSanToHistory(eventObject) {
+                this.$refs['history'].addSanMove({
+                    san: eventObject.san,
+                    whiteTurn: eventObject.whiteTurn,
+                });
             }
         },
         computed: {

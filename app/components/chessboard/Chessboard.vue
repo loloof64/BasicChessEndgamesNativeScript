@@ -268,6 +268,8 @@ export default {
             this.promotionDialogOpened = false;
             this.boardOrientationBeforePromotionDialog = undefined;
             this.boardLogic.move({from: this.startCellStr, to: this.endCellStr, promotion: typeStr});
+            const history = this.boardLogic.history();
+            const lastMoveSan = history[history.length - 1];
             this.lastMove = {
                 origin: {
                     file: this.dndOriginFile,
@@ -279,8 +281,12 @@ export default {
                 }
             };
             this.cancelDnd();
-
             this.checkGameEndedStateAndNotifyUser();
+            this.$emit('movesan', {
+                san: lastMoveSan,
+                whiteTurn: this.boardLogic.turn() === 'w',
+            });
+
             const canvas = this.$refs.canvas.nativeView;
             canvas.redraw();
             if (this.gameInProgress) this.makeComputerPlayIfComputerTurn();
@@ -396,6 +402,8 @@ export default {
                         }
                         else {
                             this.boardLogic.move({from: this.startCellStr, to: this.endCellStr});
+                            const history = this.boardLogic.history();
+                            const lastMoveSan = history[history.length - 1];
                             this.lastMove = {
                                 origin: {
                                     file: this.dndOriginFile,
@@ -408,6 +416,11 @@ export default {
                             };
                             this.cancelDnd();
                             this.checkGameEndedStateAndNotifyUser();
+                            this.$emit('movesan', {
+                                san: lastMoveSan,
+                                whiteTurn: this.boardLogic.turn() === 'w',
+                            });
+
                             canvas.redraw();
                             if (this.gameInProgress) this.makeComputerPlayIfComputerTurn();
                         }
@@ -585,11 +598,18 @@ export default {
         },
         _commitComputerMove(moveData) {
             this.boardLogic.move({from: moveData.startCellStr, to: moveData.endCellStr, promotion: moveData.promotion});
+            const history = this.boardLogic.history();
+            const lastMoveSan = history[history.length - 1];
             this.lastMove = {
                 origin: moveData.origin,
                 dest: moveData.destination,
             };
             this.checkGameEndedStateAndNotifyUser();
+            this.$emit('movesan', {
+                san: lastMoveSan,
+                whiteTurn: this.boardLogic.turn() === 'w',
+            });
+
             const canvas = this.$refs.canvas.nativeView;
             canvas.redraw();
 
