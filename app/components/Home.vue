@@ -16,12 +16,17 @@
                         <Span class="fa button" text.decode="&#xf338;" fontSize="50" />
                     </FormattedString>
                 </Label>
+                <Label  class="button" @tap="toggleHistoryVisibility()">
+                    <FormattedString>
+                        <Span class="fa button" text.decode="&#xf43c;" fontSize="50" />
+                    </FormattedString>
+                </Label>
             </WrapLayout>
             <GridLayout :width="boardWidth" :height="boardWidth" columns="*" rows="*">
                 <Chessboard ref="board" :size="boardWidth" :reversed="reversed" row="0" col="0" 
                     @movesan="addMoveSanToHistory($event)"
                 />
-                <History ref="history" :size="boardWidth" row="0" col="0" visibility="hidden" />
+                <History ref="history" :size="boardWidth" row="0" col="0" :visibility="historyVisible ? 'visible' : 'hidden'" />
             </GridLayout>
         </StackLayout>
     </Page>
@@ -37,6 +42,7 @@
         data() {
             return {
                 reversed: false,
+                historyVisible: false,
             }
         },
         methods: {
@@ -54,6 +60,9 @@
                     san: eventObject.san,
                     whiteTurn: eventObject.whiteTurn,
                 });
+            },
+            toggleHistoryVisibility() {
+                this.historyVisible = !this.historyVisible;
             }
         },
         computed: {
