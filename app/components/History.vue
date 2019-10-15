@@ -74,7 +74,8 @@ export default {
         },
         sendGotoHistoryEvent(childIndex) {
             const historyObject = this.children[childIndex];
-            if (!historyObject.historyIndex) return;
+            
+            if (historyObject.historyIndex === undefined) return;
 
             this.$emit('gotohistory', historyObject.historyIndex);
         }
