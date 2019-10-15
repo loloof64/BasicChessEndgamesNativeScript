@@ -33,6 +33,7 @@
                     @movesan="addMoveSanToHistory($event)"
                     @newgame="resetHistoryForNewGame($event)"
                     @gameended="() => historyAvailable = true"
+                    @historyselection="highlightHistoryMove($event)"
                 />
                 <History ref="history" :size="boardWidth" row="0" col="0" 
                     :visibility="historyVisible ? 'visible' : 'hidden'" 
@@ -125,6 +126,9 @@
                         this.historyAvailable = true;
                     }
                 });
+            },
+            highlightHistoryMove(eventObject) {
+                this.$refs['history'].highlightHistoryMove(eventObject);
             },
         },
         computed: {

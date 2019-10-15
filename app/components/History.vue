@@ -8,6 +8,7 @@
                 <Label v-if="child.type === 'moveSan'" :key="child.san" :text="child.san"
                     :fontSize="size * 0.065" :margin="size * 0.0125" class="moveSan"
                     @tap="() => sendGotoHistoryEvent(childIndex)"
+                    :backgroundColor="getMoveBackgroundColor(childIndex)"
                 />
             </template>
         </WrapLayout>
@@ -28,6 +29,7 @@ export default {
             firstSanMove: false,
             moveNumber: 1,
             historyIndex: 0,
+            hightlightedHistoryIndex: undefined,
         }
     },
     methods: {
@@ -74,10 +76,18 @@ export default {
         },
         sendGotoHistoryEvent(childIndex) {
             const historyObject = this.children[childIndex];
-            
+
             if (historyObject.historyIndex === undefined) return;
 
             this.$emit('gotohistory', historyObject.historyIndex);
+        },
+        highlightHistoryMove(historyIndex) {
+            this.hightlightedHistoryIndex = this.children.findIndex(currentChild => currentChild.historyIndex !== undefined &&
+                currentChild.historyIndex === historyIndex
+            );
+        },
+        getMoveBackgroundColor(childIndex) {
+            return this.hightlightedHistoryIndex === childIndex ? '#f66' : 'transparent';
         }
     },
 }

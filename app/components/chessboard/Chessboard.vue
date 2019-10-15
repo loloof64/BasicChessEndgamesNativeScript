@@ -495,6 +495,7 @@ export default {
                 this.lastMove = undefined;
                 this.historyCursorIndex = -1;
                 canvas.redraw();
+                this.$emit('historyselection', undefined);
             }
             else if (positionIndex === 'last') {
                 const lastPlayedMoveIndex = this.playedMoves.length - 1;
@@ -502,6 +503,7 @@ export default {
                 this.boardLogic.load(this.playedMoves[this.historyCursorIndex].positionFen);
                 this.lastMove = this.playedMoves[this.historyCursorIndex].lastMove;
                 canvas.redraw();
+                this.$emit('historyselection', this.historyCursorIndex);
             }
             else if (positionIndex === 'previous') {
                 if (this.historyCursorIndex !== undefined && this.historyCursorIndex > -1) {
@@ -511,10 +513,12 @@ export default {
                         this.lastMove = undefined;
                         this.historyCursorIndex = -1;
                         canvas.redraw();
+                        this.$emit('historyselection', undefined);
                     } else {
                         this.boardLogic.load(this.playedMoves[this.historyCursorIndex].positionFen);
                         this.lastMove = this.playedMoves[this.historyCursorIndex].lastMove;
                         canvas.redraw();
+                        this.$emit('historyselection', this.historyCursorIndex);
                     }
                 }
             }
@@ -524,6 +528,7 @@ export default {
                     this.boardLogic.load(this.playedMoves[this.historyCursorIndex].positionFen);
                     this.lastMove = this.playedMoves[this.historyCursorIndex].lastMove;
                     canvas.redraw();
+                    this.$emit('historyselection', this.historyCursorIndex);
                 }
             }
             else if (positionIndex >= 0) {
@@ -532,6 +537,7 @@ export default {
                 this.boardLogic.load(this.playedMoves[this.historyCursorIndex].positionFen);
                 this.lastMove = this.playedMoves[this.historyCursorIndex].lastMove;
                 canvas.redraw();
+                this.$emit('historyselection', this.historyCursorIndex);
             }
         },
         drawBoard(event) {
