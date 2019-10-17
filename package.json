@@ -13,6 +13,7 @@
   "repository": "<fill-your-repository-here>",
   "dependencies": {
     "@nota/nativescript-webview-ext": "5.4.1",
+    "@nstudio/nativescript-snackbar": "^1.0.0",
     "chess.js": "^0.10.2",
     "nativescript-canvas": "^2.1.8",
     "nativescript-localize": "^4.2.0",

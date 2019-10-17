@@ -5,7 +5,7 @@
         </ActionBar>
 
         <StackLayout orientation="vertical">
-            <Label text="Hello !" />
+            <Button text="Generation test" @tap="launchTest" />
         </StackLayout>
     </Page>
 </template>
@@ -13,6 +13,9 @@
 <script>
     import { localize } from "nativescript-localize";
     import Vue from "nativescript-vue";
+
+    import ChessPositionGenerator from './ChessPositionGenerator';
+    import { SnackBar, SnackBarOptions } from "@nstudio/nativescript-snackbar";
 
     Vue.filter("L", localize);
 
@@ -23,7 +26,17 @@
             }
         },
         methods: {
-            
+            launchTest() {
+                const position = new ChessPositionGenerator().generatePosition();
+                const snackbar = new SnackBar();
+                if (position === null) {
+                    snackbar.simple(localize('position_generation_fail'));
+                }
+                else {
+                    snackbar.simple(position);
+                    console.log(position);
+                }
+            }
         },
     };
 </script>
