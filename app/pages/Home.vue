@@ -67,9 +67,9 @@
 </template>
 
 <script>
-    import Chessboard from './chessboard/Chessboard.vue';
-    import PlayerType from './chessboard/PlayerType';
-    import History from './History';
+    import Chessboard from '../components/chessboard/Chessboard.vue';
+    import PlayerType from '../components/chessboard/PlayerType';
+    import History from '../components/History';
     const platformModule = require("tns-core-modules/platform");
     import { localize } from "nativescript-localize";
     import Vue from "nativescript-vue";
