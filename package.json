@@ -1,11 +1,11 @@
 {
   "nativescript": {
     "id": "com.loloof64.android.basicchessendgamestrainer",
-    "tns-android": {
-      "version": "6.1.2"
-    },
     "tns-ios": {
       "version": "6.1.1"
+    },
+    "tns-android": {
+      "version": "6.1.2"
     }
   },
   "description": "Train your basic chess endgames knowledge against your device.",
