@@ -1,6 +1,8 @@
 {
   "app.name": "Finales d'échecs basiques",
 
+  "home_title": "Sélection du jeu",
+
   "ok_button": "D'accord",
   "cancel_button": "Annuler",
 
