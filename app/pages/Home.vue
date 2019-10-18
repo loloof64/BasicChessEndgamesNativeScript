@@ -19,8 +19,6 @@
 
     Vue.filter("L", localize);
 
-    import Game from './Game';
-
     export default {
         data() {
             return {
@@ -37,7 +35,7 @@
                     snackbar.simple(localize('position_generation_fail'));
                 }
                 else {
-                    this.$navigateTo(Game, {
+                    this.$navigator.navigate('/game', {
                         transition: {
                             name:'slide',
                             duration: 200
