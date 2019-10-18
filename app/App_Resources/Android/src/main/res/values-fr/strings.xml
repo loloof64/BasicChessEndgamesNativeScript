@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="position_generation_fail">"Echec de génération de la position !"</string>
   <string name="stop_game_title">"Arrêter la partie ?"</string>
   <string name="confirm_stop_game">"Voulez-vous vraiment arrêter la partie ?"</string>
   <string name="game_ending_draw_fifty_moves_rule">"Nulle par la règle des 50 coups"</string>
@@ -14,6 +15,7 @@
   <string name="choose_promotion_piece">"Choisissez la pièce de promotion :"</string>
   <string name="cancel_button">"Annuler"</string>
   <string name="ok_button">"D\'accord"</string>
+  <string name="game_title">"Jeu"</string>
   <string name="home_title">"Sélection du jeu"</string>
   <string name="_app_name_1k3Sbz">"Finales d\'échecs basiques"</string>
   <string name="app_name">"Finales d\'échecs basiques"</string>

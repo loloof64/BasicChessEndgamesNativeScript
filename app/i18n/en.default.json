@@ -2,6 +2,7 @@
   "app.name": "Basic chess endgames",
 
   "home_title": "Game selection",
+  "game_title": "Game",
 
   "ok_button": "Ok",
   "cancel_button": "Cancel",

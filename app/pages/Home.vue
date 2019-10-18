@@ -19,6 +19,8 @@
 
     Vue.filter("L", localize);
 
+    import Game from './Game';
+
     export default {
         data() {
             return {
@@ -26,15 +28,24 @@
             }
         },
         methods: {
+            
             launchTest() {
                 const position = new ChessPositionGenerator().generatePosition();
                 const snackbar = new SnackBar();
+
                 if (position === null) {
                     snackbar.simple(localize('position_generation_fail'));
                 }
                 else {
-                    snackbar.simple(position);
-                    console.log(position);
+                    this.$navigateTo(Game, {
+                        transition: {
+                            name:'slide',
+                            duration: 200
+                        },
+                        props: {
+                            position,
+                        }
+                    });
                 }
             }
         },

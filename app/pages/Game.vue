@@ -1,7 +1,7 @@
 <template>
     <Page class="page">
         <ActionBar class="action-bar">
-            <Label class="action-bar-title" text="Home"></Label>
+            <Label class="action-bar-title" :text="'game_title' | L"></Label>
         </ActionBar>
 
         <StackLayout orientation="vertical">
@@ -84,11 +84,18 @@
                 historyAvailable: false,
             }
         },
+        props: [
+            'position',
+        ],
         methods: {
             newGame() {
+                const userHasWhite = this.position.split(" ")[1] === 'w';
+                const whitePlayer = userHasWhite ? PlayerType.Human : PlayerType.Computer;
+                const blackPlayer = userHasWhite ? PlayerType.Computer : PlayerType.Human;
                 this.$refs['board'].startNewGame({
-                    whitePlayerType: PlayerType.Computer,
-                    blackPlayerType: PlayerType.Computer,
+                    startPositionStr: this.position,
+                    whitePlayerType: whitePlayer,
+                    blackPlayerType: blackPlayer,
                 });
             },
             reverseBoard() {
@@ -138,6 +145,9 @@
 
                 return screenWidth < screenHeight ? screenWidth : screenHeight;
             }
+        },
+        mounted: function() {
+            this.newGame();
         },
         components: {
             Chessboard,
