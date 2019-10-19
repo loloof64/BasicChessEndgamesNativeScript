@@ -3,6 +3,7 @@ export default class ChessPositionValidator {
     checkPositionValidity(positionFenStr) {
         const positionPieces = this._buildPositionPiecesFromFen(positionFenStr);
         if (! this._checkGoodPiecesCount(positionPieces)) return false;
+        if (! this._checkThatNoPawnOnFirstOrEightRank(positionPieces)) return false;
         return true;
     }
 
@@ -98,6 +99,17 @@ export default class ChessPositionValidator {
         if (whiteRooksCount > 10 || blackRooksCount > 10) return false;
         if (whiteQueensCount > 9 || blackQueensCount > 9) return false;
 
+        return true;
+    }
+
+    _checkThatNoPawnOnFirstOrEightRank(positionPieces) {
+        for (let fileIndex = 0; fileIndex < 8; fileIndex++) {
+            const pieceAtTopRank = positionPieces[7][fileIndex];
+            const pieceAtBottomRank = positionPieces[0][fileIndex];
+
+            if (pieceAtTopRank !== null && pieceAtTopRank.type === 'p') return false;
+            if (pieceAtBottomRank !== null && pieceAtBottomRank.type === 'p') return false;
+        }
         return true;
     }
 
