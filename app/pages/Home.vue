@@ -14,7 +14,7 @@
     import { localize } from "nativescript-localize";
     import Vue from "nativescript-vue";
 
-    import ChessPositionGenerator from './ChessPositionGenerator';
+    import ChessPositionGenerator from '../util/ChessPositionGenerator';
     import { SnackBar, SnackBarOptions } from "@nstudio/nativescript-snackbar";
 
     Vue.filter("L", localize);

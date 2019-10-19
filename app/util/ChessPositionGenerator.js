@@ -1,4 +1,5 @@
 import Chess from 'chess.js';
+import ChessPositionValidator from './ChessPositionValidator';
 
 const MAX_SINGLE_STEP_TRIES = 15;
 
@@ -6,6 +7,7 @@ export default class ChessPositionGenerator {
 
     constructor(inputScriptsObject) {
         this.inputScripts = inputScriptsObject;
+        this.chessPositionValidator = new ChessPositionValidator();
     }
 
     generatePosition() {
@@ -63,8 +65,7 @@ export default class ChessPositionGenerator {
         Returns the position FEN
         or null if failed too many times.
     */
-    _placeComputerKing({
-    chessInstance, playerHasWhite, playerKingPosition}) {
+    _placeComputerKing({chessInstance, playerHasWhite}) {
         
         for (let tryNumber = 0; tryNumber < MAX_SINGLE_STEP_TRIES; tryNumber++) {
             const clonedInstance = new Chess(chessInstance.fen());
@@ -79,7 +80,21 @@ export default class ChessPositionGenerator {
             const validSquare = clonedInstance.put({ type: 'k', color }, square);
             if (!validSquare) continue;
 
-            if (validSquare) return clonedInstance;
+            ////////////////////////////////////
+            console.log(clonedInstance.fen());
+            /////////////////////////////////////
+
+            if (! this.chessPositionValidator.checkPositionValidity(clonedInstance.fen()) ) {
+                /////////////////////////////////////
+                console.log('Not valid !');
+                /////////////////////////////////////
+                continue;
+            }
+            
+            ////////////////////////////////
+            console.log('valid !');
+            ////////////////////////////////
+            return clonedInstance;
         }
         return null;
     }

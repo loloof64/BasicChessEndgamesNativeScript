@@ -9,7 +9,7 @@
     }
   },
   "description": "Train your basic chess endgames knowledge against your device.",
-  "license": "GPLv3",
+  "license": "GPL-3.0+",
   "repository": "<fill-your-repository-here>",
   "dependencies": {
     "@nota/nativescript-webview-ext": "5.4.1",
