@@ -2,7 +2,7 @@ export default class ChessPositionValidator {
 
     checkPositionValidity(positionFenStr) {
         const positionPieces = this._buildPositionPiecesFromFen(positionFenStr);
-        if (! this._checkGoodKingsCount(positionPieces)) return false;
+        if (! this._checkGoodPiecesCount(positionPieces)) return false;
         return true;
     }
 
@@ -60,17 +60,45 @@ export default class ChessPositionValidator {
         }
     }
 
-    _checkGoodKingsCount(positionPieces) {
+    _checkGoodPiecesCount(positionPieces) {
         let whiteKingCount = 0;
         let blackKingCount = 0;
+
+        let whitePawnsCount = 0;
+        let blackPawnsCount = 0;
+        let whiteKnightsCount = 0;
+        let blackKnightsCount = 0;
+        let whiteBishopsCount = 0;
+        let blackBishopsCount = 0;
+        let whiteRooksCount = 0;
+        let blackRooksCount = 0;
+        let whiteQueensCount = 0;
+        let blackQueensCount = 0;
 
         positionPieces.forEach(line => line.forEach(piece => {
             if (piece === null) return;
             if (piece.type === 'k' && piece.white) whiteKingCount++;
             else if (piece.type === 'k' && !piece.white) blackKingCount++;
+            else if (piece.type === 'p' && piece.white) whitePawnsCount++;
+            else if (piece.type === 'p' && !piece.white) blackPawnsCount++;
+            else if (piece.type === 'n' && piece.white) whiteKnightsCount++;
+            else if (piece.type === 'n' && !piece.white) blackKnightsCount++;
+            else if (piece.type === 'b' && piece.white) whiteBishopsCount++;
+            else if (piece.type === 'b' && !piece.white) blackBishopsCount++;
+            else if (piece.type === 'r' && piece.white) whiteRooksCount++;
+            else if (piece.type === 'r' && !piece.white) blackRooksCount++;
+            else if (piece.type === 'q' && piece.white) whiteQueensCount++;
+            else if (piece.type === 'q' && !piece.white) blackQueensCount++;
         }));
 
-        return whiteKingCount === 1 && blackKingCount === 1;
+        if (whiteKingCount !== 1 || blackKingCount !== 1) return false;
+        if (whitePawnsCount > 8 || blackPawnsCount > 8) return false;
+        if (whiteKnightsCount > 10 || blackKnightsCount > 10) return false;
+        if (whiteBishopsCount > 10 || blackBishopsCount > 10) return false;
+        if (whiteRooksCount > 10 || blackRooksCount > 10) return false;
+        if (whiteQueensCount > 9 || blackQueensCount > 9) return false;
+
+        return true;
     }
 
 }
