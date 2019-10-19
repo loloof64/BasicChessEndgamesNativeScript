@@ -1,9 +1,12 @@
+import Chess from 'chess.js';
+
 export default class ChessPositionValidator {
 
     checkPositionValidity(positionFenStr) {
         const positionPieces = this._buildPositionPiecesFromFen(positionFenStr);
         if (! this._checkGoodPiecesCount(positionPieces)) return false;
         if (! this._checkThatNoPawnOnFirstOrEightRank(positionPieces)) return false;
+        if (! this._checkThatKingNotInTurnIsNotInChess(positionFenStr)) return false;
         return true;
     }
 
@@ -111,6 +114,15 @@ export default class ChessPositionValidator {
             if (pieceAtBottomRank !== null && pieceAtBottomRank.type === 'p') return false;
         }
         return true;
+    }
+
+    _checkThatKingNotInTurnIsNotInChess(positionFenStr) {
+        const positionFenStrWithOppositeTurnParts = positionFenStr.split(" ");
+        const currentPlayerTurn = positionFenStrWithOppositeTurnParts[1];
+        positionFenStrWithOppositeTurnParts[1] = currentPlayerTurn === 'b' ? 'w' : 'b';
+        const positionFenStrWithOppositeTurn = positionFenStrWithOppositeTurnParts.join(" ");
+        const chessInstance = new Chess(positionFenStrWithOppositeTurn);
+        return ! chessInstance.in_check();
     }
 
 }
