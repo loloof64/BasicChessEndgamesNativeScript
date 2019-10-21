@@ -6,7 +6,7 @@ export default class ChessPositionValidator {
         const positionPieces = this._buildPositionPiecesFromFen(positionFenStr);
         if (! this._checkGoodPiecesCount(positionPieces)) return false;
         if (! this._checkThatNoPawnOnFirstOrEightRank(positionPieces)) return false;
-        if (! this._checkThatKingNotInTurnIsNotInChess(positionFenStr)) return false;
+        if (! this._checkThatKingNotInTurnIsNotInCheck(positionFenStr)) return false;
         return true;
     }
 
@@ -116,7 +116,7 @@ export default class ChessPositionValidator {
         return true;
     }
 
-    _checkThatKingNotInTurnIsNotInChess(positionFenStr) {
+    _checkThatKingNotInTurnIsNotInCheck(positionFenStr) {
         const positionFenStrWithOppositeTurnParts = positionFenStr.split(" ");
         const currentPlayerTurn = positionFenStrWithOppositeTurnParts[1];
         positionFenStrWithOppositeTurnParts[1] = currentPlayerTurn === 'b' ? 'w' : 'b';

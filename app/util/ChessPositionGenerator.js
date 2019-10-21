@@ -80,20 +80,10 @@ export default class ChessPositionGenerator {
             const validSquare = clonedInstance.put({ type: 'k', color }, square);
             if (!validSquare) continue;
 
-            ////////////////////////////////////
-            console.log(clonedInstance.fen());
-            /////////////////////////////////////
-
-            if (! this.chessPositionValidator.checkPositionValidity(clonedInstance.fen()) ) {
-                /////////////////////////////////////
-                console.log('Not valid !');
-                /////////////////////////////////////
+            if ( ! this.chessPositionValidator.checkPositionValidity(clonedInstance.fen()) ) {
                 continue;
             }
             
-            ////////////////////////////////
-            console.log('valid !');
-            ////////////////////////////////
             return clonedInstance;
         }
         return null;
