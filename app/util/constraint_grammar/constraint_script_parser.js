@@ -143,7 +143,7 @@ class ConstraintScriptParser extends EmbeddedActionsParser {
                         value = value === rhsValue;
                     }
                     else if (tokenMatcher(op, t.NotEq)) {
-                        value = vallue !== rhsValue;
+                        value = value !== rhsValue;
                     } 
                 } else if (tokenMatcher(op, t.AbsRelationalOperator)) {
                     if (tokenMatcher(op, t.Less)) {
