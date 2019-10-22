@@ -1,5 +1,6 @@
 import Chess from 'chess.js';
 import ChessPositionValidator from './ChessPositionValidator';
+import interpretScript from '../util/ConstraintScriptInterpreter';
 
 const MAX_SINGLE_STEP_TRIES = 15;
 
@@ -55,6 +56,17 @@ export default class ChessPositionGenerator {
             const color = playerHasWhite ? 'w' : 'b';
             const validSquare = clonedInstance.put({ type: 'k', color }, square);
             if (!validSquare) continue;
+
+            try {
+                const respectConstraint = interpretScript(this.inputScripts.playerKingConstraint);
+                console.log('Respect constraint', respectConstraint);
+            }
+            catch (e) {
+                throw {
+                    kind: 'player_king_constraint_script_error',
+                    error: e,
+                };
+            }
 
             if (validSquare) return clonedInstance;
         }

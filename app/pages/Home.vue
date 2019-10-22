@@ -6,6 +6,7 @@
 
         <StackLayout orientation="vertical">
             <Button text="Generation test" @tap="launchTest" />
+            <TextView v-model="constraintScript" />
         </StackLayout>
     </Page>
 </template>
@@ -22,29 +23,38 @@
     export default {
         data() {
             return {
-
+                constraintScript: "",
             }
         },
         methods: {
             
             launchTest() {
-                const position = new ChessPositionGenerator().generatePosition();
                 const snackbar = new SnackBar();
 
-                if (position === null) {
-                    snackbar.simple(localize('position_generation_fail'));
+                try {
+                    const position = new ChessPositionGenerator({
+                        playerKingConstraint: this.constraintScript,
+                    }).generatePosition();
+
+                    if (position === null) {
+                        snackbar.simple(localize('position_generation_fail'));
+                    }
+                    else {
+                        this.$navigator.navigate('/game', {
+                            transition: {
+                                name:'slide',
+                                duration: 200
+                            },
+                            props: {
+                                position,
+                            }
+                        });
+                    }
+                } catch (e) {
+                    console.error(e.error);
+                    snackbar.simple('Script error !');
                 }
-                else {
-                    this.$navigator.navigate('/game', {
-                        transition: {
-                            name:'slide',
-                            duration: 200
-                        },
-                        props: {
-                            position,
-                        }
-                    });
-                }
+                
             }
         },
     };

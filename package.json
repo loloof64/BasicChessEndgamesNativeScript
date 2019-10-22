@@ -14,6 +14,7 @@
   "dependencies": {
     "@nota/nativescript-webview-ext": "5.4.1",
     "@nstudio/nativescript-snackbar": "^1.0.0",
+    "acorn": "^7.1.0",
     "chess.js": "^0.10.2",
     "chevrotain": "^6.5.0",
     "nativescript-canvas": "^2.1.8",
