@@ -16,7 +16,6 @@
     import Vue from "nativescript-vue";
 
     import ChessPositionGenerator from '../util/ChessPositionGenerator';
-    import { SnackBar, SnackBarOptions } from "@nstudio/nativescript-snackbar";
 
     Vue.filter("L", localize);
 
@@ -29,7 +28,6 @@
         methods: {
             
             launchTest() {
-                const snackbar = new SnackBar();
 
                 try {
                     const position = new ChessPositionGenerator({
@@ -37,7 +35,12 @@
                     }).generatePosition();
 
                     if (position === null) {
-                        snackbar.simple(localize('position_generation_fail'));
+                        alert({
+                        title: localize('position_generation_fail'),
+                        okButtonText: localize('ok_button')
+                        }).then(() => {
+                            console.error('Failed to generate position')
+                        })
                     }
                     else {
                         this.$navigator.navigate('/game', {
@@ -51,8 +54,13 @@
                         });
                     }
                 } catch (e) {
-                    console.error(e.error);
-                    snackbar.simple('Script error !');
+                    alert({
+                        title: localize('script_error_title'),
+                        message: e.error.message,
+                        okButtonText: localize('ok_button')
+                    }).then(() => {
+                        console.error(e.error.message);
+                    })
                 }
                 
             }

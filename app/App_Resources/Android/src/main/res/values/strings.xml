@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="position_generation_fail">"Failed to generate position !"</string>
+  <string name="script_error_title">"Script error"</string>
   <string name="stop_game_title">"Stop game ?"</string>
   <string name="confirm_stop_game">"Do you really want to stop the game ?"</string>
   <string name="game_ending_draw_fifty_moves_rule">"Draw by the 50-moves rule"</string>

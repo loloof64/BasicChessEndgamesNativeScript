@@ -22,5 +22,6 @@
   "confirm_stop_game": "Do you really want to stop the game ?",
   "stop_game_title": "Stop game ?",
 
+  "script_error_title": "Script error",
   "position_generation_fail": "Failed to generate position !"
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="position_generation_fail">"Echec de génération de la position !"</string>
+  <string name="script_error_title">"Erreur de script"</string>
   <string name="stop_game_title">"Arrêter la partie ?"</string>
   <string name="confirm_stop_game">"Voulez-vous vraiment arrêter la partie ?"</string>
   <string name="game_ending_draw_fifty_moves_rule">"Nulle par la règle des 50 coups"</string>
