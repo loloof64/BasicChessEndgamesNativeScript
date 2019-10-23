@@ -22,7 +22,7 @@ export default class ChessPositionGenerator {
     }
 
     /*
-        Returns the position FEN
+        Returns the Chess instance
         or null if failed too many times.
     */
     _placeKings(playerHasWhite) {
@@ -40,7 +40,7 @@ export default class ChessPositionGenerator {
     }
 
     /*
-        Returns the position FEN
+        Returns the Chess instance
         or null if failed too many times.
     */
     _placePlayerKing({chessInstance, playerHasWhite}) {
@@ -64,14 +64,8 @@ export default class ChessPositionGenerator {
                 updatedScript = updatedScript.replace(/\$file/g, randomFile);
                 updatedScript = updatedScript.replace(/\$rank/g, randomRank);
                 updatedScript = updatedScript.replace(/\$playerHasWhite/, playerHasWhite ? "2==2" : "2!=2");
-                //////////////////////////////////
-                console.log(updatedScript);
-                //////////////////////////////////
 
                 const respectConstraint = interpretScript(updatedScript);
-                /////////////////////////////////////////////////////////
-                console.log('Respect constraint', respectConstraint);
-                /////////////////////////////////////////////////////////
 
                 if (!respectConstraint) continue;
             }
@@ -88,7 +82,7 @@ export default class ChessPositionGenerator {
     }
 
     /*
-        Returns the position FEN
+        Returns the Chess instance
         or null if failed too many times.
     */
     _placeComputerKing({chessInstance, playerHasWhite}) {
@@ -109,8 +103,13 @@ export default class ChessPositionGenerator {
             if ( ! this.chessPositionValidator.checkPositionValidity(clonedInstance.fen()) ) {
                 continue;
             }
-            
-            return clonedInstance;
+
+            let fenWithGoodPlayerTurn = clonedInstance.fen();
+            let parts = fenWithGoodPlayerTurn.split(" ");
+            parts[1] = playerHasWhite ? 'w' : 'b';
+            fenWithGoodPlayerTurn = parts.join(" ");
+
+            return new Chess(fenWithGoodPlayerTurn);
         }
         return null;
     }
