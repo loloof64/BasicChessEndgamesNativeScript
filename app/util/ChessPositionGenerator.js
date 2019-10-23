@@ -2,7 +2,7 @@ import Chess from 'chess.js';
 import ChessPositionValidator from './ChessPositionValidator';
 import interpretScript from '../util/ConstraintScriptInterpreter';
 
-const MAX_SINGLE_STEP_TRIES = 15;
+const MAX_SINGLE_STEP_TRIES = 50;
 
 export default class ChessPositionGenerator {
 
@@ -44,6 +44,8 @@ export default class ChessPositionGenerator {
         or null if failed too many times.
     */
     _placePlayerKing({chessInstance, playerHasWhite}) {
+        const constraintScript = this.inputScripts.playerKingConstraint;
+
         for (let tryNumber = 0; tryNumber < MAX_SINGLE_STEP_TRIES; tryNumber++) {
             const clonedInstance = new Chess(chessInstance.fen());
             const randomFile = parseInt(Math.random() * 8);
@@ -58,8 +60,20 @@ export default class ChessPositionGenerator {
             if (!validSquare) continue;
 
             try {
-                const respectConstraint = interpretScript(this.inputScripts.playerKingConstraint);
+                let updatedScript = constraintScript;
+                updatedScript = updatedScript.replace(/\$file/g, randomFile);
+                updatedScript = updatedScript.replace(/\$rank/g, randomRank);
+                updatedScript = updatedScript.replace(/\$playerHasWhite/, playerHasWhite ? "2==2" : "2!=2");
+                //////////////////////////////////
+                console.log(updatedScript);
+                //////////////////////////////////
+
+                const respectConstraint = interpretScript(updatedScript);
+                /////////////////////////////////////////////////////////
                 console.log('Respect constraint', respectConstraint);
+                /////////////////////////////////////////////////////////
+
+                if (!respectConstraint) continue;
             }
             catch (e) {
                 throw {
