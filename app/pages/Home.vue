@@ -5,8 +5,20 @@
         </ActionBar>
 
         <StackLayout orientation="vertical">
-            <Button text="Generation test" @tap="launchTest" />
-            <TextView v-model="constraintScript" />
+            <TabView selectedIndex="0">
+                <TabViewItem :title="'sample_scripts' | L" 
+                iconSource="res://bookshelf">
+                    <GridLayout>
+                        <Label text="Sample scripts" class="h2 text-center" />
+                    </GridLayout>
+                </TabViewItem>
+
+                <TabViewItem :title="'custom_scripts' | L" 
+                iconSource="res://handsaw">
+                        <Label text="Custom scripts" class="h2 text-center" />
+                    </GridLayout>
+                </TabViewItem>
+            </TabView>
         </StackLayout>
     </Page>
 </template>
@@ -15,7 +27,7 @@
     import { localize } from "nativescript-localize";
     import Vue from "nativescript-vue";
 
-    import ChessPositionGenerator from '../util/ChessPositionGenerator';
+    import ChessPositionGenerator from '../position_generator/ChessPositionGenerator';
 
     Vue.filter("L", localize);
 

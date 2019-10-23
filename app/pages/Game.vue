@@ -6,23 +6,23 @@
 
         <StackLayout orientation="vertical">
             <WrapLayout dock="top" orientation="horizontal">
-                <Label  class="button" @tap="newGame()">
+                <Label class="button" @tap="newGame()">
                     <FormattedString>
                         <Span class="fa button" text.decode="&#xf11e;" fontSize="30" />
                     </FormattedString>
                 </Label>
-                <Label  class="button" @tap="reverseBoard()">
+                <Label class="button" @tap="reverseBoard()">
                     <FormattedString>
                         <Span class="fa button" text.decode="&#xf338;" fontSize="30" />
                     </FormattedString>
                 </Label>
-                <Label  class="button" @tap="toggleHistoryVisibility()">
+                <Label class="button" @tap="toggleHistoryVisibility()">
                     <FormattedString>
                         <Span v-if="historyVisible" class="fa button" text.decode="&#xf43c;" fontSize="30" />
                         <Span v-else class="fa button" text.decode="&#xf1da;" fontSize="30" />
                     </FormattedString>
                 </Label>
-                <Label  class="button" @tap="requestGameStop()">
+                <Label class="button" @tap="requestGameStop()">
                     <FormattedString>
                         <Span class="fa button" text.decode="&#xf28d;" fontSize="30" />
                     </FormattedString>

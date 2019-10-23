@@ -1,6 +1,6 @@
 import Chess from 'chess.js';
 import ChessPositionValidator from './ChessPositionValidator';
-import interpretScript from '../util/ConstraintScriptInterpreter';
+import interpretScript from '../position_generator/ConstraintScriptInterpreter';
 
 const MAX_SINGLE_STEP_TRIES = 50;
 

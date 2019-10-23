@@ -23,5 +23,8 @@
   "stop_game_title": "Stop game ?",
 
   "script_error_title": "Script error",
-  "position_generation_fail": "Failed to generate position !"
+  "position_generation_fail": "Failed to generate position !",
+
+  "sample_scripts": "Sample",
+  "custom_scripts": "Custom"
 }

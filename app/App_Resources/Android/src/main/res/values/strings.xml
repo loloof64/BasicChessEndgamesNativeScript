@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="custom_scripts">"Custom"</string>
+  <string name="sample_scripts">"Sample"</string>
   <string name="position_generation_fail">"Failed to generate position !"</string>
   <string name="script_error_title">"Script error"</string>
   <string name="stop_game_title">"Stop game ?"</string>

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="custom_scripts">"Personnels"</string>
+  <string name="sample_scripts">"Exemples"</string>
   <string name="position_generation_fail">"Echec de génération de la position !"</string>
   <string name="script_error_title">"Erreur de script"</string>
   <string name="stop_game_title">"Arrêter la partie ?"</string>
