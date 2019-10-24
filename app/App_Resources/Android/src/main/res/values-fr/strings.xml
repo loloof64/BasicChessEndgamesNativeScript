@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="sample_krr_k">"Roi+2Tours / Roi"</string>
+  <string name="sample_kr_k">"Roi+Tour / Roi"</string>
   <string name="sample_kq_k">"Roi+Dame / Roi"</string>
   <string name="custom_scripts">"Personnels"</string>
   <string name="sample_scripts">"Exemples"</string>

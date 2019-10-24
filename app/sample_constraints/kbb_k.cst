@@ -1,0 +1,18 @@
+# Computer king constraint
+
+correctFile = ($file >= #FileC) && ($file <= #FileF);
+correctRank = ($rank >= #Rank3) && ($rank <= #Rank6);
+
+return correctFile && correctRank;
+
+# Other pieces count
+
+P B 2
+
+# Other piece mutual constraint
+# P B
+
+firstPieceColor = ($firstFile + $firstRank) % 2;
+secondPieceColor = ($secondFile + $secondRank) % 2;
+
+return firstPieceColor != secondPieceColor;

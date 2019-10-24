@@ -33,5 +33,7 @@
   "custom_scripts": "Custom",
 
   "sample_kq_k": "King+Queen / King",
-  "sample_krr_k": "King+2Rooks / King"
+  "sample_kr_k": "King+Rook / King",
+  "sample_krr_k": "King+2Rooks / King",
+  "sample_kbb_k": "King+2Bishops / King"
 }

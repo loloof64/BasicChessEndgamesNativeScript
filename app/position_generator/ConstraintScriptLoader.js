@@ -26,19 +26,32 @@ export default class ConstraintScriptLoader {
     }
 
     _processInputScript(inputScriptString) {
-        this.result = {};
+        this.result = {
+            playerKingConstraint: [],
+            computerKingConstraint: [],
+            otherPiecesCount: [],
+            otherPieceMutualConstraint: {},
+        };
         const lines = inputScriptString.split(/\r?\n/);
         lines.forEach(line => {
             const headerType = this._getHeaderType(line);
+            const pieceTypeSpecification = this._getPieceTypeSpecification(line);
             const isAnHeaderLine = [
                 'playerKingConstraint', 
                 'computerKingConstraint',
                 'otherPiecesCount',
+                'otherPieceMutualConstraint',
             ].includes(headerType);
+            const isAPieceTypeSpecification = 
+            pieceTypeSpecification !== undefined && [
+                'P', 'N', 'B', 'R', 'Q', 'K'
+            ].includes(pieceTypeSpecification.type);
 
             if (isAnHeaderLine) {
                 this.currentScriptType = headerType;
-                this._addEntryForCurrentScriptType();
+            }
+            else if (isAPieceTypeSpecification) {
+                this.pieceTypeSpecification = pieceTypeSpecification;
             }
             else {
                 this._addLineToCurrentScript(line);
@@ -53,8 +66,22 @@ export default class ConstraintScriptLoader {
                 if (headerType === 'otherPiecesCount') {
                     accumData[headerType] = value;
                 }
+                else if (['otherPieceMutualConstraint'].includes(headerType)) {
+                    const allScripts = Object.entries(value).reduce(
+                        (tempAccumData, tempCurrData) => {
+                            const pieceType = tempCurrData[0];
+                            const pieceScriptLines = tempCurrData[1];
+
+                            const joinedScript = pieceScriptLines.join('\n');
+                            tempAccumData[pieceType] = joinedScript.length > 0 ? joinedScript : undefined;
+                            return tempAccumData;
+                        }
+                    , {});
+                    accumData[headerType] = allScripts;
+                }
                 else {
-                    accumData[headerType] = value.join('\n');
+                    const joinedScript = value.join('\n');
+                    accumData[headerType] = joinedScript.length > 0 ? joinedScript : undefined;
                 }
 
                 return accumData;
@@ -68,27 +95,43 @@ export default class ConstraintScriptLoader {
                 case 'Player king constraint': return 'playerKingConstraint';
                 case 'Computer king constraint': return 'computerKingConstraint';
                 case 'Other pieces count': return 'otherPiecesCount';
+                case 'Other piece mutual constraint': return 'otherPieceMutualConstraint';
                 default: return null;
             }
         }
         return null;
     }
 
-    _addEntryForCurrentScriptType() {
-        this.result[this.currentScriptType] = [];
+    _getPieceTypeSpecification(line) {
+        if (! line.startsWith('#')) return undefined;
+        const parts = line.split(" ");
+
+        if (parts.length < 3) return undefined;
+
+        try {
+            const type = parts[1];
+            const count = parseInt(parts[2]);
+            return {type, count};
+        }
+        catch {
+            return undefined;
+        }
     }
 
     _addLineToCurrentScript(line) {
         const emptyLine = line.length === 0;
         if (emptyLine) return;
-        if (this.currentScriptType !== 'otherPiecesCount')  this.result[this.currentScriptType].push(line);
-        else {
+        if (this.currentScriptType === 'otherPiecesCount') {
             const lineParts = line.split(" ");
             const ownerSide = lineParts[0];
             const pieceType = lineParts[1];
             const pieceCount = parseInt(lineParts[2]);
-
+            
             this.result[this.currentScriptType].push({pieceType, pieceCount, ownerSide});
         }
+        else if (this.currentScriptType === 'otherPieceMutualConstraint') {
+
+        }
+        else this.result[this.currentScriptType].push(line);
     }
 }

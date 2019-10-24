@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="sample_krr_k">"King+2Rooks / King"</string>
+  <string name="sample_kr_k">"King+Rook / King"</string>
   <string name="sample_kq_k">"King+Queen / King"</string>
   <string name="custom_scripts">"Custom"</string>
   <string name="sample_scripts">"Sample"</string>

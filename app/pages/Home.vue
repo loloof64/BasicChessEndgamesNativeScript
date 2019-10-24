@@ -46,8 +46,16 @@
                         label: localize('sample_kq_k'),
                     },
                     {
+                        path: 'kr_k.cst',
+                        label: localize('sample_kr_k'),
+                    },
+                    {
                         path: 'krr_k.cst',
                         label: localize('sample_krr_k'),
+                    },
+                    {
+                        path: 'kbb_k.cst',
+                        label: localize('sample_kbb_k'),
                     },
                 ], 
             }
