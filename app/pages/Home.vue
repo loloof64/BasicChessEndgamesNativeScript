@@ -44,7 +44,11 @@
                     {
                         path: 'kq_k.cst',
                         label: localize('sample_kq_k'),
-                    }
+                    },
+                    {
+                        path: 'krr_k.cst',
+                        label: localize('sample_krr_k'),
+                    },
                 ], 
             }
         },
@@ -77,7 +81,7 @@
                 }
 
                 try {
-                    const position = new ChessPositionGenerator(scriptData).generatePosition();
+                    const position = new ChessPositionGenerator().generatePosition(scriptData);
 
                     if (position === null) {
                         alert({

@@ -75,8 +75,7 @@ export default class ConstraintScriptLoader {
     }
 
     _addEntryForCurrentScriptType() {
-        if (this.currentScriptType === 'otherPiecesCount') this.result[this.currentScriptType] = {};
-        else this.result[this.currentScriptType] = [];
+        this.result[this.currentScriptType] = [];
     }
 
     _addLineToCurrentScript(line) {
@@ -85,10 +84,11 @@ export default class ConstraintScriptLoader {
         if (this.currentScriptType !== 'otherPiecesCount')  this.result[this.currentScriptType].push(line);
         else {
             const lineParts = line.split(" ");
-            const pieceType = lineParts[0];
-            const pieceCount = parseInt(lineParts[1]);
+            const ownerSide = lineParts[0];
+            const pieceType = lineParts[1];
+            const pieceCount = parseInt(lineParts[2]);
 
-            this.result[this.currentScriptType][pieceType] = pieceCount;
+            this.result[this.currentScriptType].push({pieceType, pieceCount, ownerSide});
         }
     }
 }

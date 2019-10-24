@@ -32,5 +32,6 @@
   "sample_scripts": "Exemples",
   "custom_scripts": "Personnels",
 
-  "sample_kq_k": "Roi+Dame/Roi"
+  "sample_kq_k": "Roi+Dame / Roi",
+  "sample_krr_k": "Roi+2Tours / Roi"
 }

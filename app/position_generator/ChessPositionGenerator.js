@@ -3,6 +3,7 @@ import ChessPositionValidator from './ChessPositionValidator';
 import interpretScript from '../position_generator/ConstraintScriptInterpreter';
 
 const MAX_KING_STEP_TRIES = 30;
+const MAX_SINGLE_PIECE_STEP_TRIES = 50;
 
 const GENERAL_VALUES = {
     '#FileA': 0,
@@ -27,11 +28,12 @@ const GENERAL_VALUES = {
 export default class ChessPositionGenerator {
 
     constructor(inputScriptsObject) {
-        this.inputScripts = inputScriptsObject;
+        this.inputScripts = undefined;
         this.chessPositionValidator = new ChessPositionValidator();
     }
 
-    generatePosition() {
+    generatePosition(inputScriptsObject) {
+        this.inputScripts = inputScriptsObject;
         const randomInt = parseInt(Math.random() * 10);
         const playerHasWhite = randomInt > 4;
 
@@ -55,8 +57,12 @@ export default class ChessPositionGenerator {
 
         const chessInstanceWithKings = this._placeComputerKing({chessInstance, playerHasWhite});
         if (chessInstanceWithKings === null) return null;
+        chessInstance = chessInstanceWithKings;
 
-        return chessInstanceWithKings;
+        const completePosition = this._placeOtherPieces({chessInstance, playerHasWhite});
+        if (completePosition === null) return null;
+
+        return completePosition;
     }
 
     /*
@@ -164,4 +170,74 @@ export default class ChessPositionGenerator {
         }
         return null;
     }
+
+    /*
+        Returns the Chess instance
+        or null if failed too many times.
+    */
+   _placeOtherPieces({chessInstance, playerHasWhite}) {
+       const constraintScript = this.inputScripts.otherPiecesCount;
+       let chessInstanceWithAllPieces = chessInstance;
+       let failedForAtLeastOnePiece = false;
+        constraintScript.forEach(currentEntry => {
+            const pieceType = currentEntry.pieceType;
+            const ownerSide = currentEntry.ownerSide;
+            const pieceCount = currentEntry.pieceCount;
+
+            for (let pieceIndex = 0; pieceIndex < pieceCount; pieceIndex++) {
+                const chessInstanceWithNewPiece = this._placeSinglePiece({
+                    chessInstance: chessInstanceWithAllPieces, playerHasWhite, 
+                    pieceType, ownerSide});
+                if (chessInstanceWithNewPiece === null) {
+                    failedForAtLeastOnePiece = true;
+                    break;
+                }
+                chessInstanceWithAllPieces = chessInstanceWithNewPiece;
+            }
+
+            if (failedForAtLeastOnePiece) return null;
+        });
+        return chessInstanceWithAllPieces;
+   }
+
+   /*
+        Returns the Chess instance
+        or null if failed too many times.
+    */
+   _placeSinglePiece({chessInstance, playerHasWhite, pieceType, ownerSide}) {
+        for (let tryNumber = 0; tryNumber < MAX_SINGLE_PIECE_STEP_TRIES; tryNumber++) {
+            const clonedInstance = new Chess(chessInstance.fen());
+            const randomFile = parseInt(Math.random() * 8);
+            const file = String.fromCharCode('a'.charCodeAt(0) + randomFile);
+
+            const randomRank = parseInt(Math.random() * 8);
+            const rank = String.fromCharCode('1'.charCodeAt(0) + randomRank);
+
+            const square = "" + file + rank;
+
+            let color;
+            if (playerHasWhite) {
+                color = ownerSide ? 'w' : 'b';
+            }
+            else {
+                color = ownerSide ? 'b' : 'w';
+            }
+
+            const freeSquare = clonedInstance.get(square) === null;
+            if (!freeSquare) continue;
+
+            const validSquare = clonedInstance.put({type: pieceType.toLowerCase(), color}, square);
+            if (!validSquare) continue;
+
+            const positionValid = this.chessPositionValidator.checkPositionValidity(clonedInstance.fen());
+            if ( ! positionValid ) {
+                continue;
+            }
+
+            return clonedInstance;
+        }
+        
+        return null;
+   }
+
 };

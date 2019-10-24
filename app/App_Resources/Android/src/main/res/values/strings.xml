@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="sample_kq_k">"Roi+Dame/Roi"</string>
+  <string name="sample_krr_k">"King+2Rooks / King"</string>
+  <string name="sample_kq_k">"King+Queen / King"</string>
   <string name="custom_scripts">"Custom"</string>
   <string name="sample_scripts">"Sample"</string>
   <string name="computer_king_constraint_script_error">"Computer king constraint"</string>
