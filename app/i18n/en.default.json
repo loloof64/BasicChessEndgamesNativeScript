@@ -23,8 +23,14 @@
   "stop_game_title": "Stop game ?",
 
   "script_error_title": "Script error",
+  "script_loading_error_title": "Error while loading script",
   "position_generation_fail": "Failed to generate position !",
 
+  "player_king_constraint_script_error": "Player king constraint",
+  "computer_king_constraint_script_error": "Computer king constraint",
+
   "sample_scripts": "Sample",
-  "custom_scripts": "Custom"
+  "custom_scripts": "Custom",
+
+  "sample_kq_k": "Roi+Dame/Roi"
 }

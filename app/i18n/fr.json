@@ -23,8 +23,14 @@
   "stop_game_title": "Arrêter la partie ?",
 
   "script_error_title": "Erreur de script",
+  "script_loading_error_title": "Erreur en chargeant le script",
   "position_generation_fail": "Echec de génération de la position !",
 
+  "player_king_constraint_script_error": "Contrainte roi joueur",
+  "computer_king_constraint_script_error": "Contrainte roi ordinateur",
+
   "sample_scripts": "Exemples",
-  "custom_scripts": "Personnels"
+  "custom_scripts": "Personnels",
+
+  "sample_kq_k": "Roi+Dame/Roi"
 }
