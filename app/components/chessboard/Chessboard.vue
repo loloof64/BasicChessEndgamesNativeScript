@@ -166,6 +166,7 @@ export default {
             this._commitComputerMove(moveData);
         },
         makeComputerPlayIfComputerTurn() {
+            if (!this.gameInProgress) return;
             const whiteTurn = this.boardLogic.turn() === 'w';
             const computerToPlay = whiteTurn ?
                  this.whitePlayerType === PlayerType.Computer :
@@ -207,6 +208,7 @@ export default {
                 whiteMove: this.boardLogic.turn() === 'w',
             });
             const canvas = this.$refs.canvas.nativeView;
+            this.checkGameEndedStateAndNotifyUser();
             canvas.redraw();
             this.makeComputerPlayIfComputerTurn();
         },
