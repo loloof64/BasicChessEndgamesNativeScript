@@ -58,6 +58,10 @@
                         path: 'kbb_k.cst',
                         label: localize('sample_kbb_k'),
                     },
+                    {
+                        path: 'kppp_kppp.cst',
+                        label: localize('sample_kppp_kppp'),
+                    },
                 ],
                 generatingPosition: false,
             }
@@ -123,10 +127,6 @@
 
                     const pieceKind = e.pieceKind;
                     const pieceKindStr = pieceKind !== undefined ? localize(pieceKind) : undefined;
-
-                    //////////////////////////
-                    console.log('pieceKindStr', pieceKindStr);
-                    //////////////////////////
 
                     let title = `${localize('script_error_title')} : ${localize(e.kind)}`;
                     if (pieceKindStr !== undefined) title += ` (${pieceKindStr})`;

@@ -209,7 +209,16 @@ export default class ChessPositionGenerator {
             let pieceResolved = false;
             let selectedCell;
 
+
+            /////////////////////////////////
+            console.log('pieceIndex', pieceIndex);
+            /////////////////////////////////
+
             for (let tryNumber = 0; tryNumber < MAX_SINGLE_PIECE_STEP_TRIES; tryNumber++) {
+
+                /////////////////////////////////
+                console.log('tryNumber', tryNumber);
+                /////////////////////////////////
 
                 const clonedInstance = new Chess(chessInstance.fen());
                 

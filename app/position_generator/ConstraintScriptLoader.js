@@ -30,7 +30,9 @@ export default class ConstraintScriptLoader {
             playerKingConstraint: [],
             computerKingConstraint: [],
             otherPiecesCount: [],
+            otherPieceGlobalConstraint: {},
             otherPieceMutualConstraint: {},
+            otherPieceIndexedConstraint: {},
         };
         const lines = inputScriptString.split(/\r?\n/);
         lines.forEach(line => {
@@ -41,7 +43,9 @@ export default class ConstraintScriptLoader {
                 'playerKingConstraint', 
                 'computerKingConstraint',
                 'otherPiecesCount',
+                'otherPieceGlobalConstraint',
                 'otherPieceMutualConstraint',
+                'otherPieceIndexedConstraint',
             ].includes(headerType);
             const isAPieceTypeSpecification = 
             pieceTypeSpecification !== undefined && [
@@ -68,7 +72,11 @@ export default class ConstraintScriptLoader {
                 if (headerType === 'otherPiecesCount') {
                     accumData[headerType] = value;
                 }
-                else if (['otherPieceMutualConstraint'].includes(headerType)) {
+                else if ([
+                    'otherPieceGlobalConstraint',
+                    'otherPieceMutualConstraint',
+                    'otherPieceIndexedConstraint',
+                ].includes(headerType)) {
                     const allScripts = Object.entries(value).reduce(
                         (tempAccumData, tempCurrData) => {
                             const pieceType = tempCurrData[0];
@@ -97,7 +105,9 @@ export default class ConstraintScriptLoader {
                 case 'Player king constraint': return 'playerKingConstraint';
                 case 'Computer king constraint': return 'computerKingConstraint';
                 case 'Other pieces count': return 'otherPiecesCount';
+                case 'Other piece global constraint': return 'otherPieceGlobalConstraint';
                 case 'Other piece mutual constraint': return 'otherPieceMutualConstraint';
+                case 'Other piece indexed constraint': return 'otherPieceIndexedConstraint';
                 default: return null;
             }
         }
@@ -111,8 +121,8 @@ export default class ConstraintScriptLoader {
         if (parts.length < 3) return undefined;
 
         try {
-            const type = parts[1];
-            const ownerSide = parts[2];
+            const type = parts[2];
+            const ownerSide = parts[1];
             return {type, ownerSide};
         }
         catch {
@@ -131,13 +141,17 @@ export default class ConstraintScriptLoader {
             
             this.result[this.currentScriptType].push({pieceType, pieceCount, ownerSide});
         }
-        else if (['otherPieceMutualConstraint'].includes(this.currentScriptType)) {
+        else if ([
+            'otherPieceGlobalConstraint',
+            'otherPieceMutualConstraint',
+            'otherPieceIndexedConstraint',
+        ].includes(this.currentScriptType)) {
             this.result[this.currentScriptType][this._buildSpecificationKey(this.pieceTypeSpecification)].push(line);
         }
         else this.result[this.currentScriptType].push(line);
     }
 
     _buildSpecificationKey(typeSpecification) {
-        return `${typeSpecification.type}${typeSpecification.ownerSide}`;
+        return `${typeSpecification.ownerSide}${typeSpecification.type}`;
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="sample_kppp_kppp">"Roi+3Pions / Roi+3Pions"</string>
   <string name="sample_kbb_k">"Roi+2Fous / Roi"</string>
   <string name="sample_krr_k">"Roi+2Tours / Roi"</string>
   <string name="sample_kr_k">"Roi+Tour / Roi"</string>
@@ -19,6 +20,8 @@
   <string name="PN">"cavalier joueur"</string>
   <string name="PP">"pion joueur"</string>
   <string name="piece_mutual_constraint_script_error">"Contrainte mutuelle autre pièce"</string>
+  <string name="piece_indexed_constraint_script_error">"Contrainte indexée autre pièce"</string>
+  <string name="piece_global_constraint_script_error">"Contrainte globale autre pièce"</string>
   <string name="computer_king_constraint_script_error">"Contrainte roi ordinateur"</string>
   <string name="player_king_constraint_script_error">"Contrainte roi joueur"</string>
   <string name="position_generation_fail">"Echec de génération de la position !"</string>

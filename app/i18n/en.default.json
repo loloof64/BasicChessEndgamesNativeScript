@@ -28,6 +28,8 @@
 
   "player_king_constraint_script_error": "Player king constraint",
   "computer_king_constraint_script_error": "Computer king constraint",
+  "piece_global_constraint_script_error": "Other piece global constraint",
+  "piece_indexed_constraint_script_error": "Other piece indexed constraint",
   "piece_mutual_constraint_script_error": "Other piece mutual constraint",
 
   "PP": "player pawn",
@@ -50,5 +52,6 @@
   "sample_kq_k": "King+Queen / King",
   "sample_kr_k": "King+Rook / King",
   "sample_krr_k": "King+2Rooks / King",
-  "sample_kbb_k": "King+2Bishops / King"
+  "sample_kbb_k": "King+2Bishops / King",
+  "sample_kppp_kppp": "King+3Pawns / King+3Pawns"
 }
