@@ -56,7 +56,7 @@ export default class ChessPositionValidator {
             case 'K': return { type: 'k', white: true};
             case 'p': return { type: 'p', white: false};
             case 'n': return { type: 'n', white: false};
-            case 'n': return { type: 'b', white: false};
+            case 'b': return { type: 'b', white: false};
             case 'r': return { type: 'r', white: false};
             case 'q': return { type: 'q', white: false};
             case 'k': return { type: 'k', white: false};
