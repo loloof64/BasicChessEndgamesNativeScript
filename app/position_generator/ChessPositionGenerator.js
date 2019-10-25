@@ -27,7 +27,7 @@ const GENERAL_VALUES = {
 
 export default class ChessPositionGenerator {
 
-    constructor(inputScriptsObject) {
+    constructor() {
         this.inputScripts = undefined;
         this.chessPositionValidator = new ChessPositionValidator();
     }
@@ -37,10 +37,13 @@ export default class ChessPositionGenerator {
         const randomInt = parseInt(Math.random() * 10);
         const playerHasWhite = randomInt > 4;
 
-        let chessInstanceWithKings = this._placeKings(playerHasWhite);
+        const chessInstanceWithKings = this._placeKings(playerHasWhite);
         if (chessInstanceWithKings === null) return null;
 
-        return chessInstanceWithKings.fen();
+        const completePosition = this._placeOtherPieces({chessInstanceWithKings, playerHasWhite});
+        if (completePosition === null) return null;
+
+        return completePosition.fen();
     }
 
     /*
@@ -59,10 +62,7 @@ export default class ChessPositionGenerator {
         if (chessInstanceWithKings === null) return null;
         chessInstance = chessInstanceWithKings;
 
-        const completePosition = this._placeOtherPieces({chessInstance, playerHasWhite});
-        if (completePosition === null) return null;
-
-        return completePosition;
+        return chessInstance;
     }
 
     /*
@@ -74,13 +74,10 @@ export default class ChessPositionGenerator {
 
         for (let tryNumber = 0; tryNumber < MAX_KING_STEP_TRIES; tryNumber++) {
             const clonedInstance = new Chess(chessInstance.fen());
-            const randomFile = parseInt(Math.random() * 8);
-            const file = String.fromCharCode('a'.charCodeAt(0) + randomFile);
+            
+            const selectedCell = this._selectRandomCell();
 
-            const randomRank = parseInt(Math.random() * 8);
-            const rank = String.fromCharCode('1'.charCodeAt(0) + randomRank);
-
-            const square = "" + file + rank;
+            const square = "" + selectedCell.fileStr + selectedCell.rankStr;
             const color = playerHasWhite ? 'w' : 'b';
             const validSquare = clonedInstance.put({ type: 'k', color }, square);
             if (!validSquare) continue;
@@ -88,10 +85,16 @@ export default class ChessPositionGenerator {
             if (constraintScript !== undefined) {
                 try {
                     let updatedScript = constraintScript;
-                    updatedScript = updatedScript.replace(/\$file/g, randomFile);
-                    updatedScript = updatedScript.replace(/\$rank/g, randomRank);
-                    updatedScript = updatedScript.replace(/\$playerHasWhite/, playerHasWhite ? "2==2" : "2!=2");
-    
+                    updatedScript = this._replaceGlobalVariables(updatedScript);
+                    updatedScript = this._replaceLocalVariables({
+                        script: updatedScript,
+                        substitutions: [
+                            {regex: /\$file/g, value: selectedCell.file},
+                            {regex: /\$rank/g, value: selectedCell.rank},
+                            {regex: /\$playerHasWhite/g, value: playerHasWhite ? "2==2" : "2!=2"},
+                        ]
+                    });
+
                     const respectConstraint = interpretScript(updatedScript);
     
                     if (!respectConstraint) continue;
@@ -118,13 +121,10 @@ export default class ChessPositionGenerator {
         
         for (let tryNumber = 0; tryNumber < MAX_KING_STEP_TRIES; tryNumber++) {
             const clonedInstance = new Chess(chessInstance.fen());
-            const randomFile = parseInt(Math.random() * 8);
-            const file = String.fromCharCode('a'.charCodeAt(0) + randomFile);
+            
+            const selectedCell = this._selectRandomCell();
 
-            const randomRank = parseInt(Math.random() * 8);
-            const rank = String.fromCharCode('1'.charCodeAt(0) + randomRank);
-
-            const square = "" + file + rank;
+            const square = "" + selectedCell.fileStr + selectedCell.rankStr;
             const color = playerHasWhite ? 'b' : 'w';
             const validSquare = clonedInstance.put({ type: 'k', color }, square);
             if (!validSquare) continue;
@@ -136,17 +136,14 @@ export default class ChessPositionGenerator {
             if (constraintScript !== undefined) {
                 try {
                     let updatedScript = constraintScript;
-                    updatedScript = updatedScript.replace(/\$file/g, randomFile);
-                    updatedScript = updatedScript.replace(/\$rank/g, randomRank);
-                    updatedScript = updatedScript.replace(/\$playerHasWhite/, playerHasWhite ? "2==2" : "2!=2");
-
-                    Object.entries(GENERAL_VALUES).forEach(entry => {
-                        const key = entry[0];
-                        const value = entry[1];
-
-                        const regex = new RegExp(key, 'g');
-
-                        updatedScript = updatedScript.replace(regex, value);
+                    updatedScript = this._replaceGlobalVariables(updatedScript);
+                    updatedScript = this._replaceLocalVariables({
+                        script: updatedScript,
+                        substitutions: [
+                            {regex: /\$file/g, value: selectedCell.file},
+                            {regex: /\$rank/g, value: selectedCell.rank},
+                            {regex: /\$playerHasWhite/g, value: playerHasWhite ? "2==2" : "2!=2"},
+                        ]
                     });
     
                     const respectConstraint = interpretScript(updatedScript);
@@ -175,28 +172,29 @@ export default class ChessPositionGenerator {
         Returns the Chess instance
         or null if failed too many times.
     */
-   _placeOtherPieces({chessInstance, playerHasWhite}) {
-       const constraintScript = this.inputScripts.otherPiecesCount;
-       let chessInstanceWithAllPieces = chessInstance;
-       let failedForAtLeastOnePiece = false;
-        constraintScript.forEach(currentEntry => {
+   _placeOtherPieces({chessInstanceWithKings, playerHasWhite}) {
+        const chessInstance = chessInstanceWithKings;
+        const constraintScript = this.inputScripts.otherPiecesCount;
+        let chessInstanceWithAllPieces = chessInstance;
+        let failedForAtLeastOnePiece = false;
+
+        for (let currentEntry of constraintScript) {
             const pieceType = currentEntry.pieceType;
             const ownerSide = currentEntry.ownerSide;
             const pieceCount = currentEntry.pieceCount;
 
-            for (let pieceIndex = 0; pieceIndex < pieceCount; pieceIndex++) {
-                const chessInstanceWithNewPiece = this._placeSinglePiece({
-                    chessInstance: chessInstanceWithAllPieces, playerHasWhite, 
-                    pieceType, ownerSide});
-                if (chessInstanceWithNewPiece === null) {
-                    failedForAtLeastOnePiece = true;
-                    break;
-                }
-                chessInstanceWithAllPieces = chessInstanceWithNewPiece;
+            
+            const chessInstanceWithNewPiece = this._placeSinglePiece({
+                chessInstance: chessInstanceWithAllPieces, playerHasWhite, 
+                pieceType, ownerSide, pieceCount});
+            if (chessInstanceWithNewPiece === null) {
+                failedForAtLeastOnePiece = true;
+                break;
             }
+            chessInstanceWithAllPieces = chessInstanceWithNewPiece;
+        }
 
-            if (failedForAtLeastOnePiece) return null;
-        });
+        if (failedForAtLeastOnePiece) return null;
         return chessInstanceWithAllPieces;
    }
 
@@ -204,40 +202,155 @@ export default class ChessPositionGenerator {
         Returns the Chess instance
         or null if failed too many times.
     */
-   _placeSinglePiece({chessInstance, playerHasWhite, pieceType, ownerSide}) {
-        for (let tryNumber = 0; tryNumber < MAX_SINGLE_PIECE_STEP_TRIES; tryNumber++) {
-            const clonedInstance = new Chess(chessInstance.fen());
-            const randomFile = parseInt(Math.random() * 8);
-            const file = String.fromCharCode('a'.charCodeAt(0) + randomFile);
+   _placeSinglePiece({chessInstance, playerHasWhite, pieceType, ownerSide, pieceCount}) {
+        let alreadyPlacedPieces = [];
 
-            const randomRank = parseInt(Math.random() * 8);
-            const rank = String.fromCharCode('1'.charCodeAt(0) + randomRank);
+        for (let pieceIndex = 0; pieceIndex < pieceCount; pieceIndex++) {
+            let pieceResolved = false;
+            let selectedCell;
 
-            const square = "" + file + rank;
+            /////////////////////////////////
+            console.log('pieceIndex', pieceIndex)
+            /////////////////////////////////
 
-            let color;
-            if (playerHasWhite) {
-                color = ownerSide ? 'w' : 'b';
+            for (let tryNumber = 0; tryNumber < MAX_SINGLE_PIECE_STEP_TRIES; tryNumber++) {
+
+                ///////////////////////////////////////
+                console.log('tryNumber', tryNumber);
+                ///////////////////////////////////////
+
+                const clonedInstance = new Chess(chessInstance.fen());
+                
+                selectedCell = this._selectRandomCell();
+
+                const square = "" + selectedCell.fileStr + selectedCell.rankStr;
+
+                let color;
+                if (playerHasWhite) {
+                    color = ownerSide ? 'w' : 'b';
+                }
+                else {
+                    color = ownerSide ? 'b' : 'w';
+                }
+
+                const freeSquare = clonedInstance.get(square) === null;
+                if (!freeSquare) continue;
+
+                const validSquare = clonedInstance.put({type: pieceType.toLowerCase(), color}, square);
+                if (!validSquare) continue;
+
+                const positionValid = this.chessPositionValidator.checkPositionValidity(clonedInstance.fen());
+                if (!positionValid) continue;
+
+
+                const pieceScriptsKey = `${ownerSide}${pieceType}`;
+                const mutualScriptConstraint = this.inputScripts.otherPieceMutualConstraint[pieceScriptsKey];
+
+                const mutualScriptConstraintRespected = 
+                    this._checkMutualScriptConstraintRespected({
+                        mutualScriptConstraint, selectedCell, playerHasWhite,
+                        alreadyPlacedPieces,
+                    });
+                if (!mutualScriptConstraintRespected) continue;
+
+                
+                chessInstance = clonedInstance;
+                alreadyPlacedPieces.push(selectedCell);
+                pieceResolved = true;
+                break;
             }
-            else {
-                color = ownerSide ? 'b' : 'w';
-            }
 
-            const freeSquare = clonedInstance.get(square) === null;
-            if (!freeSquare) continue;
-
-            const validSquare = clonedInstance.put({type: pieceType.toLowerCase(), color}, square);
-            if (!validSquare) continue;
-
-            const positionValid = this.chessPositionValidator.checkPositionValidity(clonedInstance.fen());
-            if ( ! positionValid ) {
-                continue;
-            }
-
-            return clonedInstance;
+            if (!pieceResolved) return null;
         }
         
-        return null;
+        return chessInstance;
+   }
+
+   _replaceGlobalVariables(script) {
+        let updatedScript = script;
+        Object.entries(GENERAL_VALUES).forEach(entry => {
+            const key = entry[0];
+            const value = entry[1];
+
+            const regex = new RegExp(key, 'g');
+
+            updatedScript = updatedScript.replace(regex, value);
+        });
+        return updatedScript;
+   }
+
+   _replaceLocalVariables({script, substitutions}) {
+       let updatedScript = script;
+       substitutions.forEach(currentSubsitute => {
+           updatedScript = updatedScript.replace(currentSubsitute.regex, currentSubsitute.value);
+       });
+       return updatedScript;
+   }
+
+   _selectRandomCell() {
+        const randomFile = parseInt(Math.random() * 8);
+        const fileStr = String.fromCharCode('a'.charCodeAt(0) + randomFile);
+
+        const randomRank = parseInt(Math.random() * 8);
+        const rankStr = String.fromCharCode('1'.charCodeAt(0) + randomRank);
+
+        return {rankStr, fileStr, file: randomFile, rank: randomRank};
+   }
+
+   _checkMutualScriptConstraintRespected({
+       mutualScriptConstraint, selectedCell, playerHasWhite,
+       alreadyPlacedPieces, 
+   }) {
+       if (mutualScriptConstraint === undefined) return true;
+
+        let updatedScript = mutualScriptConstraint;
+
+        updatedScript = this._replaceLocalVariables({
+            script: updatedScript,
+            substitutions: [
+                {regex: /\$secondFile/g, value: selectedCell.file},
+                {regex: /\$secondRank/g, value: selectedCell.rank},
+                {regex: /\$playerHasWhite/g, value: playerHasWhite ? "2==2" : "2!=2"}
+            ]
+        });
+
+        updatedScript = this._replaceGlobalVariables(updatedScript);
+
+        try {
+            let mutualScriptConstraintStillRespected = true;
+            for (let firstPieceCoordinates of alreadyPlacedPieces) {
+
+                if (mutualScriptConstraintStillRespected) {
+                    let updatedScriptCopy = updatedScript;
+                    updatedScriptCopy = this._replaceLocalVariables({
+                        script: updatedScriptCopy,
+                        substitutions: [
+                            {regex: /\$firstFile/g, value: firstPieceCoordinates.file},
+                            {regex: /\$firstRank/g, value: firstPieceCoordinates.rank},
+                            {regex: /\$playerHasWhite/g, value: playerHasWhite ? "2==2" : "2!=2"}
+                        ]
+                    });
+
+
+                    const respectConstraint = interpretScript(updatedScriptCopy);
+                    if (!respectConstraint) {
+                        mutualScriptConstraintStillRespected = false;
+                        break;
+                    }
+                }
+            };
+
+            return mutualScriptConstraintStillRespected;
+        }
+        catch (e) {
+            throw {
+                kind: 'piece_mutual_constraint_script_error',
+                pieceType,
+                error: e,
+            };
+        }
+
+
    }
 
 };

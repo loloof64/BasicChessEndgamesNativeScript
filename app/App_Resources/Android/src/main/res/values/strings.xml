@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="sample_kbb_k">"King+2Bishops / King"</string>
   <string name="sample_krr_k">"King+2Rooks / King"</string>
   <string name="sample_kr_k">"King+Rook / King"</string>
   <string name="sample_kq_k">"King+Queen / King"</string>
   <string name="custom_scripts">"Custom"</string>
   <string name="sample_scripts">"Sample"</string>
+  <string name="piece_mutual_constraint_script_error">"Other piece mutual constraint (%1$s)"</string>
   <string name="computer_king_constraint_script_error">"Computer king constraint"</string>
   <string name="player_king_constraint_script_error">"Player king constraint"</string>
   <string name="position_generation_fail">"Failed to generate position !"</string>

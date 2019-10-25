@@ -36,6 +36,7 @@ export default class ConstraintScriptLoader {
         lines.forEach(line => {
             const headerType = this._getHeaderType(line);
             const pieceTypeSpecification = this._getPieceTypeSpecification(line);
+
             const isAnHeaderLine = [
                 'playerKingConstraint', 
                 'computerKingConstraint',
@@ -52,6 +53,7 @@ export default class ConstraintScriptLoader {
             }
             else if (isAPieceTypeSpecification) {
                 this.pieceTypeSpecification = pieceTypeSpecification;
+                this.result[this.currentScriptType][this._buildSpecificationKey(this.pieceTypeSpecification)] = [];
             }
             else {
                 this._addLineToCurrentScript(line);
@@ -110,8 +112,8 @@ export default class ConstraintScriptLoader {
 
         try {
             const type = parts[1];
-            const count = parseInt(parts[2]);
-            return {type, count};
+            const ownerSide = parts[2];
+            return {type, ownerSide};
         }
         catch {
             return undefined;
@@ -129,9 +131,13 @@ export default class ConstraintScriptLoader {
             
             this.result[this.currentScriptType].push({pieceType, pieceCount, ownerSide});
         }
-        else if (this.currentScriptType === 'otherPieceMutualConstraint') {
-
+        else if (['otherPieceMutualConstraint'].includes(this.currentScriptType)) {
+            this.result[this.currentScriptType][this._buildSpecificationKey(this.pieceTypeSpecification)].push(line);
         }
         else this.result[this.currentScriptType].push(line);
+    }
+
+    _buildSpecificationKey(typeSpecification) {
+        return `${typeSpecification.type}${typeSpecification.ownerSide}`;
     }
 }

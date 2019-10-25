@@ -28,6 +28,7 @@
 
   "player_king_constraint_script_error": "Contrainte roi joueur",
   "computer_king_constraint_script_error": "Contrainte roi ordinateur",
+  "piece_mutual_constraint_script_error": "Contrainte mutuelle autre pièce (%s)",
 
   "sample_scripts": "Exemples",
   "custom_scripts": "Personnels",
@@ -35,5 +36,5 @@
   "sample_kq_k": "Roi+Dame / Roi",
   "sample_kr_k": "Roi+Tour / Roi",
   "sample_krr_k": "Roi+2Tours / Roi",
-  "sample_kbb_k": "King+2Fous / Roi"
+  "sample_kbb_k": "Roi+2Fous / Roi"
 }

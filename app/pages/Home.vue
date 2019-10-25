@@ -9,6 +9,7 @@
                 <TabViewItem :title="'sample_scripts' | L"
                 iconSource="res://bookshelf">
                     <GridLayout>
+                        <ActivityIndicator :busy="generatingPosition" />
                         <ListView for="item in sampleScripts" @itemTap="onSampleScriptTap($event.item)">
                             <v-template>
                                 <Label :text="item.label" fontSize="22" />
@@ -57,7 +58,8 @@
                         path: 'kbb_k.cst',
                         label: localize('sample_kbb_k'),
                     },
-                ], 
+                ],
+                generatingPosition: false,
             }
         },
         methods: {
@@ -66,9 +68,12 @@
 
                 let scriptData;
 
+                this.generatingPosition = true;
+
                 try {
                     scriptData = await new ConstraintScriptLoader().loadSampleScript(scriptItem.path);
                 } catch (e) {
+                    this.generatingPosition = false;
                     alert({
                         title: localize('script_loading_error_title'),
                         okButtonText: localize('ok_button')
@@ -79,6 +84,7 @@
                 }
 
                 if (scriptData === undefined) {
+                    this.generatingPosition = false;
                     alert({
                         title: localize('script_loading_error_title'),
                         okButtonText: localize('ok_button')
@@ -90,6 +96,7 @@
 
                 try {
                     const position = new ChessPositionGenerator().generatePosition(scriptData);
+                    this.generatingPosition = false;
 
                     if (position === null) {
                         alert({
