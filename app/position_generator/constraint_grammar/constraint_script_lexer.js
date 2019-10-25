@@ -125,7 +125,7 @@ function tokenize(str) {
                 ctt = tokens.NumericLiteral
                 break
             default:
-                throw Error("sad sad panda")
+                throw "Unrecognized token "+token.value;
         }
         const chevToken = createChevToken(ctt, token)
         result.push(chevToken)

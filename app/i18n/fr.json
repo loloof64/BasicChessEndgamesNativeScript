@@ -28,7 +28,21 @@
 
   "player_king_constraint_script_error": "Contrainte roi joueur",
   "computer_king_constraint_script_error": "Contrainte roi ordinateur",
-  "piece_mutual_constraint_script_error": "Contrainte mutuelle autre pièce (%s)",
+  "piece_mutual_constraint_script_error": "Contrainte mutuelle autre pièce",
+
+  "PP": "pion joueur",
+  "PN": "cavalier joueur",
+  "PB": "fou joueur",
+  "PR": "tour joueur",
+  "PQ": "dame joueur",
+  "PK": "roi joueur",
+
+  "CP": "pion ordinateur",
+  "CN": "cavalier ordinateur",
+  "CB": "fou oridnateur",
+  "CR": "tour ordinateur",
+  "CQ": "dame ordinateur",
+  "CK": "roi ordinateur",
 
   "sample_scripts": "Exemples",
   "custom_scripts": "Personnels",

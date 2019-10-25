@@ -241,7 +241,7 @@ export default class ChessPositionGenerator {
                 const mutualScriptConstraintRespected = 
                     this._checkMutualScriptConstraintRespected({
                         mutualScriptConstraint, selectedCell, playerHasWhite,
-                        alreadyPlacedPieces,
+                        alreadyPlacedPieces, pieceType, ownerSide,
                     });
                 if (!mutualScriptConstraintRespected) continue;
 
@@ -291,7 +291,7 @@ export default class ChessPositionGenerator {
 
    _checkMutualScriptConstraintRespected({
        mutualScriptConstraint, selectedCell, playerHasWhite,
-       alreadyPlacedPieces, 
+       alreadyPlacedPieces, pieceType, ownerSide,
    }) {
        if (mutualScriptConstraint === undefined) return true;
 
@@ -335,9 +335,12 @@ export default class ChessPositionGenerator {
             return mutualScriptConstraintStillRespected;
         }
         catch (e) {
+
+            const pieceKind = `${ownerSide}${pieceType}`;
+
             throw {
                 kind: 'piece_mutual_constraint_script_error',
-                pieceType,
+                pieceKind,
                 error: e,
             };
         }

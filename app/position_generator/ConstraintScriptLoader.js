@@ -20,7 +20,7 @@ export default class ConstraintScriptLoader {
             return this._processInputScript(input);
         }
         catch (err) {
-            console.error(err);
+            console.error('Error while loading script');
             throw err;
         }
     }

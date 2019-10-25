@@ -7,7 +7,7 @@ function interpret(inputText) {
       const result = parse(inputText);
       return result;
   } catch (e) {
-      console.error(e);
+      console.error('Error while interpreting script')
       throw e;
   }
 }

@@ -15,4 +15,4 @@ P B 2
 firstPieceColor = ($firstFile + $firstRank) % 2;
 secondPieceColor = ($secondFile + $secondRank) % 2;
 
-return firstPieceColor != secondPieceColor;
+return firstPieceColor != secondPieceColor

@@ -12,7 +12,7 @@ function parse(str) {
     const value = parserInstance.Script()
 
     if (parserInstance.errors.length > 0) {
-        throw Error(parserInstance.errors)
+        throw parserInstance.errors[0].message;
     }
 
     return value;

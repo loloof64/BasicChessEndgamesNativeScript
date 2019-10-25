@@ -78,6 +78,7 @@
                         title: localize('script_loading_error_title'),
                         okButtonText: localize('ok_button')
                     }).then(() => {
+                        console.error('Error while loading script');
                         console.error(e);
                     })
                     return;
@@ -118,12 +119,24 @@
                         });
                     }
                 } catch (e) {
+                    this.generatingPosition = false;
+
+                    const pieceKind = e.pieceKind;
+                    const pieceKindStr = pieceKind !== undefined ? localize(pieceKind) : undefined;
+
+                    //////////////////////////
+                    console.log('pieceKindStr', pieceKindStr);
+                    //////////////////////////
+
+                    let title = `${localize('script_error_title')} : ${localize(e.kind)}`;
+                    if (pieceKindStr !== undefined) title += ` (${pieceKindStr})`;
+
                     alert({
-                        title: localize('script_error_title') + ' : ' + localize(e.kind),
-                        message: e.error.message,
+                        title,
+                        message: e.error,
                         okButtonText: localize('ok_button')
                     }).then(() => {
-                        console.error(e.error.message);
+                        console.error(e.error);
                     })
                 }
                 
