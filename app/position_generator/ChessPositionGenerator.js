@@ -253,6 +253,8 @@ export default class ChessPositionGenerator {
                 const indexedScriptConstraintRespected =
                     this._checkIndexedScriptConstraintRespected({
                         indexedScriptConstraint,
+                        selectedCell, playerHasWhite, pieceIndex,
+                        playerKingCoords, computerKingCoords,
                     });
                 if (!indexedScriptConstraintRespected) continue;
 
@@ -346,11 +348,41 @@ export default class ChessPositionGenerator {
    }
 
    _checkIndexedScriptConstraintRespected({
-        indexedScriptConstraint,
+        indexedScriptConstraint, 
+        selectedCell, playerHasWhite, pieceIndex,
+        playerKingCoords, computerKingCoords,
     }){
         if (indexedScriptConstraint === undefined) return true;
 
-        return true;
+        let updatedScript = indexedScriptConstraint;
+        updatedScript = this._replaceLocalVariables({
+            script: updatedScript,
+            substitutions: [
+                {regex: /\$file/g, value: selectedCell.file},
+                {regex: /\$rank/g, value: selectedCell.rank},
+                {regex: /\$playerKingFile/g, value: playerKingCoords.file},
+                {regex: /\$playerKingRank/g, value: playerKingCoords.rank},
+                {regex: /\$computerKingFile/g, value: computerKingCoords.file},
+                {regex: /\$computerKingRank/g, value: computerKingCoords.rank},
+                {regex: /\$index/g, value: pieceIndex},
+                {regex: /\$playerHasWhite/g, value: playerHasWhite ? "2==2" : "2!=2"}
+            ]
+        });
+        updatedScript = this._replaceGlobalVariables(updatedScript);
+
+        try {
+            const respectConstraint = interpretScript(updatedScript);
+            return respectConstraint;
+        }
+        catch (e) {
+            const pieceKind = `${ownerSide}${pieceType}`;
+
+            throw {
+                kind: 'piece_indexed_constraint_script_error',
+                pieceKind,
+                error: e,
+            };
+        }
     }
 
    _checkMutualScriptConstraintRespected({
