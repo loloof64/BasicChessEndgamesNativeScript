@@ -30,12 +30,14 @@ return correctRank;
 
 # P P
 
-correctFile = ($file == (#FileA + $index)) || ($file == (#FileH - $index));
+expectedFile = $playerHasWhite ? (#FileH - $index) : (#FileA + $index);
+correctFile = $file == expectedFile;
 return correctFile;
 
 # C P
 
-correctFile = ($file == (#FileA + $index)) || ($file == (#FileH - $index));
+expectedFile = $playerHasWhite ? (#FileH - $index) : (#FileA + $index);
+correctFile = $file == expectedFile;
 return correctFile;
 
 # Other piece mutual constraint
