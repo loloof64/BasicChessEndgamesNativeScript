@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="sample_knb_k">"King+Knight+Bishop / King"</string>
   <string name="sample_kppp_kppp">"King+3Pawns / King+3Pawns"</string>
+  <string name="sample_kp_k_2">"King+Pawn / King (2)"</string>
+  <string name="sample_kp_k_1">"King+Pawn / King (1)"</string>
   <string name="sample_kbb_k">"King+2Bishops / King"</string>
   <string name="sample_krr_k">"King+2Rooks / King"</string>
   <string name="sample_kr_k">"King+Rook / King"</string>

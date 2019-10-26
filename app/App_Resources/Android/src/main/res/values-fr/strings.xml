@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="sample_knb_k">"Roi+Cavalier+Fou / Roi"</string>
   <string name="sample_kppp_kppp">"Roi+3Pions / Roi+3Pions"</string>
+  <string name="sample_kp_k_2">"Roi+Pion / Roi (2)"</string>
+  <string name="sample_kp_k_1">"Roi+Pion / Roi (1)"</string>
   <string name="sample_kbb_k">"Roi+2Fous / Roi"</string>
   <string name="sample_krr_k">"Roi+2Tours / Roi"</string>
   <string name="sample_kr_k">"Roi+Tour / Roi"</string>

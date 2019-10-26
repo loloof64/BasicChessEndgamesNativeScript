@@ -59,8 +59,20 @@
                         label: localize('sample_kbb_k'),
                     },
                     {
+                        path: 'kp_k_1.cst',
+                        label: localize('sample_kp_k_1'),
+                    },
+                    {
+                        path: 'kp_k_2.cst',
+                        label: localize('sample_kp_k_2'),
+                    },
+                    {
                         path: 'kppp_kppp.cst',
                         label: localize('sample_kppp_kppp'),
+                    },
+                    {
+                        path: 'knb_k.cst',
+                        label: localize('sample_knb_k'),
                     },
                 ],
                 generatingPosition: false,

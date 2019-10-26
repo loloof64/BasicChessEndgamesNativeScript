@@ -1,0 +1,26 @@
+# Player king constraint
+
+goodFile = $file >= #FileC && $file <= #FileF;
+goodRank = $playerHasWhite ? $rank == #Rank6 : $rank == #Rank3;
+
+return goodFile && goodRank;
+
+# Computer king constraint
+
+goodFile = $file == $playerKingFile;
+goodRank = $playerHasWhite ? $rank == #Rank8 : $rank == #Rank1;
+
+return goodFile && goodRank;
+
+# Other pieces count
+
+P P 1
+
+# Other piece global constraint
+
+# P P
+
+goodFile = $file == $playerKingFile;
+goodRank = $playerHasWhite ? $rank == #Rank5 : $rank == #Rank4;
+
+return goodFile && goodRank;

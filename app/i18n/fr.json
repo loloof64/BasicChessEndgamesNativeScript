@@ -53,5 +53,8 @@
   "sample_kr_k": "Roi+Tour / Roi",
   "sample_krr_k": "Roi+2Tours / Roi",
   "sample_kbb_k": "Roi+2Fous / Roi",
-  "sample_kppp_kppp": "Roi+3Pions / Roi+3Pions"
+  "sample_kp_k_1": "Roi+Pion / Roi (1)",
+  "sample_kp_k_2": "Roi+Pion / Roi (2)",
+  "sample_kppp_kppp": "Roi+3Pions / Roi+3Pions",
+  "sample_knb_k": "Roi+Cavalier+Fou / Roi"
 }

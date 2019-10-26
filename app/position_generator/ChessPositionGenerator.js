@@ -2,7 +2,7 @@ import Chess from 'chess.js';
 import ChessPositionValidator from './ChessPositionValidator';
 import interpretScript from '../position_generator/ConstraintScriptInterpreter';
 
-const MAX_KING_STEP_TRIES = 30;
+const MAX_KING_STEP_TRIES = 100;
 const MAX_SINGLE_PIECE_STEP_TRIES = 1000;
 
 const GENERAL_VALUES = {
@@ -59,7 +59,7 @@ export default class ChessPositionGenerator {
         if (chessInstanceWithPlayerKing === null) return null;
         chessInstance = chessInstanceWithPlayerKing;
 
-        const {chessInstanceWithKings, computerKingCoords} = this._placeComputerKing({chessInstance, playerHasWhite});
+        const {chessInstanceWithKings, computerKingCoords} = this._placeComputerKing({chessInstance, playerHasWhite, playerKingCoords});
         if (chessInstanceWithKings === null) return null;
 
         return {chessInstanceWithKings, playerKingCoords, computerKingCoords};
@@ -94,6 +94,7 @@ export default class ChessPositionGenerator {
                             {regex: /\$playerHasWhite/g, value: playerHasWhite ? "2==2" : "2!=2"},
                         ]
                     });
+                    updatedScript = this._replaceGlobalVariables(updatedScript);
 
                     const respectConstraint = interpretScript(updatedScript);
                     if (!respectConstraint) continue;
@@ -115,9 +116,9 @@ export default class ChessPositionGenerator {
         Returns the Chess instance
         or null if failed too many times.
     */
-    _placeComputerKing({chessInstance, playerHasWhite}) {
+    _placeComputerKing({chessInstance, playerHasWhite, playerKingCoords}) {
         const constraintScript = this.inputScripts.computerKingConstraint;
-        
+
         for (let tryNumber = 0; tryNumber < MAX_KING_STEP_TRIES; tryNumber++) {
             const clonedInstance = new Chess(chessInstance.fen());
             
@@ -141,9 +142,12 @@ export default class ChessPositionGenerator {
                         substitutions: [
                             {regex: /\$file/g, value: selectedCell.file},
                             {regex: /\$rank/g, value: selectedCell.rank},
+                            {regex: /\$playerKingFile/g, value: playerKingCoords.file},
+                            {regex: /\$playerKingRank/g, value: playerKingCoords.rank},
                             {regex: /\$playerHasWhite/g, value: playerHasWhite ? "2==2" : "2!=2"},
                         ]
                     });
+                    updatedScript = this._replaceGlobalVariables(updatedScript);
     
                     const respectConstraint = interpretScript(updatedScript);
     
