@@ -1,11 +1,11 @@
 # Player king constraint
 
-correctRank = $playerHasWhite ? #Rank1 : #Rank8;
+correctRank = $rank == ($playerHasWhite ? #Rank1 : #Rank8);
 return correctRank;
 
 # Computer king constraint
 
-correctRank = $playerHasWhite ? #Rank1 : #Rank8;
+correctRank = $rank == ($playerHasWhite ? #Rank1 : #Rank8);
 return correctRank;
 
 # Other pieces count
@@ -17,12 +17,12 @@ C P 3
 
 # P P
 
-correctRank = $playerHasWhite ? #Rank5 : #Rank4;
+correctRank = $file == ($playerHasWhite ? #Rank5 : #Rank4);
 return correctRank;
 
 # C P
 
-correctRank = $playerHasWhite ? #Rank7 : #Rank2;
+correctRank = $file == ($playerHasWhite ? #Rank7 : #Rank2);
 return correctRank;
 
 

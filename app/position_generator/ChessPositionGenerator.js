@@ -3,7 +3,7 @@ import ChessPositionValidator from './ChessPositionValidator';
 import interpretScript from '../position_generator/ConstraintScriptInterpreter';
 
 const MAX_KING_STEP_TRIES = 30;
-const MAX_SINGLE_PIECE_STEP_TRIES = 700;
+const MAX_SINGLE_PIECE_STEP_TRIES = 1000;
 
 const GENERAL_VALUES = {
     '#FileA': 0,
@@ -37,10 +37,11 @@ export default class ChessPositionGenerator {
         const randomInt = parseInt(Math.random() * 10);
         const playerHasWhite = randomInt > 4;
 
-        const chessInstanceWithKings = this._placeKings(playerHasWhite);
+        const {chessInstanceWithKings, playerKingCoords, computerKingCoords} = this._placeKings(playerHasWhite);
         if (chessInstanceWithKings === null) return null;
 
-        const completePosition = this._placeOtherPieces({chessInstanceWithKings, playerHasWhite});
+        const completePosition = this._placeOtherPieces({chessInstanceWithKings, playerHasWhite, 
+            playerKingCoords, computerKingCoords});
         if (completePosition === null) return null;
 
         return completePosition.fen();
@@ -54,15 +55,14 @@ export default class ChessPositionGenerator {
         let chessInstance = new Chess();
         chessInstance.clear();
 
-        const chessInstanceWithPlayerKing = this._placePlayerKing({chessInstance, playerHasWhite});
+        const {chessInstanceWithPlayerKing, playerKingCoords} = this._placePlayerKing({chessInstance, playerHasWhite});
         if (chessInstanceWithPlayerKing === null) return null;
         chessInstance = chessInstanceWithPlayerKing;
 
-        const chessInstanceWithKings = this._placeComputerKing({chessInstance, playerHasWhite});
+        const {chessInstanceWithKings, computerKingCoords} = this._placeComputerKing({chessInstance, playerHasWhite});
         if (chessInstanceWithKings === null) return null;
-        chessInstance = chessInstanceWithKings;
 
-        return chessInstance;
+        return {chessInstanceWithKings, playerKingCoords, computerKingCoords};
     }
 
     /*
@@ -96,7 +96,6 @@ export default class ChessPositionGenerator {
                     });
 
                     const respectConstraint = interpretScript(updatedScript);
-    
                     if (!respectConstraint) continue;
                 }
                 catch (e) {
@@ -107,9 +106,9 @@ export default class ChessPositionGenerator {
                 }
             }
 
-            if (validSquare) return clonedInstance;
+            if (validSquare) return {chessInstanceWithPlayerKing: clonedInstance, playerKingCoords: selectedCell};
         }
-        return null;
+        return { chessInstanceWithPlayerKing: null, playerKingCoords: null};
     }
 
     /*
@@ -163,16 +162,16 @@ export default class ChessPositionGenerator {
             parts[1] = playerHasWhite ? 'w' : 'b';
             fenWithGoodPlayerTurn = parts.join(" ");
 
-            return new Chess(fenWithGoodPlayerTurn);
+            return { chessInstanceWithKings: new Chess(fenWithGoodPlayerTurn), computerKingCoords: selectedCell };
         }
-        return null;
+        return { chessInstanceWithKings: null, computerKingCoords: null };
     }
 
     /*
         Returns the Chess instance
         or null if failed too many times.
     */
-   _placeOtherPieces({chessInstanceWithKings, playerHasWhite}) {
+   _placeOtherPieces({chessInstanceWithKings, playerHasWhite, playerKingCoords, computerKingCoords}) {
         const chessInstance = chessInstanceWithKings;
         const constraintScript = this.inputScripts.otherPiecesCount;
         let chessInstanceWithAllPieces = chessInstance;
@@ -184,7 +183,8 @@ export default class ChessPositionGenerator {
             const pieceCount = currentEntry.pieceCount;
 
             const chessInstanceWithNewPiece = this._placeSinglePiece({
-                chessInstance: chessInstanceWithAllPieces, playerHasWhite, 
+                chessInstance: chessInstanceWithAllPieces, playerHasWhite,
+                playerKingCoords, computerKingCoords,
                 pieceType, ownerSide, pieceCount});
             if (chessInstanceWithNewPiece === null) {
                 failedForAtLeastOnePiece = true;
@@ -201,7 +201,11 @@ export default class ChessPositionGenerator {
         Returns the Chess instance
         or null if failed too many times.
     */
-   _placeSinglePiece({chessInstance, playerHasWhite, pieceType, ownerSide, pieceCount}) {
+   _placeSinglePiece({
+        chessInstance, playerHasWhite,
+        playerKingCoords, computerKingCoords,
+        pieceType, ownerSide, pieceCount
+    }) {
         let alreadyPlacedPieces = [];
 
         for (let pieceIndex = 0; pieceIndex < pieceCount; pieceIndex++) {
@@ -234,7 +238,23 @@ export default class ChessPositionGenerator {
 
 
                 const pieceScriptsKey = `${ownerSide}${pieceType}`;
+                const globalScriptConstraint = this.inputScripts.otherPieceGlobalConstraint[pieceScriptsKey];
+                const indexedScriptConstraint = this.inputScripts.otherPieceIndexedConstraint[pieceScriptsKey];
                 const mutualScriptConstraint = this.inputScripts.otherPieceMutualConstraint[pieceScriptsKey];
+
+                const globalScriptConstraintRespected =
+                    this._checkGlobalScriptConstraintRespected({
+                        globalScriptConstraint, selectedCell,
+                        playerKingCoords, computerKingCoords,
+                        playerHasWhite,
+                    });
+                if (!globalScriptConstraintRespected) continue;
+
+                const indexedScriptConstraintRespected =
+                    this._checkIndexedScriptConstraintRespected({
+                        indexedScriptConstraint,
+                    });
+                if (!indexedScriptConstraintRespected) continue;
 
                 const mutualScriptConstraintRespected = 
                     this._checkMutualScriptConstraintRespected({
@@ -287,6 +307,40 @@ export default class ChessPositionGenerator {
         return {rankStr, fileStr, file: randomFile, rank: randomRank};
    }
 
+   _checkGlobalScriptConstraintRespected({
+        globalScriptConstraint, selectedCell,
+        playerKingCoords, computerKingCoords,
+        playerHasWhite,
+   }){
+        if (globalScriptConstraint === undefined) return true;
+
+        let updatedScript = globalScriptConstraint;
+
+        updatedScript = this._replaceLocalVariables({
+            script: updatedScript,
+            substitutions: [
+                {regex: /\$file/g, value: selectedCell.file},
+                {regex: /\$rank/g, value: selectedCell.rank},
+                {regex: /\$playerKingFile/g, value: playerKingCoords.file},
+                {regex: /\$playerKingRank/g, value: playerKingCoords.rank},
+                {regex: /\$computerKingFile/g, value: computerKingCoords.file},
+                {regex: /\$computerKingRank/g, value: computerKingCoords.rank},
+                {regex: /\$playerHasWhite/g, value: playerHasWhite ? "2==2" : "2!=2"}
+            ]
+        });
+        updatedScript = this._replaceGlobalVariables(updatedScript);
+
+        return true;
+   }
+
+   _checkIndexedScriptConstraintRespected({
+        indexedScriptConstraint,
+    }){
+        if (indexedScriptConstraint === undefined) return true;
+
+        return true;
+    }
+
    _checkMutualScriptConstraintRespected({
        mutualScriptConstraint, selectedCell, playerHasWhite,
        alreadyPlacedPieces, pieceType, ownerSide,
@@ -320,7 +374,6 @@ export default class ChessPositionGenerator {
                             {regex: /\$playerHasWhite/g, value: playerHasWhite ? "2==2" : "2!=2"}
                         ]
                     });
-
 
                     const respectConstraint = interpretScript(updatedScriptCopy);
                     if (!respectConstraint) {

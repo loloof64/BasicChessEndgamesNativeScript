@@ -12,7 +12,7 @@
                         <ActivityIndicator :busy="generatingPosition" />
                         <ListView for="item in sampleScripts" @itemTap="onSampleScriptTap($event.item)">
                             <v-template>
-                                <Label :text="item.label" fontSize="22" />
+                                <Label :text="item.label" fontSize="22" width="100%" />
                             </v-template>
                         </ListView>
                     </GridLayout>
