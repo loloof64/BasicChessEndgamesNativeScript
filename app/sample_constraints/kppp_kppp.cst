@@ -17,12 +17,12 @@ C P 3
 
 # P P
 
-correctRank = $file == ($playerHasWhite ? #Rank5 : #Rank4);
+correctRank = $rank == ($playerHasWhite ? #Rank5 : #Rank4);
 return correctRank;
 
 # C P
 
-correctRank = $file == ($playerHasWhite ? #Rank7 : #Rank2);
+correctRank = $rank == ($playerHasWhite ? #Rank7 : #Rank2);
 return correctRank;
 
 

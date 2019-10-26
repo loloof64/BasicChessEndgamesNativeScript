@@ -330,7 +330,19 @@ export default class ChessPositionGenerator {
         });
         updatedScript = this._replaceGlobalVariables(updatedScript);
 
-        return true;
+        try {
+            const respectConstraint = interpretScript(updatedScript);
+            return respectConstraint;
+        }
+        catch (e) {
+            const pieceKind = `${ownerSide}${pieceType}`;
+
+            throw {
+                kind: 'piece_global_constraint_script_error',
+                pieceKind,
+                error: e,
+            };
+        }
    }
 
    _checkIndexedScriptConstraintRespected({
