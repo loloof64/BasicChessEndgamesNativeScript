@@ -43,11 +43,11 @@ return correctFile;
 # P P
 
 filesDifference = $firstFile - $secondFile;
-correctFile = (filesDifference == 1) || (filesDifference == -1);
+correctFile = (filesDifference < 3) && (filesDifference > -3);
 return correctFile;
 
 # C P
 
 filesDifference = $firstFile - $secondFile;
-correctFile = (filesDifference == 1) || (filesDifference == -1);
+correctFile = (filesDifference < 3) && (filesDifference > -3);
 return correctFile;

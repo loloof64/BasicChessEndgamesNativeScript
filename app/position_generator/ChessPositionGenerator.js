@@ -3,7 +3,7 @@ import ChessPositionValidator from './ChessPositionValidator';
 import interpretScript from '../position_generator/ConstraintScriptInterpreter';
 
 const MAX_KING_STEP_TRIES = 30;
-const MAX_SINGLE_PIECE_STEP_TRIES = 50;
+const MAX_SINGLE_PIECE_STEP_TRIES = 700;
 
 const GENERAL_VALUES = {
     '#FileA': 0,
@@ -183,7 +183,6 @@ export default class ChessPositionGenerator {
             const ownerSide = currentEntry.ownerSide;
             const pieceCount = currentEntry.pieceCount;
 
-            
             const chessInstanceWithNewPiece = this._placeSinglePiece({
                 chessInstance: chessInstanceWithAllPieces, playerHasWhite, 
                 pieceType, ownerSide, pieceCount});
@@ -209,29 +208,19 @@ export default class ChessPositionGenerator {
             let pieceResolved = false;
             let selectedCell;
 
-
-            /////////////////////////////////
-            console.log('pieceIndex', pieceIndex);
-            /////////////////////////////////
-
             for (let tryNumber = 0; tryNumber < MAX_SINGLE_PIECE_STEP_TRIES; tryNumber++) {
-
-                /////////////////////////////////
-                console.log('tryNumber', tryNumber);
-                /////////////////////////////////
-
                 const clonedInstance = new Chess(chessInstance.fen());
-                
+
                 selectedCell = this._selectRandomCell();
 
                 const square = "" + selectedCell.fileStr + selectedCell.rankStr;
 
                 let color;
                 if (playerHasWhite) {
-                    color = ownerSide ? 'w' : 'b';
+                    color = ownerSide === 'P' ? 'w' : 'b';
                 }
                 else {
-                    color = ownerSide ? 'b' : 'w';
+                    color = ownerSide === 'P' ? 'b' : 'w';
                 }
 
                 const freeSquare = clonedInstance.get(square) === null;
