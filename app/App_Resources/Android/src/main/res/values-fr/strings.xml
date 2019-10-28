@@ -31,7 +31,7 @@
   <string name="player_king_constraint_script_error">"Contrainte roi joueur"</string>
   <string name="position_generation_fail">"Echec de génération de la position !"</string>
   <string name="script_loading_error_title">"Erreur en chargeant le script"</string>
-  <string name="script_error_title">"Erreur de script"</string>
+  <string name="script_execution_error_title">"Erreur d\'exécution du script"</string>
   <string name="stop_game_title">"Arrêter la partie ?"</string>
   <string name="confirm_stop_game">"Voulez-vous vraiment arrêter la partie ?"</string>
   <string name="game_ending_draw_fifty_moves_rule">"Nulle par la règle des 50 coups"</string>

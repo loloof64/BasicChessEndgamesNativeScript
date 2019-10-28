@@ -9,12 +9,12 @@
                 <TabViewItem :title="'sample_scripts' | L"
                 iconSource="res://bookshelf">
                     <GridLayout>
-                        <ActivityIndicator :busy="generatingPosition" />
-                        <ListView for="item in sampleScripts" @itemTap="onSampleScriptTap($event.item)">
+                        <ListView for="item in sampleScripts" @itemTap="onSampleScriptTap($event.item)"  row="0" col="0">
                             <v-template>
                                 <Label :text="item.label" fontSize="22" width="100%" />
                             </v-template>
                         </ListView>
+                        <ActivityIndicator :busy="generatingPosition" row="0" col="0" />
                     </GridLayout>
                 </TabViewItem>
 
@@ -118,8 +118,8 @@
 
                     if (position === null) {
                         alert({
-                        title: localize('position_generation_fail'),
-                        okButtonText: localize('ok_button')
+                            title: localize('position_generation_fail'),
+                            okButtonText: localize('ok_button')
                         }).then(() => {
                             console.error('Failed to generate position')
                         })
@@ -142,7 +142,7 @@
                     const pieceKind = e.pieceKind;
                     const pieceKindStr = pieceKind !== undefined ? localize(pieceKind) : undefined;
 
-                    let title = `${localize('script_error_title')} : ${localize(e.kind)}`;
+                    let title = `${localize('script_execution_error_title')} : ${localize(e.kind)}`;
                     if (pieceKindStr !== undefined) title += ` (${pieceKindStr})`;
 
                     alert({

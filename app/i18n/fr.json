@@ -22,7 +22,7 @@
   "confirm_stop_game": "Voulez-vous vraiment arrêter la partie ?",
   "stop_game_title": "Arrêter la partie ?",
 
-  "script_error_title": "Erreur de script",
+  "script_execution_error_title": "Erreur d'exécution du script",
   "script_loading_error_title": "Erreur en chargeant le script",
   "position_generation_fail": "Echec de génération de la position !",
 
