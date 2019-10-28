@@ -95,7 +95,8 @@ export default {
             this.hightlightedChildIndex = historyIndex;
         },
         getMoveBackgroundColor(childIndex) {
-            const matchingChild = this.children.find(item => item.historyIndex === this.hightlightedChildIndex);
+            const matchingChild = this.children.find(item => item.childIndex === this.hightlightedChildIndex);
+            if (!matchingChild) return 'transparent';
             return matchingChild.childIndex === childIndex ? '#f66' : 'transparent';
         },
         getCurrentHistoryElement() {
@@ -108,7 +109,8 @@ export default {
                 this.historyIndex = -1;
             }
             else if (childIndex === 'last') {
-                this.historyIndex = this.children.length - 1;
+                const historyLength = this.children.filter(item => item.type === 'moveSan').length;
+                this.historyIndex = historyLength - 1;
             }
             else if (childIndex === 'previous') {
                 this.historyIndex -= 1;
@@ -119,7 +121,9 @@ export default {
             else {
                 this.historyIndex = childIndex;
             }
-            this.hightlightedChildIndex = this.historyIndex;
+            const matchingChild = this.children.find(item => item.historyIndex === this.historyIndex);
+            this.childIndex = matchingChild ? matchingChild.childIndex : undefined;
+            this.hightlightedChildIndex = this.childIndex;
         }
     },
 }
