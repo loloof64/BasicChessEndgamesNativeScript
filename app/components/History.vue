@@ -40,15 +40,18 @@ export default {
             // clear array content
             this.children.splice(0, this.children.length);
 
+            this.historyIndex = 0;
+            this.childIndex = 0;
+
             const numberStr = `${moveNumber}.${whiteMove ? '' : '..'}`;
             this.children.push({
                 type: 'moveNumber',
                 number: numberStr,
+                childIndex: this.childIndex,
             });
+            this.childIndex++;
 
             this.firstSanMove = true;
-            this.historyIndex = 0;
-            this.childIndex = 0;
             this.hightlightedChildIndex = undefined;
         },
         addSanMove({san, whiteMove, moveNumber}) {
@@ -59,8 +62,9 @@ export default {
                 this.children.push({
                     type: 'moveNumber',
                     number: number,
-                    childIndex: this.childIndex++,
+                    childIndex: this.childIndex,
                 });
+                this.childIndex++;
             }
 
             this.children.push({
@@ -68,9 +72,11 @@ export default {
                 san: san,
                 moveNumber,
                 whiteMove,
-                childIndex: this.childIndex++,
-                historyIndex: this.historyIndex++,
+                childIndex: this.childIndex,
+                historyIndex: this.historyIndex,
             });
+            this.childIndex++;
+            this.historyIndex++;
 
             this.firstSanMove = false;
             // Move the scrollview to the bottom
@@ -86,10 +92,11 @@ export default {
             this.$emit('gotohistory', historyObject.historyIndex);
         },
         highlightHistoryMove(historyIndex) {
-            this.hightlightedChildIndex = this.children.findIndex(currentChild => currentChild.historyIndex === historyIndex);
+            this.hightlightedChildIndex = historyIndex;
         },
         getMoveBackgroundColor(childIndex) {
-            return this.hightlightedChildIndex === childIndex ? '#f66' : 'transparent';
+            const matchingChild = this.children.find(item => item.historyIndex === this.hightlightedChildIndex);
+            return matchingChild.childIndex === childIndex ? '#f66' : 'transparent';
         },
         getCurrentHistoryElement() {
             const allSanHistoryElements = this.children.filter(item => item.type === 'moveSan');
