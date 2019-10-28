@@ -27,9 +27,9 @@ export default {
         return {
             children: [],
             firstSanMove: false,
-            moveNumber: 1,
+            childIndex: 0,
             historyIndex: 0,
-            hightlightedHistoryIndex: undefined,
+            hightlightedChildIndex: undefined,
         }
     },
     methods: {
@@ -47,28 +47,30 @@ export default {
             });
 
             this.firstSanMove = true;
-            this.moveNumber = number;
             this.historyIndex = 0;
-            this.hightlightedHistoryIndex = undefined;
+            this.childIndex = 0;
+            this.hightlightedChildIndex = undefined;
         },
-        addSanMove({san, whiteMove}) {
+        addSanMove({san, whiteMove, moveNumber}) {
             const white = whiteMove === undefined ? true : whiteMove;
 
             if (!this.firstSanMove && white) {
-                this.moveNumber++;
-                const number = `${this.moveNumber}.`;
+                const number = `${moveNumber}.`;
                 this.children.push({
                     type: 'moveNumber',
                     number: number,
+                    childIndex: this.childIndex++,
                 });
             }
 
             this.children.push({
                 type: 'moveSan',
                 san: san,
-                historyIndex: this.historyIndex,
+                moveNumber,
+                whiteMove,
+                childIndex: this.childIndex++,
+                historyIndex: this.historyIndex++,
             });
-            this.historyIndex++;
 
             this.firstSanMove = false;
             // Move the scrollview to the bottom
@@ -77,18 +79,40 @@ export default {
         },
         sendGotoHistoryEvent(childIndex) {
             const historyObject = this.children[childIndex];
+            this.childIndex = childIndex;
 
-            if (historyObject.historyIndex === undefined) return;
+            if (historyObject.childIndex === undefined) return;
 
             this.$emit('gotohistory', historyObject.historyIndex);
         },
         highlightHistoryMove(historyIndex) {
-            this.hightlightedHistoryIndex = this.children.findIndex(currentChild => currentChild.historyIndex !== undefined &&
-                currentChild.historyIndex === historyIndex
-            );
+            this.hightlightedChildIndex = this.children.findIndex(currentChild => currentChild.historyIndex === historyIndex);
         },
         getMoveBackgroundColor(childIndex) {
-            return this.hightlightedHistoryIndex === childIndex ? '#f66' : 'transparent';
+            return this.hightlightedChildIndex === childIndex ? '#f66' : 'transparent';
+        },
+        getCurrentHistoryElement() {
+            const allSanHistoryElements = this.children.filter(item => item.type === 'moveSan');
+            const historyElement = allSanHistoryElements[this.historyIndex];
+            return historyElement;
+        },
+        gotoHistoryIndex(childIndex) {
+            if (childIndex === 'first') {
+                this.historyIndex = -1;
+            }
+            else if (childIndex === 'last') {
+                this.historyIndex = this.children.length - 1;
+            }
+            else if (childIndex === 'previous') {
+                this.historyIndex -= 1;
+            }
+            else if (childIndex === 'next') {
+                this.historyIndex += 1;
+            }
+            else {
+                this.historyIndex = childIndex;
+            }
+            this.hightlightedChildIndex = this.historyIndex;
         }
     },
 }

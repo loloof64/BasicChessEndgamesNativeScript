@@ -40,27 +40,30 @@
                     @gotohistory="gotoHistory($event)"
                 />
             </GridLayout>
-            <WrapLayout dock="bottom" orientation="horizontal" :visibility="historyAvailable ? 'visible' : 'hidden'">
-                <Label class="button" @tap="gotoHistory('first')">
-                    <FormattedString>
-                        <Span class="fa button" text.decode="&#xf04a;" fontSize="30" />
-                    </FormattedString>
-                </Label>
-                <Label class="button" @tap="gotoHistory('previous')">
-                    <FormattedString>
-                        <Span class="fa button" text.decode="&#xf048;" fontSize="30" />
-                    </FormattedString>
-                </Label>
-                <Label class="button" @tap="gotoHistory('next')">
-                    <FormattedString>
-                        <Span class="fa button" text.decode="&#xf051;" fontSize="30" />
-                    </FormattedString>
-                </Label>
-                <Label class="button" @tap="gotoHistory('last')">
-                    <FormattedString>
-                        <Span class="fa button" text.decode="&#xf04e;" fontSize="30" />
-                    </FormattedString>
-                </Label>
+            <WrapLayout dock="bottom" orientation="horizontal">
+                <WrapLayout :visibility="historyAvailable ? 'visible' : 'collapse'" orientation="horizontal">
+                    <Label class="button" @tap="gotoHistory('first')">
+                        <FormattedString>
+                            <Span class="fa button" text.decode="&#xf04a;" fontSize="30" />
+                        </FormattedString>
+                    </Label>
+                    <Label class="button" @tap="gotoHistory('previous')">
+                        <FormattedString>
+                            <Span class="fa button" text.decode="&#xf048;" fontSize="30" />
+                        </FormattedString>
+                    </Label>
+                    <Label class="button" @tap="gotoHistory('next')">
+                        <FormattedString>
+                            <Span class="fa button" text.decode="&#xf051;" fontSize="30" />
+                        </FormattedString>
+                    </Label>
+                    <Label class="button" @tap="gotoHistory('last')">
+                        <FormattedString>
+                            <Span class="fa button" text.decode="&#xf04e;" fontSize="30" />
+                        </FormattedString>
+                    </Label>
+                </WrapLayout>
+                <Label :text="currentMoveFan" />
             </WrapLayout>
         </StackLayout>
     </Page>
@@ -82,6 +85,7 @@
                 reversed: false,
                 historyVisible: false,
                 historyAvailable: false,
+                currentMoveFan: '',
             }
         },
         props: [
@@ -97,22 +101,30 @@
                     whitePlayerType: whitePlayer,
                     blackPlayerType: blackPlayer,
                 });
+                this.currentMoveFan = '';
             },
             reverseBoard() {
                 this.reversed = ! this.reversed;
             },
-            addMoveSanToHistory(eventObject) {
-                this.$refs['history'].addSanMove(eventObject);
+            addMoveSanToHistory(historyElement) {
+                this.$refs['history'].addSanMove(historyElement);
+                this.currentMoveFan = `${historyElement.moveNumber}.${historyElement.whiteMove ? '' : '..'} ${historyElement.san}`;
             },
             resetHistoryForNewGame(eventObject) {
                 this.$refs['history'].startHistory(eventObject);
                 this.historyAvailable = false;
+                this.currentMoveFan = '';
             },
-            gotoHistory(eventObject) {
+            gotoHistory(positionIndex) {
                 const board = this.$refs['board'];
                 if (board.gameIsRunning()) return;
 
-                board.gotoHistory(eventObject);
+                board.gotoHistory(positionIndex);
+                this.$refs['history'].gotoHistoryIndex(positionIndex);
+                const historyElement = this.$refs['history'].getCurrentHistoryElement();
+                this.currentMoveFan = historyElement !== undefined ? 
+                    `${historyElement.moveNumber}.${historyElement.whiteMove ? '' : '..'} ${historyElement.san}`:
+                    '';
                 this.historyVisible = false;
             },
             toggleHistoryVisibility() {

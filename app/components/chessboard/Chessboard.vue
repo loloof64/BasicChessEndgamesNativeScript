@@ -288,6 +288,7 @@ export default {
             return whiteTurn ? '\u2658' : '\u265E';
         },
         commitPromotion(typeStr) {
+            const moveNumber =  parseInt(this.boardLogic.fen().split(" ")[5]);
             this.promotionDialogOpened = false;
             this.boardOrientationBeforePromotionDialog = undefined;
             this.boardLogic.move({from: this.startCellStr, to: this.endCellStr, promotion: typeStr});
@@ -317,6 +318,7 @@ export default {
 
             this.checkGameEndedStateAndNotifyUser();
             this.$emit('movesan', {
+                moveNumber,
                 san: lastMoveSan,
                 whiteMove: lastMoveIsWhite,
             });
@@ -445,6 +447,7 @@ export default {
                             this.promotionDialogOpened = true;
                         }
                         else {
+                            const moveNumber =  parseInt(this.boardLogic.fen().split(" ")[5]);
                             this.boardLogic.move({from: this.startCellStr, to: this.endCellStr});
                             const lastMoveIsWhite = this.boardLogic.turn() === 'b'; 
                             const history = this.boardLogic.history();
@@ -473,6 +476,7 @@ export default {
 
                             this.checkGameEndedStateAndNotifyUser();
                             this.$emit('movesan', {
+                                moveNumber,
                                 san: lastMoveSan,
                                 whiteMove: lastMoveIsWhite,
                             });
@@ -708,6 +712,7 @@ export default {
             };
         },
         _commitComputerMove(moveData) {
+            const moveNumber =  parseInt(this.boardLogic.fen().split(" ")[5]);;
             this.boardLogic.move({from: moveData.startCellStr, to: moveData.endCellStr, promotion: moveData.promotion});
             const lastMoveIsWhite = this.boardLogic.turn() === 'b'; 
             const history = this.boardLogic.history();
@@ -729,6 +734,7 @@ export default {
 
             this.checkGameEndedStateAndNotifyUser();
             this.$emit('movesan', {
+                moveNumber,
                 san: lastMoveSan,
                 whiteMove: lastMoveIsWhite,
             });
