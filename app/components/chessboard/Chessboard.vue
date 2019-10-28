@@ -186,6 +186,7 @@ export default {
         stopGame() {
             this.gameInProgress = false;
             this.historyCursorIndex = this.playedMoves.length - 1;
+            this.$emit('historyselection', this.historyCursorIndex);
         },
         startNewGame({whitePlayerType, blackPlayerType, startPositionStr}) {
             this.cancelDnd();
