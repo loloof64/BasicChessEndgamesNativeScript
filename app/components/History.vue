@@ -92,7 +92,8 @@ export default {
             this.$emit('gotohistory', historyObject.historyIndex);
         },
         highlightHistoryMove(historyIndex) {
-            this.hightlightedChildIndex = historyIndex;
+            const matchingChild = this.children.find(item => item.historyIndex === historyIndex);
+            this.hightlightedChildIndex = matchingChild.childIndex;
         },
         getMoveBackgroundColor(childIndex) {
             const matchingChild = this.children.find(item => item.childIndex === this.hightlightedChildIndex);

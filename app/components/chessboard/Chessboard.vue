@@ -316,12 +316,12 @@ export default {
                 lastMove: this.lastMove,
             });
 
-            this.checkGameEndedStateAndNotifyUser();
             this.$emit('movesan', {
                 moveNumber,
                 san: lastMoveSan,
                 whiteMove: lastMoveIsWhite,
             });
+            this.checkGameEndedStateAndNotifyUser();
 
             const canvas = this.$refs.canvas.nativeView;
             canvas.redraw();
@@ -347,26 +347,31 @@ export default {
                 this.gameEndedReason = 'game_ending_mate';
                 this.historyCursorIndex = this.playedMoves.length - 1;
                 this.$emit('gameended');
+                this.$emit('historyselection', this.historyCursorIndex);
             } else if (this.boardLogic.in_stalemate()) {
                 this.gameInProgress = false;
                 this.gameEndedReason = 'game_ending_draw_stalemate';
                 this.historyCursorIndex = this.playedMoves.length - 1;
                 this.$emit('gameended');
+                this.$emit('historyselection', this.historyCursorIndex);
             } else if (this.boardLogic.in_threefold_repetition()) {
                 this.gameInProgress = false;
                 this.gameEndedReason = 'game_ending_draw_three_fold_repetitions';
                 this.historyCursorIndex = this.playedMoves.length - 1;
                 this.$emit('gameended');
+                this.$emit('historyselection', this.historyCursorIndex);
             } else if (this.boardLogic.insufficient_material()) {
                 this.gameInProgress = false;
                 this.gameEndedReason = 'game_ending_draw_missing_material';
                 this.historyCursorIndex = this.playedMoves.length - 1;
                 this.$emit('gameended');
+                this.$emit('historyselection', this.historyCursorIndex);
             } else if (this.boardLogic.in_draw()) {
                 this.gameInProgress = false;
                 this.gameEndedReason = 'game_ending_draw_fifty_moves_rule';
                 this.historyCursorIndex = this.playedMoves.length - 1;
                 this.$emit('gameended');
+                this.$emit('historyselection', this.historyCursorIndex);
             }
         },
         reactToTouch(event) {
@@ -474,12 +479,12 @@ export default {
                                 lastMove: this.lastMove,
                             });
 
-                            this.checkGameEndedStateAndNotifyUser();
                             this.$emit('movesan', {
                                 moveNumber,
                                 san: lastMoveSan,
                                 whiteMove: lastMoveIsWhite,
                             });
+                            this.checkGameEndedStateAndNotifyUser();
 
                             canvas.redraw();
                             if (this.gameInProgress) this.makeComputerPlayIfComputerTurn();
@@ -732,12 +737,12 @@ export default {
                 lastMove: this.lastMove,
             });
 
-            this.checkGameEndedStateAndNotifyUser();
             this.$emit('movesan', {
                 moveNumber,
                 san: lastMoveSan,
                 whiteMove: lastMoveIsWhite,
             });
+            this.checkGameEndedStateAndNotifyUser();
 
             const canvas = this.$refs.canvas.nativeView;
             canvas.redraw();
