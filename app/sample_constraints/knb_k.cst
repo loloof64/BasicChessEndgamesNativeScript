@@ -1,3 +1,7 @@
+# Drawish
+
+false
+
 # Computer king constraint
 
 correctFile = ($file >= #FileC) && ($file <= #FileF);

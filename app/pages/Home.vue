@@ -113,6 +113,7 @@
 
                 try {
                     const position = new ChessPositionGenerator().generatePosition(scriptData);
+                    const gameGoal = scriptData.drawish ? localize('drawish_goal') : localize('winning_goal');
                     this.generatingPosition = false;
 
                     if (position === null) {
@@ -131,6 +132,7 @@
                             },
                             props: {
                                 position,
+                                gameGoal,
                             }
                         });
                     }

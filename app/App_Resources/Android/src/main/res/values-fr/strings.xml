@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="drawish_goal">"Objectif nulle"</string>
+  <string name="winning_goal">"Objectif gain"</string>
   <string name="sample_knb_k">"Roi+Cavalier+Fou / Roi"</string>
   <string name="sample_kppp_kppp">"Roi+3Pions / Roi+3Pions"</string>
   <string name="sample_kp_k_2">"Roi+Pion / Roi (2)"</string>

@@ -1,3 +1,7 @@
+# Drawish
+
+false
+
 # Player king constraint
 
 goodFile = $file >= #FileC && $file <= #FileF;

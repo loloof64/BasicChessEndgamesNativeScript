@@ -33,6 +33,7 @@ export default class ConstraintScriptLoader {
             otherPieceGlobalConstraint: {},
             otherPieceMutualConstraint: {},
             otherPieceIndexedConstraint: {},
+            drawish: false,
         };
         const lines = inputScriptString.split(/\r?\n/);
         lines.forEach(line => {
@@ -46,6 +47,7 @@ export default class ConstraintScriptLoader {
                 'otherPieceGlobalConstraint',
                 'otherPieceMutualConstraint',
                 'otherPieceIndexedConstraint',
+                'drawish',
             ].includes(headerType);
             const isAPieceTypeSpecification = 
             pieceTypeSpecification !== undefined && [
@@ -69,7 +71,10 @@ export default class ConstraintScriptLoader {
                 const headerType = currData[0];
                 const value = currData[1];
 
-                if (headerType === 'otherPiecesCount') {
+                if (headerType === 'drawish') {
+                    accumData[headerType] = value;
+                }
+                else if (headerType === 'otherPiecesCount') {
                     accumData[headerType] = value;
                 }
                 else if ([
@@ -108,6 +113,7 @@ export default class ConstraintScriptLoader {
                 case 'Other piece global constraint': return 'otherPieceGlobalConstraint';
                 case 'Other piece mutual constraint': return 'otherPieceMutualConstraint';
                 case 'Other piece indexed constraint': return 'otherPieceIndexedConstraint';
+                case 'Drawish': return 'drawish';
                 default: return null;
             }
         }
@@ -131,9 +137,12 @@ export default class ConstraintScriptLoader {
     }
 
     _addLineToCurrentScript(line) {
-        const emptyLine = line.length === 0;
+        const emptyLine = line.trim().length === 0;
         if (emptyLine) return;
-        if (this.currentScriptType === 'otherPiecesCount') {
+        if (this.currentScriptType === 'drawish') {
+            this.result[this.currentScriptType] = line.trim() === 'true';
+        }
+        else if (this.currentScriptType === 'otherPiecesCount') {
             const lineParts = line.split(" ");
             const ownerSide = lineParts[0];
             const pieceType = lineParts[1];

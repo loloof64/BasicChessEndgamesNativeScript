@@ -56,5 +56,8 @@
   "sample_kp_k_1": "Roi+Pion / Roi (1)",
   "sample_kp_k_2": "Roi+Pion / Roi (2)",
   "sample_kppp_kppp": "Roi+3Pions / Roi+3Pions",
-  "sample_knb_k": "Roi+Cavalier+Fou / Roi"
+  "sample_knb_k": "Roi+Cavalier+Fou / Roi",
+
+  "winning_goal": "Objectif gain",
+  "drawish_goal": "Objectif nulle"
 }

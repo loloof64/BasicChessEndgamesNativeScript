@@ -40,31 +40,34 @@
                     @gotohistory="gotoHistory($event)"
                 />
             </GridLayout>
-            <WrapLayout dock="bottom" orientation="horizontal">
-                <WrapLayout :visibility="historyAvailable ? 'visible' : 'collapse'" orientation="horizontal">
-                    <Label class="button" @tap="gotoHistory('first')">
-                        <FormattedString>
-                            <Span class="fa button" text.decode="&#xf04a;" fontSize="30" />
-                        </FormattedString>
-                    </Label>
-                    <Label class="button" @tap="gotoHistory('previous')">
-                        <FormattedString>
-                            <Span class="fa button" text.decode="&#xf048;" fontSize="30" />
-                        </FormattedString>
-                    </Label>
-                    <Label class="button" @tap="gotoHistory('next')">
-                        <FormattedString>
-                            <Span class="fa button" text.decode="&#xf051;" fontSize="30" />
-                        </FormattedString>
-                    </Label>
-                    <Label class="button" @tap="gotoHistory('last')">
-                        <FormattedString>
-                            <Span class="fa button" text.decode="&#xf04e;" fontSize="30" />
-                        </FormattedString>
-                    </Label>
-                </WrapLayout>
-                <Label :text="currentMoveFan" />
-            </WrapLayout>
+            <StackLayout dock="bottom" orientation="vertical">
+                <Label fontSize="22" fontWeight="bold" :text="gameGoal" />
+                <StackLayout orientation="horizontal">
+                    <WrapLayout :visibility="historyAvailable ? 'visible' : 'collapse'" orientation="horizontal">
+                        <Label class="button" @tap="gotoHistory('first')">
+                            <FormattedString>
+                                <Span class="fa button" text.decode="&#xf04a;" fontSize="30" />
+                            </FormattedString>
+                        </Label>
+                        <Label class="button" @tap="gotoHistory('previous')">
+                            <FormattedString>
+                                <Span class="fa button" text.decode="&#xf048;" fontSize="30" />
+                            </FormattedString>
+                        </Label>
+                        <Label class="button" @tap="gotoHistory('next')">
+                            <FormattedString>
+                                <Span class="fa button" text.decode="&#xf051;" fontSize="30" />
+                            </FormattedString>
+                        </Label>
+                        <Label class="button" @tap="gotoHistory('last')">
+                            <FormattedString>
+                                <Span class="fa button" text.decode="&#xf04e;" fontSize="30" />
+                            </FormattedString>
+                        </Label>
+                    </WrapLayout>
+                    <Label :text="currentMoveFan" fontSize="22" />
+                </StackLayout>
+            </StackLayout>
         </StackLayout>
     </Page>
 </template>
@@ -90,6 +93,7 @@
         },
         props: [
             'position',
+            'gameGoal',
         ],
         methods: {
             newGame() {

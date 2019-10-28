@@ -1,3 +1,7 @@
+# Drawish
+
+false
+
 # Player king constraint
 
 correctRank = $rank == ($playerHasWhite ? #Rank1 : #Rank8);
