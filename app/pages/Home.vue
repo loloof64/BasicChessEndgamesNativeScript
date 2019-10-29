@@ -21,6 +21,7 @@
                 <TabViewItem :title="'custom_scripts' | L" 
                 iconSource="res://handsaw">
                     <GridLayout>
+                        <Label :text="explorerPath" class="explorerPath" />
                         <ScrollView :height="personalsListViewHeight">
                             <ListView for="item in explorerItems" @itemTap="onExplorerTap($event.item)">
                                 <v-template>
@@ -100,12 +101,14 @@
                 ],
                 generatingPosition: false,
                 explorerItems: [],
+                explorerPath: '',
                 explorerManager: new FileExplorer(),
                 personalsListViewHeight: platformModule.screen.mainScreen.heightDIPs - 200,
             }
         },
         async mounted() {
             this.explorerItems = await this.explorerManager.getItems();
+            this.explorerPath = this.explorerManager.getShortenedPath();
         },
         methods: {  
             async onSampleScriptTap(scriptItem) {
@@ -208,5 +211,9 @@
 
     .vb {
         vertical-align: bottom;
+    }
+
+    .explorerPath {
+        font-size: 18;
     }
 </style>

@@ -36,14 +36,14 @@ export default class FileExplorer {
             if (fst.folder !== snd.folder) {
                 return fst.folder ? -1 : 1;
             }
-            return fst.name.localeCompare(snd.name, this.getLocale(), {sentitivity: "base"});
+            return fst.name.localeCompare(snd.name, this._getLocale(), {sentitivity: "base"});
         });
     }
 
     /*
     https://stackoverflow.com/a/48758960/662618
     */
-    getLocale() {
+    _getLocale() {
         let lang;  
         if (platformModule.isAndroid) {
           lang = java.util.Locale.getDefault().getLanguage();
@@ -72,7 +72,7 @@ export default class FileExplorer {
         this.currentFolder = this.currentFolder.parent;
     }
 
-    get shortenedPath() {
+    getShortenedPath() {
         const path = this.currentFolder.path;
         return path.replace(this.personalScriptsRootFolder.path, localize('custom_scripts_root'))
     }
