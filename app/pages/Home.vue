@@ -20,9 +20,15 @@
 
                 <TabViewItem :title="'custom_scripts' | L" 
                 iconSource="res://handsaw">
-                    <GridLayout>
-                        <Label text="Custom scripts" class="h2 text-center" />
-                    </GridLayout>
+                    <ScrollView>
+                        <StackLayout>
+                            <ListView for="item in explorerItems" @itemTap="onExplorerTap($event.item)"  :height="personalsListViewHeight">
+                                <v-template>
+                                    <Label :text="item.label" fontSize="22" width="100%" />
+                                </v-template>
+                            </ListView>
+                        </StackLayout>
+                    </ScrollView>
                 </TabViewItem>
             </TabView>
         </StackLayout>
@@ -32,11 +38,17 @@
 <script>
     import { localize } from "nativescript-localize";
     import Vue from "nativescript-vue";
+    const platformModule = require("tns-core-modules/platform");
 
     import ChessPositionGenerator from '../position_generator/ChessPositionGenerator';
     import ConstraintScriptLoader from '../position_generator/ConstraintScriptLoader';
 
     Vue.filter("L", localize);
+
+    const fileSystemModule = require("tns-core-modules/file-system");
+    const currentAppFolder = fileSystemModule.knownFolders.currentApp();
+    const personalScriptsRootFolder = currentAppFolder.getFolder('personnal_constraints');
+    
 
     export default {
         data() {
@@ -76,10 +88,34 @@
                     },
                 ],
                 generatingPosition: false,
+                explorerItems: [],
+                personalsListViewHeight: platformModule.screen.mainScreen.heightDIPs - 200,
+                personalsScriptsCurrentFolder: personalScriptsRootFolder,
             }
         },
-        methods: {
-            
+        mounted() {
+            this.explorerItems = [];
+            personalScriptsRootFolder.getEntities().then(entities => {
+                entities.forEach(entity => {
+                    const isAFolder = fileSystemModule.Folder.exists(entity.path);
+                    const name = entity.name;
+                    const path = entity.path;
+                    if (isAFolder) {
+                        explorerItems.push({
+                            name, path,
+                            folder: true,
+                        });
+                    }
+                    else if (name.endsWith('.cst')) {
+                        explorerItems.push({
+                            name, path,
+                            folder: false,
+                        })
+                    }
+                });
+            });
+        },
+        methods: {  
             async onSampleScriptTap(scriptItem) {
 
                 let scriptData;
@@ -154,7 +190,10 @@
                     })
                 }
                 
-            }
+            },
+            onExplorerTap(explorerItem) {
+
+            },
         },
     };
 </script>
