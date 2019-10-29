@@ -13,6 +13,7 @@
   "repository": "<fill-your-repository-here>",
   "dependencies": {
     "@nota/nativescript-webview-ext": "5.4.1",
+    "@nstudio/nativescript-floatingactionbutton": "^1.1.0",
     "acorn": "^7.1.0",
     "chess.js": "^0.10.2",
     "chevrotain": "^6.5.0",

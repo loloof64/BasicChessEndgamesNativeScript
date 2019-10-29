@@ -9,7 +9,7 @@
                 <TabViewItem :title="'sample_scripts' | L"
                 iconSource="res://bookshelf">
                     <GridLayout>
-                        <ListView for="item in sampleScripts" @itemTap="onSampleScriptTap($event.item)"  row="0" col="0">
+                        <ListView for="item in sampleScripts" @itemTap="onSampleScriptTap($event.item)" row="0" col="0">
                             <v-template>
                                 <Label :text="item.label" fontSize="22" width="100%" />
                             </v-template>
@@ -20,15 +20,25 @@
 
                 <TabViewItem :title="'custom_scripts' | L" 
                 iconSource="res://handsaw">
-                    <ScrollView>
-                        <StackLayout>
-                            <ListView for="item in explorerItems" @itemTap="onExplorerTap($event.item)"  :height="personalsListViewHeight">
+                    <GridLayout>
+                        <ScrollView :height="personalsListViewHeight">
+                            <ListView for="item in explorerItems" @itemTap="onExplorerTap($event.item)">
                                 <v-template>
                                     <Label :text="item.label" fontSize="22" width="100%" />
                                 </v-template>
                             </ListView>
-                        </StackLayout>
-                    </ScrollView>
+                        </ScrollView>
+                        <Fab
+                            class="fab-button hr vb"
+                            backgroundColor="orchid"
+                            icon="res://new_document"
+                        />
+                        <Fab
+                            class="fab-button hl vb"
+                            backgroundColor="yellowgreen"
+                            icon="res://new_folder"
+                        />
+                    </GridLayout>
                 </TabViewItem>
             </TabView>
         </StackLayout>
@@ -44,6 +54,10 @@
     import ConstraintScriptLoader from '../position_generator/ConstraintScriptLoader';
 
     Vue.filter("L", localize);
+    Vue.registerElement(
+        'Fab',
+        () => require('@nstudio/nativescript-floatingactionbutton').Fab
+    );
 
     const fileSystemModule = require("tns-core-modules/file-system");
     const currentAppFolder = fileSystemModule.knownFolders.currentApp();
@@ -200,4 +214,21 @@
 
 <style scoped lang="scss">
     @import '../app-variables';
+
+    .fab-button {
+        width: 65;
+        height: 65;
+    }
+
+    .hl {
+        horizontal-align: left;
+    }
+
+    .hr {
+        horizontal-align: right;
+    }
+
+    .vb {
+        vertical-align: bottom;
+    }
 </style>
