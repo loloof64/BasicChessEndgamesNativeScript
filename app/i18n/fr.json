@@ -59,5 +59,7 @@
   "sample_knb_k": "Roi+Cavalier+Fou / Roi",
 
   "winning_goal": "Objectif gain",
-  "drawish_goal": "Objectif nulle"
+  "drawish_goal": "Objectif nulle",
+
+  "custom_scripts_root": "scripts://"
 }

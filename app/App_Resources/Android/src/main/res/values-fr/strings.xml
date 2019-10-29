@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="custom_scripts_root">"scripts://"</string>
   <string name="drawish_goal">"Objectif nulle"</string>
   <string name="winning_goal">"Objectif gain"</string>
   <string name="sample_knb_k">"Roi+Cavalier+Fou / Roi"</string>

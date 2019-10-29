@@ -53,17 +53,14 @@
     import ChessPositionGenerator from '../position_generator/ChessPositionGenerator';
     import ConstraintScriptLoader from '../position_generator/ConstraintScriptLoader';
 
+    import FileExplorer from '../util/FileExplorer';
+
     Vue.filter("L", localize);
     Vue.registerElement(
         'Fab',
         () => require('@nstudio/nativescript-floatingactionbutton').Fab
     );
-
-    const fileSystemModule = require("tns-core-modules/file-system");
-    const currentAppFolder = fileSystemModule.knownFolders.currentApp();
-    const personalScriptsRootFolder = currentAppFolder.getFolder('personnal_constraints');
     
-
     export default {
         data() {
             return {
@@ -103,31 +100,12 @@
                 ],
                 generatingPosition: false,
                 explorerItems: [],
+                explorerManager: new FileExplorer(),
                 personalsListViewHeight: platformModule.screen.mainScreen.heightDIPs - 200,
-                personalsScriptsCurrentFolder: personalScriptsRootFolder,
             }
         },
-        mounted() {
-            this.explorerItems = [];
-            personalScriptsRootFolder.getEntities().then(entities => {
-                entities.forEach(entity => {
-                    const isAFolder = fileSystemModule.Folder.exists(entity.path);
-                    const name = entity.name;
-                    const path = entity.path;
-                    if (isAFolder) {
-                        explorerItems.push({
-                            name, path,
-                            folder: true,
-                        });
-                    }
-                    else if (name.endsWith('.cst')) {
-                        explorerItems.push({
-                            name, path,
-                            folder: false,
-                        })
-                    }
-                });
-            });
+        async mounted() {
+            this.explorerItems = await this.explorerManager.getItems();
         },
         methods: {  
             async onSampleScriptTap(scriptItem) {

@@ -59,5 +59,7 @@
   "sample_knb_k": "King+Knight+Bishop / King",
 
   "winning_goal": "Winning goal",
-  "drawish_goal": "Drawish goal"
+  "drawish_goal": "Drawish goal",
+
+  "custom_scripts_root": "scripts://"
 }
