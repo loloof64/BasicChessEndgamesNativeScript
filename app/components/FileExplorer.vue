@@ -186,6 +186,7 @@
     .fab-button {
         width: 65;
         height: 65;
+        opacity: 0.3;
     }
 
     .hl {
