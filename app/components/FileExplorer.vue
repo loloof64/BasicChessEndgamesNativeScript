@@ -47,7 +47,7 @@
             return {
                 explorerPath: '',
                 explorerItems: [],
-                scriptsViewHeight: platformModule.screen.mainScreen.heightDIPs - 200,
+                scriptsViewHeight: platformModule.screen.mainScreen.heightDIPs - 260,
                 explorerPathWidth: platformModule.screen.mainScreen.widthDIPs,
                 currentFolder: undefined,
                 scriptsRootFolder: undefined,
