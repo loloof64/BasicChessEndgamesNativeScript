@@ -20,26 +20,29 @@
 
                 <TabViewItem :title="'custom_scripts' | L" 
                 iconSource="res://handsaw">
-                    <GridLayout>
+                    <StackLayout>
                         <Label :text="explorerPath" class="explorerPath" />
-                        <ScrollView :height="personalsListViewHeight">
-                            <ListView for="item in explorerItems" @itemTap="onExplorerTap($event.item)">
-                                <v-template>
-                                    <Label :text="item.label" fontSize="22" width="100%" />
-                                </v-template>
-                            </ListView>
-                        </ScrollView>
-                        <Fab
-                            class="fab-button hr vb"
-                            backgroundColor="orchid"
-                            icon="res://new_document"
-                        />
-                        <Fab
-                            class="fab-button hl vb"
-                            backgroundColor="yellowgreen"
-                            icon="res://new_folder"
-                        />
-                    </GridLayout>
+                        <GridLayout>
+                            <ScrollView :height="personalsListViewHeight">
+                                <ListView for="item in explorerItems" @itemTap="onExplorerTap($event.item)">
+                                    <v-template>
+                                        <Label :text="item.name" fontSize="22" width="100%" />
+                                    </v-template>
+                                </ListView>
+                            </ScrollView>
+                            <Fab
+                                class="fab-button hr vb"
+                                backgroundColor="orchid"
+                                icon="res://new_document"
+                            />
+                            <Fab
+                                class="fab-button hl vb"
+                                backgroundColor="yellowgreen"
+                                icon="res://new_folder"
+                                @tap="createFolder()"
+                            />
+                        </GridLayout>
+                    </StackLayout>
                 </TabViewItem>
             </TabView>
         </StackLayout>
@@ -189,6 +192,29 @@
             onExplorerTap(explorerItem) {
 
             },
+            createFolder() {
+                prompt({
+                    title: localize('new_folder_title'),
+                    okButtonText: localize('ok_button'),
+                    cancelButtonText: localize('cancel_button'),
+                }).then(async result => {
+                    const folderName = result.text || this._randomName();
+
+                    this.explorerManager.addFolder(folderName);
+                    const updatedItems = await this.explorerManager.getItems();
+
+                    this.explorerItems = updatedItems;
+                });
+            },
+            _randomName() {
+                let name = '';
+                for (let i = 0; i < 20; i++) {
+                    const letterIndex = Math.random() * 26;
+                    const letter = String.fromCharCode('a'.charCodeAt(0) + letterIndex);
+                    name += letter;
+                }
+                return name;
+            }
         },
     };
 </script>
@@ -215,5 +241,6 @@
 
     .explorerPath {
         font-size: 18;
+        background-color: aquamarine;
     }
 </style>

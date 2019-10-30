@@ -40,6 +40,14 @@ export default class FileExplorer {
         });
     }
 
+    addFolder(folderName) {
+        const newFolder = this.currentFolder.getFolder(folderName);
+        ///////////////////////////////////////
+        console.log('newFolder', newFolder);
+        ///////////////////////////////////////
+        return newFolder;
+    }
+
     /*
     https://stackoverflow.com/a/48758960/662618
     */

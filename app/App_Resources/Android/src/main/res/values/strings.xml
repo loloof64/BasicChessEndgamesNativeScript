@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="new_folder_title">"Create new folder"</string>
   <string name="custom_scripts_root">"scripts://"</string>
   <string name="drawish_goal">"Drawish goal"</string>
   <string name="winning_goal">"Winning goal"</string>

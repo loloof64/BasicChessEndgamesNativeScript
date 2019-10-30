@@ -61,5 +61,6 @@
   "winning_goal": "Winning goal",
   "drawish_goal": "Drawish goal",
 
-  "custom_scripts_root": "scripts://"
+  "custom_scripts_root": "scripts://",
+  "new_folder_title": "Create new folder"
 }

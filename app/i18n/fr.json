@@ -61,5 +61,6 @@
   "winning_goal": "Objectif gain",
   "drawish_goal": "Objectif nulle",
 
-  "custom_scripts_root": "scripts://"
+  "custom_scripts_root": "scripts://",
+  "new_folder_title": "Créer un nouveau dossier"
 }
