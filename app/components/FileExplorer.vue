@@ -106,12 +106,23 @@
                         })
                     }
                 });
-                return explorerItems.sort((fst, snd) => {
+                let updatedItems = explorerItems.sort((fst, snd) => {
                     if (fst.folder !== snd.folder) {
                         return fst.folder ? -1 : 1;
                     }
                     return fst.name.localeCompare(snd.name, this._getLocale(), {sentitivity: "base"});
                 });
+
+                const weCanGoUp = this.currentFolder.path !== this.scriptsRootFolder.path;
+                if (weCanGoUp) {
+                    updatedItems.unshift({
+                        name: '..',
+                        path: '..',
+                        folder: true,
+                    });
+                }
+
+                return updatedItems;
             },
 
             _addFolder(folderName) {
@@ -135,21 +146,6 @@
                 return lang;
             },
 
-            goToSubFolder(folderName) {
-                const folderPath = fileSystemModule.path.join(this.currentFolder.path, folderName);
-                const folder = fileSystemModule.Folder.fromPath(folderPath);
-                const isAnExistingFolder = fileSystemModule.Folder.exists(folder);
-
-                if (isAnExistingFolder) {
-                    this.currentFolder = folder;
-                }
-            },
-
-            goUpLevel() {
-                if (this.currentFolder === this.scriptsRootFolder) return;
-                this.currentFolder = this.currentFolder.parent;
-            },
-
             _getShortenedPath() {
                 const path = this.currentFolder.path;
                 return path.replace(this.scriptsRootFolder.path, localize('custom_scripts_root'))
@@ -168,7 +164,8 @@
 
             _navigateToFolder(folderPathString) {
                 if (folderPathString === '..') {
-
+                    this.currentFolder = this.currentFolder.parent;
+                    this._updateItems();
                 }
                 else {
                     const targetFolder = fileSystemModule.Folder.fromPath(folderPathString);
