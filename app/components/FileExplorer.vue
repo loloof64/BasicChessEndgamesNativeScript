@@ -1,8 +1,10 @@
 <template>
     <StackLayout>
-        <Label :text="explorerPath" class="explorerPath" />
+        <ScrollView :width="explorerPathWidth" height="30" orientation="horizontal">
+            <Label :text="explorerPath" class="explorerPath" textWrap="true" />
+        </ScrollView>
         <GridLayout>
-            <ScrollView :height="personalsListViewHeight">
+            <ScrollView :height="scriptsViewHeight" orientation="vertical">
                 <ListView for="item in explorerItems" @itemTap="_onExplorerTap($event.item)">
                     <v-template>
                         <StackLayout orientation="horizontal">
@@ -45,7 +47,8 @@
             return {
                 explorerPath: '',
                 explorerItems: [],
-                personalsListViewHeight: platformModule.screen.mainScreen.heightDIPs - 200,
+                scriptsViewHeight: platformModule.screen.mainScreen.heightDIPs - 200,
+                explorerPathWidth: platformModule.screen.mainScreen.widthDIPs,
                 currentFolder: undefined,
                 scriptsRootFolder: undefined,
             }
