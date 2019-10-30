@@ -56,7 +56,6 @@
             this.scriptsRootFolder = rootFolder;
             this.currentFolder = rootFolder;
             this._updateItems();
-            this.explorerPath = this._getShortenedPath();
         },
         methods: {
             async _createFolder() {
@@ -73,7 +72,9 @@
                 });
             },
             _onExplorerTap(explorerItem) {
-
+                if (explorerItem.folder) {
+                    this._navigateToFolder(explorerItem.path);
+                }
             },
             _randomName() {
                 let name = '';
@@ -87,7 +88,7 @@
 
             async _getItems() {
                 let explorerItems = [];
-                const entities = await this.scriptsRootFolder.getEntities();
+                const entities = await this.currentFolder.getEntities();
                 entities.forEach(entity => {
                     const isAFolder = fileSystemModule.Folder.exists(entity.path);
                     const name = entity.name;
@@ -158,10 +159,22 @@
                 this.explorerItems = await this._getItems();
                 // Also triggers VueJS change detection
                 this.explorerItems.splice(this.explorerItems.length);
+                this.explorerPath = this._getShortenedPath();
             },
 
             _isFolder(explorerItem) {
                 return explorerItem.folder;
+            },
+
+            _navigateToFolder(folderPathString) {
+                if (folderPathString === '..') {
+
+                }
+                else {
+                    const targetFolder = fileSystemModule.Folder.fromPath(folderPathString);
+                    this.currentFolder = targetFolder;
+                    this._updateItems(); 
+                }
             }
         }
     }
