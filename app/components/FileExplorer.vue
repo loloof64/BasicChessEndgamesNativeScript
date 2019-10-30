@@ -5,7 +5,11 @@
             <ScrollView :height="personalsListViewHeight">
                 <ListView for="item in explorerItems" @itemTap="_onExplorerTap($event.item)">
                     <v-template>
-                        <Label :text="item.name" fontSize="22" width="100%" />
+                        <StackLayout orientation="horizontal">
+                            <Image v-if="_isFolder(item)" src="res://folder" class="type_thumbnail" />
+                            <Image v-else src="res://file" class="type_thumbnail" />
+                            <Label :text="item.name" class="item_label" />
+                        </StackLayout>
                     </v-template>
                 </ListView>
             </ScrollView>
@@ -154,6 +158,10 @@
                 this.explorerItems = await this._getItems();
                 // Also triggers VueJS change detection
                 this.explorerItems.splice(this.explorerItems.length);
+            },
+
+            _isFolder(explorerItem) {
+                return explorerItem.folder;
             }
         }
     }
@@ -182,5 +190,18 @@
     .explorerPath {
         font-size: 18;
         background-color: aquamarine;
+    }
+
+    .type_thumbnail {
+        width: 30;
+        height: 30;
+        margin: 6 8;
+    }
+
+    .item_label {
+        width: 100%;
+        height: 100%;
+        font-size: 22;
+        vertical-align: middle;
     }
 </style>
