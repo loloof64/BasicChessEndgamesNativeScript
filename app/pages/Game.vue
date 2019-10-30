@@ -73,7 +73,7 @@
 </template>
 
 <script>
-    import Chessboard from '../components/chessboard/Chessboard.vue';
+    import Chessboard from '../components/chessboard/Chessboard';
     import PlayerType from '../components/chessboard/PlayerType';
     import History from '../components/History';
     const platformModule = require("tns-core-modules/platform");

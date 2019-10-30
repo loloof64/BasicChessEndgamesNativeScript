@@ -20,29 +20,7 @@
 
                 <TabViewItem :title="'custom_scripts' | L" 
                 iconSource="res://handsaw">
-                    <StackLayout>
-                        <Label :text="explorerPath" class="explorerPath" />
-                        <GridLayout>
-                            <ScrollView :height="personalsListViewHeight">
-                                <ListView for="item in explorerItems" @itemTap="onExplorerTap($event.item)">
-                                    <v-template>
-                                        <Label :text="item.name" fontSize="22" width="100%" />
-                                    </v-template>
-                                </ListView>
-                            </ScrollView>
-                            <Fab
-                                class="fab-button hr vb"
-                                backgroundColor="orchid"
-                                icon="res://new_document"
-                            />
-                            <Fab
-                                class="fab-button hl vb"
-                                backgroundColor="yellowgreen"
-                                icon="res://new_folder"
-                                @tap="createFolder()"
-                            />
-                        </GridLayout>
-                    </StackLayout>
+                    <FileExplorer ref="explorerManager" />
                 </TabViewItem>
             </TabView>
         </StackLayout>
@@ -50,20 +28,15 @@
 </template>
 
 <script>
-    import { localize } from "nativescript-localize";
-    import Vue from "nativescript-vue";
-    const platformModule = require("tns-core-modules/platform");
-
     import ChessPositionGenerator from '../position_generator/ChessPositionGenerator';
     import ConstraintScriptLoader from '../position_generator/ConstraintScriptLoader';
 
-    import FileExplorer from '../util/FileExplorer';
+    import FileExplorer from '../components/FileExplorer';
 
+    import { localize } from "nativescript-localize";
+
+    import Vue from "nativescript-vue";
     Vue.filter("L", localize);
-    Vue.registerElement(
-        'Fab',
-        () => require('@nstudio/nativescript-floatingactionbutton').Fab
-    );
     
     export default {
         data() {
@@ -104,14 +77,11 @@
                 ],
                 generatingPosition: false,
                 explorerItems: [],
-                explorerPath: '',
-                explorerManager: new FileExplorer(),
-                personalsListViewHeight: platformModule.screen.mainScreen.heightDIPs - 200,
             }
         },
         async mounted() {
-            this.explorerItems = await this.explorerManager.getItems();
-            this.explorerPath = this.explorerManager.getShortenedPath();
+            this.explorerItems = await this.$refs['explorerManager'].getItems();
+            this.explorerPath = this.$refs['explorerManager'].getShortenedPath();
         },
         methods: {  
             async onSampleScriptTap(scriptItem) {
@@ -189,58 +159,11 @@
                 }
                 
             },
-            onExplorerTap(explorerItem) {
-
-            },
-            createFolder() {
-                prompt({
-                    title: localize('new_folder_title'),
-                    okButtonText: localize('ok_button'),
-                    cancelButtonText: localize('cancel_button'),
-                }).then(async result => {
-                    const folderName = result.text || this._randomName();
-
-                    this.explorerManager.addFolder(folderName);
-                    const updatedItems = await this.explorerManager.getItems();
-
-                    this.explorerItems = updatedItems;
-                });
-            },
-            _randomName() {
-                let name = '';
-                for (let i = 0; i < 20; i++) {
-                    const letterIndex = Math.random() * 26;
-                    const letter = String.fromCharCode('a'.charCodeAt(0) + letterIndex);
-                    name += letter;
-                }
-                return name;
-            }
         },
+        components: {FileExplorer,},
     };
 </script>
 
 <style scoped lang="scss">
     @import '../app-variables';
-
-    .fab-button {
-        width: 65;
-        height: 65;
-    }
-
-    .hl {
-        horizontal-align: left;
-    }
-
-    .hr {
-        horizontal-align: right;
-    }
-
-    .vb {
-        vertical-align: bottom;
-    }
-
-    .explorerPath {
-        font-size: 18;
-        background-color: aquamarine;
-    }
 </style>
