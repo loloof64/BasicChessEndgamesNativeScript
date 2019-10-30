@@ -51,11 +51,11 @@
             const rootFolder = currentAppFolder.getFolder('personnal_constraints');
             this.scriptsRootFolder = rootFolder;
             this.currentFolder = rootFolder;
-            this.explorerItems = await this._getItems();
+            this._updateItems();
             this.explorerPath = this._getShortenedPath();
         },
         methods: {
-            _createFolder() {
+            async _createFolder() {
                 prompt({
                     title: localize('new_folder_title'),
                     okButtonText: localize('ok_button'),
@@ -64,9 +64,8 @@
                     const folderName = result.text || this._randomName();
 
                     this._addFolder(folderName);
-                    const updatedItems = await this.getItems();
-
-                    this.explorerItems = updatedItems;
+                    
+                    this._updateItems();
                 });
             },
             _onExplorerTap(explorerItem) {
@@ -150,6 +149,12 @@
                 const path = this.currentFolder.path;
                 return path.replace(this.scriptsRootFolder.path, localize('custom_scripts_root'))
             },
+
+            async _updateItems() {
+                this.explorerItems = await this._getItems();
+                // Also triggers VueJS change detection
+                this.explorerItems.splice(this.explorerItems.length);
+            }
         }
     }
 </script>
