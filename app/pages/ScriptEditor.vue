@@ -68,18 +68,18 @@
                             icon="res://save"
                             @tap="_saveAndExit()"
                         />
-                        <StackLayout orientation="vertical"
-                            class="modal" :class="add_piece_modal_open ? 'open' : ''"
-                        >
-                            <Label :text="'adding_piece_count_title' | L" class="modal_title" />
-                            <Label :text="'piece_type_picker' | L" class="modal_label" />
-                            <ListPicker :items="types" v-model="type_to_add" selectedIndex="0" />
-                            <Label :text="'piece_owner_picker' | L" class="modal_label" />
-                            <ListPicker :items="owners" v-model="owner_to_add" selectedIndex="0" />
-                            <Button :text="'add_piece_type' | L" @tap="_addPieceType()" />
-                            <Button :text="'cancel' | L" @tap="_cancel()" />
-                            <Label :text="piece_modal_error" class="modal_error" />
-                        </StackLayout>
+                        <ScrollView class="modal" :class="add_piece_modal_open ? 'open' : ''" :height="scriptsZonesHeight">
+                            <StackLayout orientation="vertical">
+                                <Label :text="'adding_piece_count_title' | L" class="modal_title" />
+                                <Label :text="'piece_type_picker' | L" class="modal_label" />
+                                <ListPicker :items="types" v-model="type_to_add" selectedIndex="0" />
+                                <Label :text="'piece_owner_picker' | L" class="modal_label" />
+                                <ListPicker :items="owners" v-model="owner_to_add" selectedIndex="0" />
+                                <Button :text="'add_piece_type' | L" @tap="_addPieceType()" />
+                                <Button :text="'cancel' | L" @tap="_cancel()" />
+                                <Label :text="piece_modal_error" class="modal_error" />
+                            </StackLayout>
+                        </ScrollView>
                     </GridLayout>
                 </TabViewItem>
             </TabView>
@@ -98,6 +98,7 @@
         data() {
             return {
                 scriptsZonesHeight: platformModule.screen.mainScreen.heightDIPs - 170,
+                pieceTypeModalHeight: platformModule.screen.mainScreen.heightDIPs - 200,
                 pieces_counts: [],
                 piece_modal_error: '',
                 add_piece_modal_open: false,
@@ -278,7 +279,7 @@
     }
 
     .modal.open {
-        opacity: 0.7;
+        opacity: 1.0;
         visibility: visible;
     }
 
@@ -286,6 +287,7 @@
         font-size: $piece_count_font_size;
         color: red;
         font-style: italic;
+        text-align: center;
     }
 
     .delete_icon {
