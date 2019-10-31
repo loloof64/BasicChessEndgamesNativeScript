@@ -51,7 +51,7 @@
                                             :class="item.code.startsWith('c') ? 'computer_owner' : 'player_owner'"
                                         />
                                         <Label class="piece_count" :text="item.count" />
-                                        <Image src="res://delete" class="delete_icon" />
+                                        <Image src="res://delete" class="delete_icon" @tap="_removePiece(item.code)" />
                                     </StackLayout>
                                 </v-template>
                             </ListView>
@@ -128,7 +128,7 @@
                 ////////////////////////////////////////////////
                 console.log(playerKingConstraint);
                 console.log(computerKingConstraint);
-                console.log(this.pieces_counts);
+                console.log(JSON.stringify(this.pieces_counts));
                 ////////////////////////////////////////////////
             },
 
@@ -193,6 +193,12 @@
 
             _cancel() {
                 this.add_piece_modal_open = false;
+            },
+
+            _removePiece(pieceCode) {
+                this.pieces_counts = this.pieces_counts.filter(item => item.code !== pieceCode);
+                // Also triggers VueJS change detection
+                this.pieces_counts.splice(this.pieces_counts.length);
             }
         }
     }
