@@ -10,9 +10,8 @@
                     <GridLayout>
                         <ScrollView :height="scriptsZonesHeight">
                             <TextView editable="true"
-                                ref="player_king"
-                                :text="playerKingConstraint"
-                                @blur="_updatePlayerKingConstraint()"   
+                                autocorrect="false"
+                                ref="player_king"   
                             />
                         </ScrollView>
                         <Fab
@@ -28,13 +27,12 @@
                     <GridLayout>
                         <ScrollView :height="scriptsZonesHeight">
                             <TextView editable="true" 
+                                autocorrect="false"
                                 ref="computer_king"
-                                :text="computerKingConstraint"
-                                @blur="_updateComputerKingConstraint()"   
                             />
                         </ScrollView>
                         <Fab
-                            class="fab-button hl vb"
+                            class="fab-button hr vb"
                             backgroundColor="yellowgreen"
                             icon="res://save"
                             @tap="_saveAndExit()"
@@ -56,23 +54,17 @@
     export default {
         data() {
             return {
-                playerKingConstraint: '',
-                computerKingConstraint: '',
                 scriptsZonesHeight: platformModule.screen.mainScreen.heightDIPs - 170,
             };
         },
         methods: {
-            _updatePlayerKingConstraint() {
-                this.playerKingConstraint = this.$refs['player_king'].text;
-            },
-
-            _updateComputerKingConstraint() {
-                this.computerKingConstraint = this.$refs['computer_king'].text;
-            },
-
             _saveAndExit() {
-                console.log(this.playerKingConstraint);
-                console.log(this.computerKingConstraint);
+                const playerKingConstraint = this.$refs['player_king'].nativeView.text;
+                const computerKingConstraint = this.$refs['computer_king'].nativeView.text;
+                ////////////////////////////////////////////////
+                console.log(playerKingConstraint);
+                console.log(computerKingConstraint);
+                ////////////////////////////////////////////////
             },
         }
     }
@@ -93,5 +85,13 @@
 
     .vb {
         vertical-align: bottom;
+    }
+
+    .update_button {
+        background-color: rgb(112, 63, 16);
+    }
+
+    .action-bar {
+        background-color: rgba(252, 143, 19, 0.89);
     }
 </style>

@@ -64,6 +64,7 @@
   "custom_scripts_root": "scripts://",
   "new_folder_title": "Créer un nouveau dossier",
 
+  "update_script": "Mettre le script à jour",
   "script_editor_title": "Editeur de script",
   "player_king_constraint_tab": "Roi joueur",
   "computer_king_constraint_tab": "Roi ordinateur"

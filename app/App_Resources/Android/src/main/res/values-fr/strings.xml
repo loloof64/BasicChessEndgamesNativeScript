@@ -3,6 +3,7 @@
   <string name="computer_king_constraint_tab">"Roi ordinateur"</string>
   <string name="player_king_constraint_tab">"Roi joueur"</string>
   <string name="script_editor_title">"Editeur de script"</string>
+  <string name="update_script">"Mettre le script à jour"</string>
   <string name="new_folder_title">"Créer un nouveau dossier"</string>
   <string name="custom_scripts_root">"scripts://"</string>
   <string name="drawish_goal">"Objectif nulle"</string>
