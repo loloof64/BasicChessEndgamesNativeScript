@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="already_added_piece_type">"Pièce déjà ajoutée !"</string>
+  <string name="piece_owner_picker">"Propriétaire"</string>
+  <string name="piece_type_picker">"Type"</string>
+  <string name="adding_piece_count_title">"Ajouter un type de pièce"</string>
   <string name="other_pieces_count_tab">"Inventaire autres pièces"</string>
   <string name="computer_king_constraint_tab">"Roi ordinateur"</string>
   <string name="player_king_constraint_tab">"Roi joueur"</string>
   <string name="script_editor_title">"Editeur de script"</string>
   <string name="update_script">"Mettre le script à jour"</string>
+  <string name="computer">"ordinateur"</string>
+  <string name="player">"joueur"</string>
+  <string name="queen">"dame"</string>
+  <string name="rook">"tour"</string>
+  <string name="bishop">"fou"</string>
+  <string name="knight">"cavalier"</string>
+  <string name="pawn">"pion"</string>
   <string name="new_folder_title">"Créer un nouveau dossier"</string>
   <string name="custom_scripts_root">"scripts://"</string>
   <string name="drawish_goal">"Objectif nulle"</string>

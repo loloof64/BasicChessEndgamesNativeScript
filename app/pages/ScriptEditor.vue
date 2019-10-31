@@ -48,10 +48,10 @@
                                     <StackLayout orientation="horizontal">
                                         <Label class="piece_type_cell" :text="item.type" />
                                         <Label class="piece_owner_cell" :text="item.owner"
-                                            :class="item.owner === 'computer' ? 'computer_owner' : 'player_owner'"
+                                            :class="item.code.startsWith('c') ? 'computer_owner' : 'player_owner'"
                                         />
                                         <Label class="piece_count" :text="item.count" />
-                                        <Image src="res://delete" />
+                                        <Image src="res://delete" class="delete_icon" />
                                     </StackLayout>
                                 </v-template>
                             </ListView>
@@ -68,6 +68,18 @@
                             icon="res://save"
                             @tap="_saveAndExit()"
                         />
+                        <StackLayout orientation="vertical"
+                            class="modal" :class="add_piece_modal_open ? 'open' : ''"
+                        >
+                            <Label :text="'adding_piece_count_title' | L" class="modal_title" />
+                            <Label :text="'piece_type_picker' | L" class="modal_label" />
+                            <ListPicker :items="types" v-model="type_to_add" selectedIndex="0" />
+                            <Label :text="'piece_owner_picker' | L" class="modal_label" />
+                            <ListPicker :items="owners" v-model="owner_to_add" selectedIndex="0" />
+                            <Button :text="'add_piece_type' | L" @tap="_addPieceType()" />
+                            <Button :text="'cancel' | L" @tap="_cancel()" />
+                            <Label :text="piece_modal_error" class="modal_error" />
+                        </StackLayout>
                     </GridLayout>
                 </TabViewItem>
             </TabView>
@@ -87,6 +99,21 @@
             return {
                 scriptsZonesHeight: platformModule.screen.mainScreen.heightDIPs - 170,
                 pieces_counts: [],
+                piece_modal_error: '',
+                add_piece_modal_open: false,
+                type_to_add: undefined,
+                owner_to_add: undefined,
+                types: [
+                    localize('pawn'), 
+                    localize('knight'), 
+                    localize('bishop'), 
+                    localize('rook'), 
+                    localize('queen')
+                ],
+                owners: [
+                    localize('player'),
+                    localize('computer'),
+                ],
             };
         },
         methods: {
@@ -102,24 +129,65 @@
 
             _sortPiecesCounts() {
                 this.pieces_counts = this.pieces_counts.sort((fst, snd) => {
-                    if (fst.owner !== snd.owner) {
-                        return fst.owner === 'player' ? -1 : 1;
+                    const fstOwner = fst.code[0];
+                    const sndOwner = snd.code[0];
+
+                    const fstType = fst.code[1];
+                    const sndType = snd.code[1];
+
+                    if (fstOwner !== sndOwner) {
+                        return fstOwner === 'p' ? -1 : 1;
                     }
                     const typesOrder = {
-                        'pawn': 0,
-                        'knight': 1,
-                        'bishop': 2,
-                        'rook': 3,
-                        'queen': 4,
-                        'king': 5,
+                        'p': 0,
+                        'n': 1,
+                        'b': 2,
+                        'r': 3,
+                        'q': 4,
                     };
 
-                    return typesOrder[fst.type] < typesOrder[snd.type] ? -1 : 1;
+                    return typesOrder[fstType] < typesOrder[sndType] ? -1 : 1;
                 });
             },
 
             _addCount() {
+                this.add_piece_modal_open = true;
+            },
 
+            _addPieceType() {
+                if (!this._checkUniqueness()) {
+                    this.piece_modal_error = localize('already_added_piece_type');
+                }
+                else {
+                    const type = this.types[this.type_to_add];
+                    const owner = this.owners[this.owner_to_add];
+                    this.pieces_counts.push({
+                        code: this._getSelectedPieceCode(),
+                        type,
+                        owner,
+                        count: 1,
+                    });
+                    this._sortPiecesCounts();
+                    // Also triggers VueJS change detection
+                    this.pieces_counts.splice(this.pieces_counts.length);
+                    this.add_piece_modal_open = false;
+                }
+            },
+
+            _checkUniqueness() {
+                const selectedPieceCode = this._getSelectedPieceCode();
+                return this.pieces_counts.filter(item => item.code === selectedPieceCode).length === 0;
+            },
+
+            _getSelectedPieceCode() {
+                const typeString = ['p', 'n', 'b', 'r', 'q'][this.type_to_add];
+                const ownerString = ['p', 'c'][this.owner_to_add];
+
+                return `${ownerString}${typeString}`;
+            },
+
+            _cancel() {
+                this.add_piece_modal_open = false;
             }
         }
     }
@@ -154,19 +222,22 @@
         background-color: rgba(252, 143, 19, 0.89);
     }
 
+    $piece_count_font_size: 20;
+    $piece_count_color: midnightblue;
+
     .piece_type_cell {
-        width: 25;
+        font-size: $piece_count_font_size;
+        width: 100;
         height: 100%;
         background-color: aqua;
+        text-align: center;
     }
 
     .piece_owner_cell {
-        width: 25;
+        width: 150;
         height: 100%;
+        text-align: center;
     }
-
-    $piece_count_font_size: 20;
-    $piece_count_color: midnightblue;
 
     .player_owner {
         font-size: $piece_count_font_size;
@@ -181,8 +252,44 @@
     }
 
     .piece_count {
+        width: 40;
         font-size: $piece_count_font_size;
         color: $piece_count_color;
         background-color: yellow;
+        text-align: center;
+    }
+
+    .modal_title {
+        width: 100%;
+        font-size: 20;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .modal_label {
+        width: 100%;
+        font-size: 16;
+    }
+
+    .modal {
+        opacity: 0;
+        visibility: collapse;
+        background-color: white;
+    }
+
+    .modal.open {
+        opacity: 0.7;
+        visibility: visible;
+    }
+
+    .modal_error {
+        font-size: $piece_count_font_size;
+        color: red;
+        font-style: italic;
+    }
+
+    .delete_icon {
+        width: 30;
+        height: 30;
     }
 </style>

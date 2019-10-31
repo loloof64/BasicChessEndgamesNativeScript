@@ -64,9 +64,22 @@
   "custom_scripts_root": "scripts://",
   "new_folder_title": "Create new folder",
 
+  "pawn": "pawn",
+  "knight": "knight",
+  "bishop": "bishop",
+  "rook": "rook",
+  "queen": "queen",
+
+  "player": "player",
+  "computer": "computer",
+
   "update_script": "Update script",
   "script_editor_title": "Script editor",
   "player_king_constraint_tab": "Player king",
   "computer_king_constraint_tab": "Computer king",
-  "other_pieces_count_tab": "Other pieces count"
+  "other_pieces_count_tab": "Other pieces count",
+  "adding_piece_count_title": "Adding piece type",
+  "piece_type_picker": "Type",
+  "piece_owner_picker": "Owner",
+  "already_added_piece_type": "Already added piece !"
 }

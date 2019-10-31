@@ -47,8 +47,6 @@ import CanvasPlugin from 'nativescript-canvas/vue';
 import Chess from 'chess.js';
 import PlayerType from "./PlayerType";
 
-const dialogs = require("tns-core-modules/ui/dialogs");
-
 import Vue from "nativescript-vue";
 import { localize } from "nativescript-localize";
 import { Color } from 'tns-core-modules/color/color';
