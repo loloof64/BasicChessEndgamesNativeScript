@@ -81,5 +81,6 @@
   "adding_piece_count_title": "Adding piece type",
   "piece_type_picker": "Type",
   "piece_owner_picker": "Owner",
-  "already_added_piece_type": "Already added piece !"
+  "already_added_piece_type": "Already added piece !",
+  "add_piece_type_button": "Add"
 }

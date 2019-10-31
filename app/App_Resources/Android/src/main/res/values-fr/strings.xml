@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="add_piece_type_button">"Ajouter"</string>
   <string name="already_added_piece_type">"Pièce déjà ajoutée !"</string>
   <string name="piece_owner_picker">"Propriétaire"</string>
   <string name="piece_type_picker">"Type"</string>

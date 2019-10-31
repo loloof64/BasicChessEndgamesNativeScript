@@ -75,9 +75,11 @@
                                 <ListPicker :items="types" v-model="type_to_add" selectedIndex="0" />
                                 <Label :text="'piece_owner_picker' | L" class="modal_label" />
                                 <ListPicker :items="owners" v-model="owner_to_add" selectedIndex="0" />
-                                <Button :text="'add_piece_type' | L" @tap="_addPieceType()" />
-                                <Button :text="'cancel' | L" @tap="_cancel()" />
-                                <Label :text="piece_modal_error" class="modal_error" />
+                                <StackLayout orientation="horizontal">
+                                    <Button :text="'add_piece_type_button' | L" @tap="_addPieceType()" class="modal_button" />
+                                    <Button :text="'cancel_button' | L" @tap="_cancel()" class="modal_button" />
+                                    <Label :text="piece_modal_error" class="modal_error" />
+                                </StackLayout>
                             </StackLayout>
                         </ScrollView>
                     </GridLayout>
@@ -288,6 +290,11 @@
         color: red;
         font-style: italic;
         text-align: center;
+    }
+
+    .modal_button {
+        font-size: 16;
+        background-color: coral;
     }
 
     .delete_icon {
