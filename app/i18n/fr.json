@@ -62,5 +62,9 @@
   "drawish_goal": "Objectif nulle",
 
   "custom_scripts_root": "scripts://",
-  "new_folder_title": "Créer un nouveau dossier"
+  "new_folder_title": "Créer un nouveau dossier",
+
+  "script_editor_title": "Editeur de script",
+  "player_king_constraint_tab": "Roi joueur",
+  "computer_king_constraint_tab": "Roi ordinateur"
 }

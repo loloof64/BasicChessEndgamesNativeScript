@@ -62,5 +62,9 @@
   "drawish_goal": "Drawish goal",
 
   "custom_scripts_root": "scripts://",
-  "new_folder_title": "Create new folder"
+  "new_folder_title": "Create new folder",
+
+  "script_editor_title": "Script editor",
+  "player_king_constraint_tab": "Player king",
+  "computer_king_constraint_tab": "Computer king"
 }

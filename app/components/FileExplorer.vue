@@ -19,6 +19,7 @@
                 class="fab-button hr vb"
                 backgroundColor="orchid"
                 icon="res://new_document"
+                @tap="_newScriptInEditor()"
             />
             <Fab
                 class="fab-button hl vb"
@@ -72,6 +73,19 @@
                     this._addFolder(folderName);
                     
                     this._updateItems();
+                });
+            },
+            _newScriptInEditor() {
+                this.$navigator.navigate('/script_editor', {
+                    transition: {
+                        name:'slide',
+                        duration: 200
+                    },
+                    props: {
+                        folderPath: this.currentFolder.path,
+                        mode: 'new',
+                        permission: 'w',
+                    }
                 });
             },
             _onExplorerTap(explorerItem) {
@@ -138,12 +152,12 @@
             _getLocale() {
                 let lang;  
                 if (platformModule.isAndroid) {
-                lang = java.util.Locale.getDefault().getLanguage();
+                    lang = java.util.Locale.getDefault().getLanguage();
                 }
                 if (platformModule.isIOS) {
-                lang = NSLocale.preferredLanguages.firstObject;
+                    lang = NSLocale.preferredLanguages.firstObject;
                 } else {
-                platformModule.device.language;
+                    platformModule.device.language;
                 }
 
                 return lang;
