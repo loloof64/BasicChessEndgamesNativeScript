@@ -61,12 +61,14 @@
                             backgroundColor="yellowgreen"
                             icon="res://add"
                             @tap="_addCount()"
+                            :visibility="add_piece_modal_open ? 'collapse' : 'visible'"
                         />
                         <Fab
                             class="fab-button hr vb"
                             backgroundColor="yellowgreen"
                             icon="res://save"
                             @tap="_saveAndExit()"
+                            :visibility="add_piece_modal_open ? 'collapse' : 'visible'"
                         />
                         <ScrollView class="modal" :class="add_piece_modal_open ? 'open' : ''" :height="scriptsZonesHeight">
                             <StackLayout orientation="vertical">
