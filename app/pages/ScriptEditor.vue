@@ -39,6 +39,37 @@
                         />
                     </GridLayout>
                 </TabViewItem>
+
+                <TabViewItem :title="'other_pieces_count_tab' | L">
+                    <GridLayout>
+                        <ScrollView :height="scriptsZonesHeight">
+                            <ListView for="item in pieces_counts">
+                                <v-template>
+                                    <StackLayout orientation="horizontal">
+                                        <Label class="piece_type_cell" :text="item.type" />
+                                        <Label class="piece_owner_cell" :text="item.owner"
+                                            :class="item.owner === 'computer' ? 'computer_owner' : 'player_owner'"
+                                        />
+                                        <Label class="piece_count" :text="item.count" />
+                                        <Image src="res://delete" />
+                                    </StackLayout>
+                                </v-template>
+                            </ListView>
+                        </ScrollView>
+                        <Fab
+                            class="fab-button hl vb"
+                            backgroundColor="yellowgreen"
+                            icon="res://add"
+                            @tap="_addCount()"
+                        />
+                        <Fab
+                            class="fab-button hr vb"
+                            backgroundColor="yellowgreen"
+                            icon="res://save"
+                            @tap="_saveAndExit()"
+                        />
+                    </GridLayout>
+                </TabViewItem>
             </TabView>
         </StackLayout>
     </Page>
@@ -55,6 +86,7 @@
         data() {
             return {
                 scriptsZonesHeight: platformModule.screen.mainScreen.heightDIPs - 170,
+                pieces_counts: [],
             };
         },
         methods: {
@@ -64,8 +96,31 @@
                 ////////////////////////////////////////////////
                 console.log(playerKingConstraint);
                 console.log(computerKingConstraint);
+                console.log(this.pieces_counts);
                 ////////////////////////////////////////////////
             },
+
+            _sortPiecesCounts() {
+                this.pieces_counts = this.pieces_counts.sort((fst, snd) => {
+                    if (fst.owner !== snd.owner) {
+                        return fst.owner === 'player' ? -1 : 1;
+                    }
+                    const typesOrder = {
+                        'pawn': 0,
+                        'knight': 1,
+                        'bishop': 2,
+                        'rook': 3,
+                        'queen': 4,
+                        'king': 5,
+                    };
+
+                    return typesOrder[fst.type] < typesOrder[snd.type] ? -1 : 1;
+                });
+            },
+
+            _addCount() {
+
+            }
         }
     }
 </script>
@@ -77,6 +132,10 @@
         width: 65;
         height: 65;
         opacity: 0.3;
+    }
+
+    .hl {
+        horizontal-align: left;
     }
 
     .hr {
@@ -93,5 +152,37 @@
 
     .action-bar {
         background-color: rgba(252, 143, 19, 0.89);
+    }
+
+    .piece_type_cell {
+        width: 25;
+        height: 100%;
+        background-color: aqua;
+    }
+
+    .piece_owner_cell {
+        width: 25;
+        height: 100%;
+    }
+
+    $piece_count_font_size: 20;
+    $piece_count_color: midnightblue;
+
+    .player_owner {
+        font-size: $piece_count_font_size;
+        color: $piece_count_color;
+        background-color: yellowgreen;
+    }
+
+    .computer_owner {
+        font-size: $piece_count_font_size;
+        color: $piece_count_color;
+        background-color: palevioletred;
+    }
+
+    .piece_count {
+        font-size: $piece_count_font_size;
+        color: $piece_count_color;
+        background-color: yellow;
     }
 </style>

@@ -67,5 +67,6 @@
   "update_script": "Update script",
   "script_editor_title": "Script editor",
   "player_king_constraint_tab": "Player king",
-  "computer_king_constraint_tab": "Computer king"
+  "computer_king_constraint_tab": "Computer king",
+  "other_pieces_count_tab": "Other pieces count"
 }

@@ -15,4 +15,6 @@ Train your basic chess endgames knowledge against your device.
 * saw by Skyclick
 * new-document from FreePik
 * add from Katkuro
-* file, folder, save from Smashicons
+* add, file, folder, save from Smashicons
+* delete from Kiranshastry
+

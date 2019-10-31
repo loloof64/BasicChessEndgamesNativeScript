@@ -67,5 +67,6 @@
   "update_script": "Mettre le script à jour",
   "script_editor_title": "Editeur de script",
   "player_king_constraint_tab": "Roi joueur",
-  "computer_king_constraint_tab": "Roi ordinateur"
+  "computer_king_constraint_tab": "Roi ordinateur",
+  "other_pieces_count_tab": "Inventaire autres pièces"
 }

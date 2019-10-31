@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="other_pieces_count_tab">"Other pieces count"</string>
   <string name="computer_king_constraint_tab">"Computer king"</string>
   <string name="player_king_constraint_tab">"Player king"</string>
   <string name="script_editor_title">"Script editor"</string>
