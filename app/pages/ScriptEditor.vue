@@ -239,6 +239,13 @@
                             <Label :text="'winning_goal_switch' | L" class="goal_label"/>
                             <Switch v-model="winningGoal" />
                         </StackLayout>
+
+                        <Fab
+                            class="fab-button hr vb"
+                            backgroundColor="yellowgreen"
+                            icon="res://save"
+                            @tap="_saveAndExit()"
+                        />
                     </GridLayout>
                 </TabViewItem>
 
