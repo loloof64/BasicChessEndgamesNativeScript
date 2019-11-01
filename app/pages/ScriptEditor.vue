@@ -139,6 +139,13 @@
                             </ScrollView>
                         </StackLayout> 
 
+                        <Fab
+                            class="fab-button hr vb"
+                            backgroundColor="yellowgreen"
+                            icon="res://save"
+                            @tap="_saveAndExit()"
+                        />
+
                     </GridLayout>
                 </TabViewItem>
 
@@ -174,6 +181,13 @@
                             </ScrollView>
                         </StackLayout> 
 
+                        <Fab
+                            class="fab-button hr vb"
+                            backgroundColor="yellowgreen"
+                            icon="res://save"
+                            @tap="_saveAndExit()"
+                        />
+
                     </GridLayout>
                 </TabViewItem>
 
@@ -208,6 +222,13 @@
                                 />
                             </ScrollView>
                         </StackLayout> 
+
+                        <Fab
+                            class="fab-button hr vb"
+                            backgroundColor="yellowgreen"
+                            icon="res://save"
+                            @tap="_saveAndExit()"
+                        />
 
                     </GridLayout>
                 </TabViewItem>
