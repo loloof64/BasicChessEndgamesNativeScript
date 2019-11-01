@@ -80,6 +80,8 @@
   "computer_king_constraint_tab": "Roi ordinateur",
   "other_pieces_count_tab": "Inventaire autres pièces",
   "other_pieces_general_constraint_tab": "Général autres pièces",
+  "other_pieces_mutual_constraint_tab": "Mutuelle autres pièces",
+  "other_pieces_indexed_constraint_tab": "Indexée autres pièces",
   "adding_piece_count_title": "Ajouter un type de pièce",
   "piece_picker": "Pièce",
   "already_added_piece_type": "Pièce déjà ajoutée !",
@@ -87,5 +89,10 @@
   "editing_piece_count_title": "Edition du nombre de pièces",
   "too_many_pieces_error": "15 pièces maximum par particpant !",
   "no_editing_piece_available": "Il n'y a aucune pièce mis à part les rois.",
-  "general_modal_title": "Contrainte générale pour %s"
+  "general_modal_title": "Contrainte générale pour %s",
+  "mutual_modal_title": "Contrainte mutuelle pour %s",
+  "indexed_modal_title": "Contrainte indexée pour %s",
+
+  "script_piece_deletion_confirmation_title": "Supprimer pièce %s ?",
+  "script_piece_deletion_confirmation_message": "Au moins un script est associé à cette pièce : supprimer ?"
 }

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="script_piece_deletion_confirmation_message">"Au moins un script est associé à cette pièce : supprimer ?"</string>
+  <string name="script_piece_deletion_confirmation_title">"Supprimer pièce %1$s ?"</string>
+  <string name="indexed_modal_title">"Contrainte indexée pour %1$s"</string>
+  <string name="mutual_modal_title">"Contrainte mutuelle pour %1$s"</string>
   <string name="general_modal_title">"Contrainte générale pour %1$s"</string>
   <string name="no_editing_piece_available">"Il n\'y a aucune pièce mis à part les rois."</string>
   <string name="too_many_pieces_error">"15 pièces maximum par particpant !"</string>
@@ -8,6 +12,8 @@
   <string name="already_added_piece_type">"Pièce déjà ajoutée !"</string>
   <string name="piece_picker">"Pièce"</string>
   <string name="adding_piece_count_title">"Ajouter un type de pièce"</string>
+  <string name="other_pieces_indexed_constraint_tab">"Indexée autres pièces"</string>
+  <string name="other_pieces_mutual_constraint_tab">"Mutuelle autres pièces"</string>
   <string name="other_pieces_general_constraint_tab">"Général autres pièces"</string>
   <string name="other_pieces_count_tab">"Inventaire autres pièces"</string>
   <string name="computer_king_constraint_tab">"Roi ordinateur"</string>

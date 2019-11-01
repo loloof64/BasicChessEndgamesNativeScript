@@ -80,6 +80,8 @@
   "computer_king_constraint_tab": "Computer king",
   "other_pieces_count_tab": "Other pieces count",
   "other_pieces_general_constraint_tab": "Other pieces general",
+  "other_pieces_mutual_constraint_tab": "Other pieces mutual",
+  "other_pieces_indexed_constraint_tab": "Other pieces indexed",
   "adding_piece_count_title": "Adding piece type",
   "piece_picker": "Piece",
   "already_added_piece_type": "Already added piece !",
@@ -87,5 +89,10 @@
   "editing_piece_count_title": "Editing pieces count",
   "too_many_pieces_error": "15 pieces at most per owner !",
   "no_editing_piece_available": "There is no other pieces than kings.",
-  "general_modal_title": "General for %s"
+  "general_modal_title": "General constraint for %s",
+  "mutual_modal_title": "Mutual constraint for %s",
+  "indexed_modal_title": "Indexed constraint for %s",
+
+  "script_piece_deletion_confirmation_title": "Delete piece %s ?",
+  "script_piece_deletion_confirmation_message": "At least a script is associated with this piece : delete it ?"
 }

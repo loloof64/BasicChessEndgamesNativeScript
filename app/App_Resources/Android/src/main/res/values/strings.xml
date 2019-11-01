@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="general_modal_title">"General for %1$s"</string>
+  <string name="script_piece_deletion_confirmation_message">"At least a script is associated with this piece : delete it ?"</string>
+  <string name="script_piece_deletion_confirmation_title">"Delete piece %1$s ?"</string>
+  <string name="indexed_modal_title">"Indexed constraint for %1$s"</string>
+  <string name="mutual_modal_title">"Mutual constraint for %1$s"</string>
+  <string name="general_modal_title">"General constraint for %1$s"</string>
   <string name="no_editing_piece_available">"There is no other pieces than kings."</string>
   <string name="too_many_pieces_error">"15 pieces at most per owner !"</string>
   <string name="editing_piece_count_title">"Editing pieces count"</string>
@@ -8,6 +12,8 @@
   <string name="already_added_piece_type">"Already added piece !"</string>
   <string name="piece_picker">"Piece"</string>
   <string name="adding_piece_count_title">"Adding piece type"</string>
+  <string name="other_pieces_indexed_constraint_tab">"Other pieces indexed"</string>
+  <string name="other_pieces_mutual_constraint_tab">"Other pieces mutual"</string>
   <string name="other_pieces_general_constraint_tab">"Other pieces general"</string>
   <string name="other_pieces_count_tab">"Other pieces count"</string>
   <string name="computer_king_constraint_tab">"Computer king"</string>

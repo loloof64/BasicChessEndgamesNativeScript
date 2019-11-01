@@ -142,6 +142,76 @@
                     </GridLayout>
                 </TabViewItem>
 
+                <TabViewItem :title="'other_pieces_mutual_constraint_tab' | L">
+                    <GridLayout>
+
+                        <ScrollView v-if="pieces_counts.length > 0">
+                            <StackLayout orientation="vertical">
+                                <Button 
+                                    class="edit_other_script_button"
+                                    v-for="item in pieces_counts" :key="item.code"
+                                    :text="_getPieceButtonStringFromCode(item.code)"
+                                    @tap="_openEditMutualScriptModal(item.code)"
+                                />
+                            </StackLayout>
+                        </ScrollView>
+
+                        <Label v-else :text="'no_editing_piece_available' | L" class="no_piece_to_edit" />
+
+                        <StackLayout class="modal" :class="edit_mutual_modal_open ? 'open' : ''">
+                            <Label :text="_getMutualModalTitle()" class="modal_title" />
+                            <StackLayout orientation="horizontal">
+                                <Button :text="'ok_button' | L" class="modal_button" @tap="_editCurrentMutualConstraint()" />
+                                <Button :text="'cancel_button' | L" class="modal_button" @tap="_cancelMutualConstraintEditing()" />
+                            </StackLayout>
+                            <ScrollView orientation="vertical" :height="otherScriptModalHeight">
+                                <TextView
+                                    editable="true" 
+                                    autocorrect="false"
+                                    :text="current_mutual_constraint_content"
+                                    ref="mutual_constraint"
+                                />
+                            </ScrollView>
+                        </StackLayout> 
+
+                    </GridLayout>
+                </TabViewItem>
+
+                <TabViewItem :title="'other_pieces_indexed_constraint_tab' | L">
+                    <GridLayout>
+
+                        <ScrollView v-if="pieces_counts.length > 0">
+                            <StackLayout orientation="vertical">
+                                <Button 
+                                    class="edit_other_script_button"
+                                    v-for="item in pieces_counts" :key="item.code"
+                                    :text="_getPieceButtonStringFromCode(item.code)"
+                                    @tap="_openEditIndexedScriptModal(item.code)"
+                                />
+                            </StackLayout>
+                        </ScrollView>
+
+                        <Label v-else :text="'no_editing_piece_available' | L" class="no_piece_to_edit" />
+
+                        <StackLayout class="modal" :class="edit_indexed_modal_open ? 'open' : ''">
+                            <Label :text="_getIndexedModalTitle()" class="modal_title" />
+                            <StackLayout orientation="horizontal">
+                                <Button :text="'ok_button' | L" class="modal_button" @tap="_editCurrentIndexedConstraint()" />
+                                <Button :text="'cancel_button' | L" class="modal_button" @tap="_cancelIndexedConstraintEditing()" />
+                            </StackLayout>
+                            <ScrollView orientation="vertical" :height="otherScriptModalHeight">
+                                <TextView
+                                    editable="true" 
+                                    autocorrect="false"
+                                    :text="current_indexed_constraint_content"
+                                    ref="indexed_constraint"
+                                />
+                            </ScrollView>
+                        </StackLayout> 
+
+                    </GridLayout>
+                </TabViewItem>
+
             </TabView>
         </StackLayout>
     </Page>
@@ -173,9 +243,17 @@
                 current_edited_count: 0,
                 pieces_items: [],
                 edit_general_modal_open: false,
+                edit_mutual_modal_open: false,
+                edit_indexed_modal_open: false,
                 current_edited_general_code: undefined,
+                current_edited_mutual_code: undefined,
+                current_edited_indexed_code: undefined,
                 current_general_constraint_content: undefined,
+                current_mutual_constraint_content: undefined,
+                current_indexed_constraint_content: undefined,
                 general_scripts: {},
+                mutual_scripts: {},
+                indexed_scripts: {},
                 types: [
                     localize('pawn'), 
                     localize('knight'), 
@@ -313,9 +391,22 @@
             },
 
             _removePiece(pieceCode) {
-                this.pieces_counts = this.pieces_counts.filter(item => item.code !== pieceCode);
-                // Also triggers VueJS change detection
-                this.pieces_counts.splice(this.pieces_counts.length);
+                if (! this._checkNoScriptDefinedFor(pieceCode)) {
+                    const typeString = this._getPieceTypeStringFromCode(pieceCode);
+                    confirm({
+                        title: localize('script_piece_deletion_confirmation_title', typeString),
+                        message: localize('script_piece_deletion_confirmation_message', typeString),
+                        okButtonText: localize('ok_button'),
+                        cancelButtonText: localize('cancel_button'),
+                    }).then(result => {
+                        const userRefused = result !== true;
+                        if (userRefused) return;
+
+                        this.pieces_counts = this.pieces_counts.filter(item => item.code !== pieceCode);
+                        // Also triggers VueJS change detection
+                        this.pieces_counts.splice(this.pieces_counts.length);
+                    });
+                }
             },
 
             _editCount() {
@@ -399,6 +490,62 @@
                 this.current_general_constraint_content = '';
                 this.edit_general_modal_open = false;
             },
+
+            _getMutualModalTitle() {
+                if (this.current_edited_mutual_code === undefined) return '';
+                const typeString = this._getPieceTypeStringFromCode(this.current_edited_mutual_code);
+                return localize('mutual_modal_title', typeString);
+            },
+
+            _openEditMutualScriptModal(pieceCode) {
+                this.current_edited_mutual_code = pieceCode;
+                this.current_mutual_constraint_content = this.mutual_scripts[pieceCode];
+                this.edit_mutual_modal_open = true;
+            },
+
+            _editCurrentMutualConstraint() {
+                this.mutual_scripts[this.current_edited_mutual_code] = this.$refs['mutual_constraint'].nativeView.text;
+                this.current_mutual_constraint_content = '';
+                this.edit_mutual_modal_open = false;
+            },
+
+            _cancelMutualConstraintEditing() {
+                this.current_mutual_constraint_content = '';
+                this.edit_mutual_modal_open = false;
+            },
+
+            _getIndexedModalTitle() {
+                if (this.current_edited_indexed_code === undefined) return '';
+                const typeString = this._getPieceTypeStringFromCode(this.current_edited_indexed_code);
+                return localize('indexed_modal_title', typeString);
+            },
+
+            _openEditIndexedScriptModal(pieceCode) {
+                this.current_edited_indexed_code = pieceCode;
+                this.current_indexed_constraint_content = this.indexed_scripts[pieceCode];
+                this.edit_indexed_modal_open = true;
+            },
+
+            _editCurrentIndexedConstraint() {
+                this.indexed_scripts[this.current_edited_indexed_code] = this.$refs['indexed_constraint'].nativeView.text;
+                this.current_indexed_constraint_content = '';
+                this.edit_indexed_modal_open = false;
+            },
+
+            _cancelIndexedConstraintEditing() {
+                this.current_indexed_constraint_content = '';
+                this.edit_indexed_modal_open = false;
+            },
+
+            _checkNoScriptDefinedFor(pieceCode) {
+                const generalConstraint = this.general_scripts[pieceCode];
+                const indexedConstraint = this.indexed_scripts[pieceCode];
+                const mutualConstraint = this.mutual_scripts[pieceCode];
+
+                return ["", undefined].includes(generalConstraint) &&
+                    ["", undefined].includes(mutualConstraint) &&
+                    ["", undefined].includes(indexedConstraint);
+            }
         }
     }
 </script>
