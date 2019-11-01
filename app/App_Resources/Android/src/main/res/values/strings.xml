@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="save_script_error_title">"Failed to save script"</string>
   <string name="script_piece_deletion_confirmation_message">"At least a script is associated with this piece : delete it ?"</string>
   <string name="script_piece_deletion_confirmation_title">"Delete piece %1$s ?"</string>
   <string name="indexed_modal_title">"Indexed constraint for %1$s"</string>

@@ -96,5 +96,7 @@
   "indexed_modal_title": "Indexed constraint for %s",
 
   "script_piece_deletion_confirmation_title": "Delete piece %s ?",
-  "script_piece_deletion_confirmation_message": "At least a script is associated with this piece : delete it ?"
+  "script_piece_deletion_confirmation_message": "At least a script is associated with this piece : delete it ?",
+
+  "save_script_error_title": "Failed to save script"
 }

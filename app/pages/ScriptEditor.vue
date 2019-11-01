@@ -123,7 +123,7 @@
 
                         <Label v-else :text="'no_editing_piece_available' | L" class="no_piece_to_edit" />
 
-                        <StackLayout class="modal" :class="edit_general_modal_open ? 'open' : ''">
+                        <StackLayout class="modal" :class="edit_global_modal_open ? 'open' : ''">
                             <Label :text="_getGeneralModalTitle()" class="modal_title" />
                             <StackLayout orientation="horizontal">
                                 <Button :text="'ok_button' | L" class="modal_button" @tap="_editCurrentGeneralConstraint()" />
@@ -133,7 +133,7 @@
                                 <TextView
                                     editable="true" 
                                     autocorrect="false"
-                                    :text="current_general_constraint_content"
+                                    :text="current_global_constraint_content"
                                     ref="general_constraint"
                                 />
                             </ScrollView>
@@ -258,6 +258,7 @@
     import { localize } from "nativescript-localize";
     import Vue from "nativescript-vue";
     const platformModule = require("tns-core-modules/platform");
+    const fileSystemModule = require("tns-core-modules/file-system");
 
     Vue.filter("L", localize);
 
@@ -280,16 +281,16 @@
                 available_counts: [],
                 current_edited_count: 0,
                 pieces_items: [],
-                edit_general_modal_open: false,
+                edit_global_modal_open: false,
                 edit_mutual_modal_open: false,
                 edit_indexed_modal_open: false,
                 current_edited_general_code: undefined,
                 current_edited_mutual_code: undefined,
                 current_edited_indexed_code: undefined,
-                current_general_constraint_content: undefined,
+                current_global_constraint_content: undefined,
                 current_mutual_constraint_content: undefined,
                 current_indexed_constraint_content: undefined,
-                general_scripts: {},
+                global_scripts: {},
                 mutual_scripts: {},
                 indexed_scripts: {},
                 types: [
@@ -313,10 +314,29 @@
                 return accumOwner;
             }, []);
         },
+        props: [
+            'folderPath',
+            'mode',
+            'permission',
+        ],
         methods: {
-            _saveAndExit() {
-                const playerKingConstraint = this.$refs['player_king'].nativeView.text;
-                const computerKingConstraint = this.$refs['computer_king'].nativeView.text;
+            async _saveAndExit() {
+                try {
+                    await this._saveInFile();
+                    this.$navigator.navigate('/home', {
+                        transition: {
+                            name:'slide',
+                            duration: 200
+                        }
+                    });
+                }
+                catch (err) {
+                    console.error(err);
+                    alert({
+                        title: localize('save_script_error_title'),
+                        okButtonText: localize('ok_button')
+                    }).then(() => {});
+                }
             },
 
             _getType(pieceCountItem) {
@@ -514,19 +534,19 @@
 
             _openEditGeneralScriptModal(pieceCode) {
                 this.current_edited_general_code = pieceCode;
-                this.current_general_constraint_content = this.general_scripts[pieceCode];
-                this.edit_general_modal_open = true;
+                this.current_global_constraint_content = this.global_scripts[pieceCode];
+                this.edit_global_modal_open = true;
             },
 
             _editCurrentGeneralConstraint() {
-                this.general_scripts[this.current_edited_general_code] = this.$refs['general_constraint'].nativeView.text;
-                this.current_general_constraint_content = '';
-                this.edit_general_modal_open = false;
+                this.global_scripts[this.current_edited_general_code] = this.$refs['general_constraint'].nativeView.text;
+                this.current_global_constraint_content = '';
+                this.edit_global_modal_open = false;
             },
 
             _cancelGeneralConstraintEditing() {
-                this.current_general_constraint_content = '';
-                this.edit_general_modal_open = false;
+                this.current_global_constraint_content = '';
+                this.edit_global_modal_open = false;
             },
 
             _getMutualModalTitle() {
@@ -576,14 +596,158 @@
             },
 
             _checkNoScriptDefinedFor(pieceCode) {
-                const generalConstraint = this.general_scripts[pieceCode];
+                const generalConstraint = this.global_scripts[pieceCode];
                 const indexedConstraint = this.indexed_scripts[pieceCode];
                 const mutualConstraint = this.mutual_scripts[pieceCode];
 
                 return ["", undefined].includes(generalConstraint) &&
                     ["", undefined].includes(mutualConstraint) &&
                     ["", undefined].includes(indexedConstraint);
-            }
+            },
+
+            async _saveInFile() {
+                const destinationFolderPath = this.folderPath;
+                if (!destinationFolderPath) {
+                    console.error("Don't know in which folder to save !");
+                    return;
+                }
+
+                const destinationFolderInstance = fileSystemModule.Folder.fromPath(destinationFolderPath);
+                const fileName = 'test.cst';
+                const fileInstance = destinationFolderInstance.getFile(fileName);
+                await this._writeScriptInFile(fileInstance);
+            },
+
+            async _writeScriptInFile(fileInstance) {
+                const drawishStatusPart = this._getDrawishStatusText();
+                const playerKingConstraintPart = this._getPlayerKingConstraintText();
+                const computerKingConstraintPart = this._getComputerKingConstraintText();
+                const otherPiecesCountPart = this._getOtherPiecesCountText();
+                const otherPiecesGlobalConstraintPart = this._getOtherPiecesGlobalConstraintText();
+                const otherPiecesMutualConstraintPart = this._getOtherPiecesMutualConstraintText();
+                const otherPiecesIndexedConstraintPart = this._getOtherPiecesIndexedConstraintText();
+
+                const textContent = [
+                    drawishStatusPart,
+                    playerKingConstraintPart,
+                    computerKingConstraintPart,
+                    otherPiecesCountPart,
+                    otherPiecesGlobalConstraintPart,
+                    otherPiecesMutualConstraintPart,
+                    otherPiecesIndexedConstraintPart,
+                ].filter(item => item.length > 0).join('\n');
+
+                await fileInstance.writeText(textContent);
+            },
+
+            _getDrawishStatusText() {
+                return [
+                    '# Drawish',
+                    '',
+                    `${this.winningGoal ? 'false' : 'true'}`,
+                ].join('\n');
+            },
+
+            _getPlayerKingConstraintText() {
+                const playerKingConstraint = this.$refs['player_king'].nativeView.text;
+                if ([undefined, ''].includes(playerKingConstraint)) return '';
+                return [
+                    '# Player king constraint',
+                    '',
+                    playerKingConstraint,
+                ].join('\n');
+            },
+
+            _getComputerKingConstraintText() {
+                const computerKingConstraint = this.$refs['computer_king'].nativeView.text;
+                if ([undefined, ''].includes(computerKingConstraint)) return '';
+                return [
+                    '# Computer king constraint',
+                    '',
+                    computerKingConstraint,
+                ].join('\n');
+            },
+
+            _getOtherPiecesCountText() {
+                const otherPiecesCount = this.pieces_counts.map(item => {
+                    const pieceCode = item.code;
+                    const pieceCount = item.count;
+
+                    return `${pieceCode.toUpperCase().split('').join(' ')} ${pieceCount}`;
+                }).join('\n');
+                if ([undefined, ''].includes(otherPiecesCount)) return '';
+                return [
+                    '# Other pieces count',
+                    '',
+                    otherPiecesCount,
+                ].join('\n');
+            },
+
+            _getOtherPiecesGlobalConstraintText() {
+                const otherPiecesGlobalConstraint = this.pieces_counts.map(item => {
+                    const pieceCode = item.code;
+                    const pieceSectionHeader = `# ${pieceCode.toUpperCase().split('').join(' ')}`;
+                    const script = this.global_scripts[pieceCode];
+
+                    if ([undefined, ''].includes(script)) return '';
+                    return [
+                        pieceSectionHeader,
+                        '',
+                        script,
+                        ''
+                    ].filter(item => item.length > 0).join('\n');
+                });
+
+                return [
+                    '# Other piece global constraint',
+                    '',
+                    otherPiecesGlobalConstraint,
+                ].join('\n');
+            },
+
+            _getOtherPiecesMutualConstraintText() {
+                const otherPiecesMutualConstraint = this.pieces_counts.map(item => {
+                    const pieceCode = item.code;
+                    const pieceSectionHeader = `# ${pieceCode.toUpperCase().split('').join(' ')}`;
+                    const script = this.mutual_scripts[pieceCode];
+
+                    if ([undefined, ''].includes(script)) return '';
+                    return [
+                        pieceSectionHeader,
+                        '',
+                        script,
+                        ''
+                    ].filter(item => item.length > 0).join('\n');
+                });
+
+                return [
+                    '# Other piece mutual constraint',
+                    '',
+                    otherPiecesMutualConstraint,
+                ].join('\n');
+            },
+
+            _getOtherPiecesIndexedConstraintText() {
+                const otherPiecesIndexedConstraint = this.pieces_counts.map(item => {
+                    const pieceCode = item.code;
+                    const pieceSectionHeader = `# ${pieceCode.toUpperCase().split('').join(' ')}`;
+                    const script = this.indexed_scripts[pieceCode];
+
+                    if ([undefined, ''].includes(script)) return '';
+                    return [
+                        pieceSectionHeader,
+                        '',
+                        script,
+                        ''
+                    ].filter(item => item.length > 0).join('\n');
+                });
+
+                return [
+                    '# Other piece indexed constraint',
+                    '',
+                    otherPiecesIndexedConstraint,
+                ].join('\n');
+            },
         }
     }
 </script>
