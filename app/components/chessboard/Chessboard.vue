@@ -360,9 +360,9 @@ export default {
                 this.$emit('gameended');
                 this.$emit('historyselection', this.historyCursorIndex);
             } else if (this.boardLogic.insufficient_material()) {
-                this.gameInProgress = false;
                 this.gameEndedReason = 'game_ending_draw_missing_material';
                 this.historyCursorIndex = this.playedMoves.length - 1;
+                this.gameInProgress = false;
                 this.$emit('gameended');
                 this.$emit('historyselection', this.historyCursorIndex);
             } else if (this.boardLogic.in_draw()) {

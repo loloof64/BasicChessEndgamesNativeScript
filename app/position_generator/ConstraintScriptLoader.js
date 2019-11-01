@@ -6,13 +6,24 @@ export default class ConstraintScriptLoader {
     }
 
     async loadSampleScript(scriptFilePath) {
+        return this._loadScript(scriptFilePath, 'sample_constraints');
+    }
+
+    async loadCustomScript(scriptFilePath) {
+        return this._loadScript(scriptFilePath);
+    }
+
+    // If baseFolderString defined, scriptFilePath will be consired a sub path of the baseFolderString.
+    async _loadScript(scriptFilePath, baseFolderString) {
         this.currentScriptType = undefined;
         this.result = {};
 
         const fileSystemModule = require("tns-core-modules/file-system");
         const currentAppFolder = fileSystemModule.knownFolders.currentApp();
 
-        const path = fileSystemModule.path.join(currentAppFolder.path, 'sample_constraints', scriptFilePath);
+        const path = baseFolderString !== undefined ?
+            fileSystemModule.path.join(currentAppFolder.path, baseFolderString, scriptFilePath):
+            scriptFilePath;
         const file = fileSystemModule.File.fromPath(path);
 
         try {
@@ -66,7 +77,7 @@ export default class ConstraintScriptLoader {
             }
         });
 
-        return Object.entries(this.result).reduce(
+        const scriptData = Object.entries(this.result).reduce(
             (accumData, currData) => {
                 const headerType = currData[0];
                 const value = currData[1];
@@ -101,6 +112,8 @@ export default class ConstraintScriptLoader {
 
                 return accumData;
             }, {});
+
+            return scriptData;
     }
 
     _getHeaderType(line) {

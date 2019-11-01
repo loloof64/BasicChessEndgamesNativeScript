@@ -93,6 +93,8 @@ export default {
         },
         highlightHistoryMove(historyIndex) {
             const matchingChild = this.children.find(item => item.historyIndex === historyIndex);
+            // Cancel if no matching child
+            if (matchingChild === undefined) return;
             this.hightlightedChildIndex = matchingChild.childIndex;
         },
         getMoveBackgroundColor(childIndex) {

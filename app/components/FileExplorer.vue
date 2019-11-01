@@ -15,6 +15,7 @@
                     </v-template>
                 </ListView>
             </ScrollView>
+            <ActivityIndicator :busy="generatingPosition" row="0" col="0" />
             <Fab
                 class="fab-button hr vb"
                 backgroundColor="orchid"
@@ -37,6 +38,10 @@
     const platformModule = require("tns-core-modules/platform");
     const fileSystemModule = require("tns-core-modules/file-system");
 
+
+    import ConstraintScriptLoader from '../position_generator/ConstraintScriptLoader';
+    import ChessPositionGenerator from '../position_generator/ChessPositionGenerator';
+
     Vue.filter("L", localize);
     Vue.registerElement(
         'Fab',
@@ -52,6 +57,7 @@
                 explorerPathWidth: platformModule.screen.mainScreen.widthDIPs,
                 currentFolder: undefined,
                 scriptsRootFolder: undefined,
+                generatingPosition: false,
             }
         },
         async mounted() {
@@ -93,6 +99,9 @@
             _onExplorerTap(explorerItem) {
                 if (explorerItem.folder) {
                     this._navigateToFolder(explorerItem.path);
+                }
+                else {
+                    this._playGame(explorerItem.path);
                 }
             },
 
@@ -181,6 +190,80 @@
                     const targetFolder = fileSystemModule.Folder.fromPath(folderPathString);
                     this.currentFolder = targetFolder;
                     this._updateItems(); 
+                }
+            },
+
+            async _playGame(gamePathString) {
+                let scriptData;
+
+                this.generatingPosition = true;
+
+                try {
+                    scriptData = await new ConstraintScriptLoader().loadCustomScript(gamePathString);
+                } catch (e) {
+                    this.generatingPosition = false;
+                    alert({
+                        title: localize('script_loading_error_title'),
+                        okButtonText: localize('ok_button')
+                    }).then(() => {
+                        console.error('Error while loading script');
+                        console.error(e);
+                    })
+                    return;
+                }
+
+                if (scriptData === undefined) {
+                    this.generatingPosition = false;
+                    alert({
+                        title: localize('script_loading_error_title'),
+                        okButtonText: localize('ok_button')
+                    }).then(() => {
+                        console.error('Ill-formed script file !');
+                    })
+                    return;
+                }
+
+                try {
+                    const position = new ChessPositionGenerator().generatePosition(scriptData);
+                    const gameGoal = scriptData.drawish ? localize('drawish_goal') : localize('winning_goal');
+                    this.generatingPosition = false;
+
+                    if (position === null) {
+                        alert({
+                            title: localize('position_generation_fail'),
+                            okButtonText: localize('ok_button')
+                        }).then(() => {
+                            console.error('Failed to generate position')
+                        })
+                    }
+                    else {
+                        this.$navigator.navigate('/game', {
+                            transition: {
+                                name:'slide',
+                                duration: 200
+                            },
+                            props: {
+                                position,
+                                gameGoal,
+                            }
+                        });
+                    }
+                } catch (e) {
+                    this.generatingPosition = false;
+
+                    const pieceKind = e.pieceKind;
+                    const pieceKindStr = pieceKind !== undefined ? localize(pieceKind) : undefined;
+
+                    let title = `${localize('script_execution_error_title')} : ${localize(e.kind)}`;
+                    if (pieceKindStr !== undefined) title += ` (${pieceKindStr})`;
+
+                    alert({
+                        title,
+                        message: e.error,
+                        okButtonText: localize('ok_button')
+                    }).then(() => {
+                        console.error(e.error);
+                    })
                 }
             }
         }

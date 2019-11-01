@@ -1,7 +1,7 @@
 <template>
     <Page class="page">
         <ActionBar class="action-bar">
-            <Label class="action-bar-title" :text="'script_editor_title' | L"></Label>
+            <Label class="action-bar-title" :text="'script_editor_title' | L" />
         </ActionBar>
 
         <StackLayout orientation="vertical">
@@ -635,7 +635,7 @@
                     otherPiecesGlobalConstraintPart,
                     otherPiecesMutualConstraintPart,
                     otherPiecesIndexedConstraintPart,
-                ].filter(item => item.length > 0).join('\n');
+                ].filter(item => item.length > 0).join('\n\n');
 
                 await fileInstance.writeText(textContent);
             },
@@ -696,8 +696,9 @@
                         script,
                         ''
                     ].filter(item => item.length > 0).join('\n');
-                });
-
+                }).join('\n');
+                
+                if (otherPiecesGlobalConstraint === undefined || otherPiecesGlobalConstraint.trim() === '') return '';
                 return [
                     '# Other piece global constraint',
                     '',
@@ -718,8 +719,9 @@
                         script,
                         ''
                     ].filter(item => item.length > 0).join('\n');
-                });
+                }).join('\n');
 
+                if (otherPiecesMutualConstraint === undefined || otherPiecesMutualConstraint.trim() === '') return '';
                 return [
                     '# Other piece mutual constraint',
                     '',
@@ -740,8 +742,9 @@
                         script,
                         ''
                     ].filter(item => item.length > 0).join('\n');
-                });
+                }).join('\n');
 
+                if (otherPiecesIndexedConstraint === undefined || otherPiecesIndexedConstraint.trim() === '') return '';
                 return [
                     '# Other piece indexed constraint',
                     '',

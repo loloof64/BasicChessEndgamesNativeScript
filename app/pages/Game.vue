@@ -100,6 +100,7 @@
                 const userHasWhite = this.position.split(" ")[1] === 'w';
                 const whitePlayer = userHasWhite ? PlayerType.Human : PlayerType.Computer;
                 const blackPlayer = userHasWhite ? PlayerType.Computer : PlayerType.Human;
+                
                 this.$refs['board'].startNewGame({
                     startPositionStr: this.position,
                     whitePlayerType: whitePlayer,
