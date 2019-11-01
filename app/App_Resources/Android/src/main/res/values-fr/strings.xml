@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="too_many_pieces_error">"15 pièces max. par particpant !"</string>
+  <string name="no_editing_piece_available">"Il n\'y a aucune pièce mis à par les rois."</string>
+  <string name="too_many_pieces_error">"15 pièces maximum par particpant !"</string>
   <string name="editing_piece_count_title">"Edition du nombre de pièces"</string>
   <string name="add_piece_type_button">"Ajouter"</string>
   <string name="already_added_piece_type">"Pièce déjà ajoutée !"</string>
-  <string name="piece_owner_picker">"Propriétaire"</string>
-  <string name="piece_type_picker">"Type"</string>
+  <string name="piece_picker">"Pièce"</string>
   <string name="adding_piece_count_title">"Ajouter un type de pièce"</string>
+  <string name="other_pieces_general_constraint_tab">"Général autres pièces"</string>
   <string name="other_pieces_count_tab">"Inventaire autres pièces"</string>
   <string name="computer_king_constraint_tab">"Roi ordinateur"</string>
   <string name="player_king_constraint_tab">"Roi joueur"</string>

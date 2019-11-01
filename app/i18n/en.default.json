@@ -78,11 +78,12 @@
   "player_king_constraint_tab": "Player king",
   "computer_king_constraint_tab": "Computer king",
   "other_pieces_count_tab": "Other pieces count",
+  "other_pieces_general_constraint_tab": "Other pieces general",
   "adding_piece_count_title": "Adding piece type",
-  "piece_type_picker": "Type",
-  "piece_owner_picker": "Owner",
+  "piece_picker": "Piece",
   "already_added_piece_type": "Already added piece !",
   "add_piece_type_button": "Add",
   "editing_piece_count_title": "Editing pieces count",
-  "too_many_pieces_error": "15 pieces at most per owner !"
+  "too_many_pieces_error": "15 pieces at most per owner !",
+  "no_editing_piece_available": "There is no other pieces than kings."
 }

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="too_many_pieces_error">"15 pieces max. per owner !"</string>
+  <string name="no_editing_piece_available">"There is no other pieces than kings."</string>
+  <string name="too_many_pieces_error">"15 pieces at most per owner !"</string>
   <string name="editing_piece_count_title">"Editing pieces count"</string>
   <string name="add_piece_type_button">"Add"</string>
   <string name="already_added_piece_type">"Already added piece !"</string>
-  <string name="piece_owner_picker">"Owner"</string>
-  <string name="piece_type_picker">"Type"</string>
+  <string name="piece_picker">"Piece"</string>
   <string name="adding_piece_count_title">"Adding piece type"</string>
+  <string name="other_pieces_general_constraint_tab">"Other pieces general"</string>
   <string name="other_pieces_count_tab">"Other pieces count"</string>
   <string name="computer_king_constraint_tab">"Computer king"</string>
   <string name="player_king_constraint_tab">"Player king"</string>

@@ -46,8 +46,8 @@
                             <ListView for="item in pieces_counts">
                                 <v-template>
                                     <StackLayout orientation="horizontal">
-                                        <Label class="piece_type_cell" :text="item.type" />
-                                        <Label class="piece_owner_cell" :text="item.owner"
+                                        <Label class="piece_type_cell" :text="_getType(item)" />
+                                        <Label class="piece_owner_cell" :text="_getOwner(item)"
                                             :class="item.code.startsWith('c') ? 'computer_owner' : 'player_owner'"
                                         />
                                         <Label class="piece_count" @tap="_openEditCountModal(item.code)">
@@ -75,13 +75,13 @@
                             @tap="_saveAndExit()"
                             :visibility="add_piece_modal_open ? 'collapse' : 'visible'"
                         />
+
+
                         <ScrollView class="modal" :class="add_piece_modal_open ? 'open' : ''" :height="pieceTypeModalHeight">
                             <StackLayout orientation="vertical">
                                 <Label :text="'adding_piece_count_title' | L" class="modal_title" />
-                                <Label :text="'piece_type_picker' | L" class="modal_label" />
-                                <ListPicker :items="types" v-model="type_to_add" selectedIndex="0" />
-                                <Label :text="'piece_owner_picker' | L" class="modal_label" />
-                                <ListPicker :items="owners" v-model="owner_to_add" selectedIndex="0" />
+                                <Label :text="'piece_picker' | L" class="modal_label" />
+                                <ListPicker :items="pieces_items" v-model="piece_to_add_index" selectedIndex="0" />
                                 <StackLayout orientation="horizontal">
                                     <Button :text="'add_piece_type_button' | L" @tap="_addPieceType()" class="modal_button" />
                                     <Button :text="'cancel_button' | L" @tap="_cancelPieceTypeAdding()" class="modal_button" />
@@ -89,6 +89,7 @@
                                 <Label :text="add_piece_modal_error" class="modal_error" />
                             </StackLayout>
                         </ScrollView>
+
                         <ScrollView class="modal" :class="edit_count_modal_open ? 'open' : ''" :height="pieceTypeModalHeight">
                             <StackLayout orientation="vertical">
                                 <Label :text="'editing_piece_count_title' | L" class="modal_title" />
@@ -101,8 +102,27 @@
                                 <Label :text="edit_piece_modal_error" class="modal_error" />
                             </StackLayout>
                         </ScrollView>
+
                     </GridLayout>
                 </TabViewItem>
+
+                <TabViewItem :title="'other_pieces_general_constraint_tab' | L">
+                    <GridLayout>
+                        <StackLayout orientation="vertical" v-if="registered_pieces_types_strings.length > 0">
+                            <ListPicker :items="registered_pieces_types_strings" v-model="edited_general_type_index" selectedIndex="0" />
+                            <ScrollView :height="otherScriptsZonesHeight">
+                                <TextView 
+                                    :text="_getGeneralConstraintText()"
+                                    editable="true"
+                                    autocorrect="false"
+                                    ref="general" 
+                                />
+                            </ScrollView>
+                        </StackLayout>
+                        <Label v-else :text="'no_editing_piece_available' | L" class="no_piece_to_edit" />
+                    </GridLayout>
+                </TabViewItem>
+
             </TabView>
         </StackLayout>
     </Page>
@@ -120,17 +140,21 @@
             return {
                 scriptsZonesHeight: platformModule.screen.mainScreen.heightDIPs - 170,
                 pieceTypeModalHeight: platformModule.screen.mainScreen.heightDIPs - 200,
+                otherScriptsZonesHeight: platformModule.screen.mainScreen.heightDIPs - 200,
                 pieces_counts: [],
                 add_piece_modal_error: '',
                 edit_piece_modal_error: '',
                 add_piece_modal_open: false,
-                type_to_add: undefined,
-                owner_to_add: undefined,
+                piece_to_add_index: undefined,
                 edit_count_modal_open: false,
                 editing_piece_count_type: '',
                 editing_piece_count_type_string: '',
                 available_counts: [],
                 current_edited_count: undefined,
+                edited_general_type_index: undefined,
+                edited_general_scripts: {},
+                registered_pieces_types_strings: [],
+                pieces_items: [],
                 types: [
                     localize('pawn'), 
                     localize('knight'), 
@@ -144,15 +168,38 @@
                 ],
             };
         },
+        mounted() {
+            this.pieces_items = this.owners.reduce((accumOwner, currentOwner) => {
+                const additions = this.types.map(currentType => `${currentType} ${currentOwner}`);
+                accumOwner.push(...additions);
+                
+                return accumOwner;
+            }, []);
+        },
         methods: {
             _saveAndExit() {
                 const playerKingConstraint = this.$refs['player_king'].nativeView.text;
                 const computerKingConstraint = this.$refs['computer_king'].nativeView.text;
-                ////////////////////////////////////////////////
-                console.log(playerKingConstraint);
-                console.log(computerKingConstraint);
-                console.log(JSON.stringify(this.pieces_counts));
-                ////////////////////////////////////////////////
+            },
+
+            _getType(pieceCountItem) {
+                const typesOrder = {
+                    'p': 0,
+                    'n': 1,
+                    'b': 2,
+                    'r': 3,
+                    'q': 4,
+                };
+
+                return this.types[typesOrder[pieceCountItem.code[1]]];
+            },
+
+            _getOwner(pieceCountItem) {
+                const ownersOrder = {
+                    'p': 0, 'c': 1,
+                };
+
+                return this.owners[ownersOrder[pieceCountItem.code[0]]];
             },
 
             _sortPiecesCounts() {
@@ -184,9 +231,11 @@
             },
 
             _addPieceType() {
-                const typesFromIndexes = ['p', 'n', 'b', 'r', 'q'];
-                const ownersFromIndexes = ['p', 'c'];
-                this.editing_piece_count_code = `${ownersFromIndexes[this.owner_to_add]}${typesFromIndexes[this.type_to_add]}`;
+                const codesFromIndexes = [
+                    'pp', 'pn', 'pb', 'pr', 'pq',
+                    'cp', 'cn', 'cb', 'cr', 'cq',
+                ];
+                this.editing_piece_count_code = codesFromIndexes[this.piece_to_add_index];
                 // As if we selected value 1, so index 0, from an exisiting counts options
                 this.current_edited_count = 0;
 
@@ -198,30 +247,19 @@
                     this.add_piece_modal_error = localize('too_many_pieces_error');
                     return;
                 }
-                const type = this.types[this.type_to_add];
-                const owner = this.owners[this.owner_to_add];
                 this.pieces_counts.push({
-                    code: this._getSelectedPieceCode(),
-                    type,
-                    owner,
+                    code: this.editing_piece_count_code,
                     count: 1,
                 });
                 this._sortPiecesCounts();
                 // Also triggers VueJS change detection
                 this.pieces_counts.splice(this.pieces_counts.length);
+                this.registered_pieces_types_strings = this._getRegisteredPiecesTypesStrings();
                 this.add_piece_modal_open = false;
             },
 
             _checkUniqueness() {
-                const selectedPieceCode = this._getSelectedPieceCode();
-                return this.pieces_counts.filter(item => item.code === selectedPieceCode).length === 0;
-            },
-
-            _getSelectedPieceCode() {
-                const typeString = ['p', 'n', 'b', 'r', 'q'][this.type_to_add];
-                const ownerString = ['p', 'c'][this.owner_to_add];
-
-                return `${ownerString}${typeString}`;
+                return this.pieces_counts.filter(item => item.code === this.editing_piece_count_code).length === 0;
             },
 
             _cancelPieceTypeAdding() {
@@ -258,6 +296,8 @@
                 this.pieces_counts = this.pieces_counts.filter(item => item.code !== pieceCode);
                 // Also triggers VueJS change detection
                 this.pieces_counts.splice(this.pieces_counts.length);
+
+                this.registered_pieces_types_strings = this._getRegisteredPiecesTypesStrings();
             },
 
             _editCount() {
@@ -297,6 +337,38 @@
                     currentComputerPiecesCount += newPieceCount;
 
                 return currentPlayerPiecesCount <= 15 && currentComputerPiecesCount <= 15;
+            },
+
+            _getRegisteredPiecesTypesStrings() {
+                return this.pieces_counts.map(item => this._getPieceTypeStringFromCode(item.code));
+            },
+
+            _getPieceTypeStringFromCode(pieceCode) {
+                const owner = {
+                    'p': this.owners[0],
+                    'c': this.owners[1],
+                }[pieceCode[0]];
+                const type = {
+                    'p': this.types[0],
+                    'n': this.types[1],
+                    'b': this.types[2],
+                    'r': this.types[3],
+                    'q': this.types[4]
+                }[pieceCode[1]]; 
+                return `${type} ${owner}`;
+            },
+
+            _getRegisteredPiecesCodes() {
+                return this.pieces_counts.map(item => item.code);
+            },
+
+            _getGeneralConstraintText() {
+                /////////////////////////////////////////////
+                console.log(this._getRegisteredPiecesCodes[this.edited_general_type_index]);
+                /////////////////////////////////////////////
+                return this.edited_general_type_index === undefined ? 
+                '' : 
+                this.edited_general_scripts[this._getRegisteredPiecesCodes[this.edited_general_type_index]];
             }
         }
     }
@@ -417,5 +489,9 @@
 
     .center_horizontal {
         text-align: center;
+    }
+
+    .no_piece_to_edit {
+        font-size: 20;
     }
 </style>

@@ -78,11 +78,12 @@
   "player_king_constraint_tab": "Roi joueur",
   "computer_king_constraint_tab": "Roi ordinateur",
   "other_pieces_count_tab": "Inventaire autres pièces",
+  "other_pieces_general_constraint_tab": "Général autres pièces",
   "adding_piece_count_title": "Ajouter un type de pièce",
-  "piece_type_picker": "Type",
-  "piece_owner_picker": "Propriétaire",
+  "piece_picker": "Pièce",
   "already_added_piece_type": "Pièce déjà ajoutée !",
   "add_piece_type_button": "Ajouter",
   "editing_piece_count_title": "Edition du nombre de pièces",
-  "too_many_pieces_error": "15 pièces maximum par particpant !"
+  "too_many_pieces_error": "15 pièces maximum par particpant !",
+  "no_editing_piece_available": "Il n'y a aucune pièce mis à par les rois."
 }
