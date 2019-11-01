@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="too_many_pieces_error">"15 pièces max. par particpant !"</string>
   <string name="editing_piece_count_title">"Edition du nombre de pièces"</string>
   <string name="add_piece_type_button">"Ajouter"</string>
   <string name="already_added_piece_type">"Pièce déjà ajoutée !"</string>

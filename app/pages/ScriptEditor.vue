@@ -65,7 +65,7 @@
                             class="fab-button hl vb"
                             backgroundColor="yellowgreen"
                             icon="res://add"
-                            @tap="_addCount()"
+                            @tap="_openAddCountModal()"
                             :visibility="add_piece_modal_open ? 'collapse' : 'visible'"
                         />
                         <Fab
@@ -75,7 +75,7 @@
                             @tap="_saveAndExit()"
                             :visibility="add_piece_modal_open ? 'collapse' : 'visible'"
                         />
-                        <ScrollView class="modal" :class="add_piece_modal_open ? 'open' : ''" :height="scriptsZonesHeight">
+                        <ScrollView class="modal" :class="add_piece_modal_open ? 'open' : ''" :height="pieceTypeModalHeight">
                             <StackLayout orientation="vertical">
                                 <Label :text="'adding_piece_count_title' | L" class="modal_title" />
                                 <Label :text="'piece_type_picker' | L" class="modal_label" />
@@ -85,19 +85,22 @@
                                 <StackLayout orientation="horizontal">
                                     <Button :text="'add_piece_type_button' | L" @tap="_addPieceType()" class="modal_button" />
                                     <Button :text="'cancel_button' | L" @tap="_cancelPieceTypeAdding()" class="modal_button" />
-                                    <Label :text="piece_modal_error" class="modal_error" />
                                 </StackLayout>
+                                <Label :text="add_piece_modal_error" class="modal_error" />
                             </StackLayout>
                         </ScrollView>
-                        <StackLayout orientation="vertical" class="modal" :class="edit_count_modal_open ? 'open' : ''">
-                            <Label :text="'editing_piece_count_title' | L" class="modal_title" />
-                            <Label :text="editing_piece_count_type_string" class="modal_label center_horizontal" />
-                            <ListPicker :items="available_counts" v-model="current_edited_count" selectedIndex="0" />
-                            <StackLayout orientation="horizontal">
-                                <Button :text="'ok_button' | L" class="modal_button" @tap="_editCount()" />
-                                <Button :text="'cancel_button' | L" class="modal_button" @tap="_cancelCountEditing()" />
+                        <ScrollView class="modal" :class="edit_count_modal_open ? 'open' : ''" :height="pieceTypeModalHeight">
+                            <StackLayout orientation="vertical">
+                                <Label :text="'editing_piece_count_title' | L" class="modal_title" />
+                                <Label :text="editing_piece_count_type_string" class="modal_label center_horizontal" />
+                                <ListPicker :items="available_counts" v-model="current_edited_count" selectedIndex="0" />
+                                <StackLayout orientation="horizontal">
+                                    <Button :text="'ok_button' | L" class="modal_button" @tap="_editCount()" />
+                                    <Button :text="'cancel_button' | L" class="modal_button" @tap="_cancelCountEditing()" />
+                                </StackLayout>
+                                <Label :text="edit_piece_modal_error" class="modal_error" />
                             </StackLayout>
-                        </StackLayout>
+                        </ScrollView>
                     </GridLayout>
                 </TabViewItem>
             </TabView>
@@ -118,7 +121,8 @@
                 scriptsZonesHeight: platformModule.screen.mainScreen.heightDIPs - 170,
                 pieceTypeModalHeight: platformModule.screen.mainScreen.heightDIPs - 200,
                 pieces_counts: [],
-                piece_modal_error: '',
+                add_piece_modal_error: '',
+                edit_piece_modal_error: '',
                 add_piece_modal_open: false,
                 type_to_add: undefined,
                 owner_to_add: undefined,
@@ -174,28 +178,38 @@
                 });
             },
 
-            _addCount() {
+            _openAddCountModal() {
+                this.add_piece_modal_error = '';
                 this.add_piece_modal_open = true;
             },
 
             _addPieceType() {
+                const typesFromIndexes = ['p', 'n', 'b', 'r', 'q'];
+                const ownersFromIndexes = ['p', 'c'];
+                this.editing_piece_count_code = `${ownersFromIndexes[this.owner_to_add]}${typesFromIndexes[this.type_to_add]}`;
+                // As if we selected value 1, so index 0, from an exisiting counts options
+                this.current_edited_count = 0;
+
                 if (!this._checkUniqueness()) {
-                    this.piece_modal_error = localize('already_added_piece_type');
+                    this.add_piece_modal_error = localize('already_added_piece_type');
+                    return;
                 }
-                else {
-                    const type = this.types[this.type_to_add];
-                    const owner = this.owners[this.owner_to_add];
-                    this.pieces_counts.push({
-                        code: this._getSelectedPieceCode(),
-                        type,
-                        owner,
-                        count: 1,
-                    });
-                    this._sortPiecesCounts();
-                    // Also triggers VueJS change detection
-                    this.pieces_counts.splice(this.pieces_counts.length);
-                    this.add_piece_modal_open = false;
+                if (! this._checkForGoodCountForEachOwner()) {
+                    this.add_piece_modal_error = localize('too_many_pieces_error');
+                    return;
                 }
+                const type = this.types[this.type_to_add];
+                const owner = this.owners[this.owner_to_add];
+                this.pieces_counts.push({
+                    code: this._getSelectedPieceCode(),
+                    type,
+                    owner,
+                    count: 1,
+                });
+                this._sortPiecesCounts();
+                // Also triggers VueJS change detection
+                this.pieces_counts.splice(this.pieces_counts.length);
+                this.add_piece_modal_open = false;
             },
 
             _checkUniqueness() {
@@ -215,6 +229,7 @@
             },
 
             _openEditCountModal(pieceCode) {
+                this.edit_piece_modal_error = '';
                 const owner = {
                     'p': this.owners[0],
                     'c': this.owners[1],
@@ -233,7 +248,7 @@
                     'r': [1,2,3,4,5,6,7,8,9,10],
                     'q': [1,2,3,4,5,6,7,8,9],
                 }[pieceCode[1]];
-                this.editing_piece_count_type = pieceCode;
+                this.editing_piece_count_code = pieceCode;
                 this.editing_piece_count_type_string = `${type} ${owner}`;
                 this.available_counts = availableCounts;
                 this.edit_count_modal_open = true;
@@ -246,7 +261,11 @@
             },
 
             _editCount() {
-                const pieceTypeIndex = this.pieces_counts.findIndex(item => item.code === this.editing_piece_count_type);
+                if (! this._checkForGoodCountForEachOwner()) {
+                    this.edit_piece_modal_error = localize('too_many_pieces_error');
+                    return;
+                }
+                const pieceTypeIndex = this.pieces_counts.findIndex(item => item.code === this.editing_piece_count_code);
                 this.pieces_counts[pieceTypeIndex].count = this.current_edited_count + 1;
                 // Also triggers VueJS change detection
                 this.pieces_counts.splice(this.pieces_counts.length);
@@ -255,6 +274,29 @@
 
             _cancelCountEditing() {
                 this.edit_count_modal_open = false;
+            },
+
+            _checkForGoodCountForEachOwner() {
+                const newPieceCount = this.current_edited_count + 1;
+                let currentPlayerPiecesCount = this.pieces_counts.reduce((accum, current) => {
+                    if (current.code.startsWith('p') && current.code !== this.editing_piece_count_code) {
+                        accum += current.count;
+                    }
+                    return accum;
+                }, 0);
+                let currentComputerPiecesCount = this.pieces_counts.reduce((accum, current) => {
+                    if (current.code.startsWith('c') && current.code !== this.editing_piece_count_code) {
+                        accum += current.count;
+                    }
+                    return accum;
+                }, 0);
+
+                const editingPieceForPlayer = this.editing_piece_count_code.startsWith('p');
+                editingPieceForPlayer ? 
+                    currentPlayerPiecesCount += newPieceCount :
+                    currentComputerPiecesCount += newPieceCount;
+
+                return currentPlayerPiecesCount <= 15 && currentComputerPiecesCount <= 15;
             }
         }
     }

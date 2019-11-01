@@ -83,5 +83,6 @@
   "piece_owner_picker": "Owner",
   "already_added_piece_type": "Already added piece !",
   "add_piece_type_button": "Add",
-  "editing_piece_count_title": "Editing pieces count"
+  "editing_piece_count_title": "Editing pieces count",
+  "too_many_pieces_error": "15 pieces at most per owner !"
 }

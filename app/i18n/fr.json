@@ -83,5 +83,6 @@
   "piece_owner_picker": "Propriétaire",
   "already_added_piece_type": "Pièce déjà ajoutée !",
   "add_piece_type_button": "Ajouter",
-  "editing_piece_count_title": "Edition du nombre de pièces"
+  "editing_piece_count_title": "Edition du nombre de pièces",
+  "too_many_pieces_error": "15 pièces maximum par particpant !"
 }
