@@ -50,7 +50,12 @@
                                         <Label class="piece_owner_cell" :text="item.owner"
                                             :class="item.code.startsWith('c') ? 'computer_owner' : 'player_owner'"
                                         />
-                                        <Label class="piece_count" :text="item.count" @tap="_openEditCountModal(item.code)" />
+                                        <Label class="piece_count" @tap="_openEditCountModal(item.code)">
+                                            <FormattedString>
+                                                <Span class="piece_count_number" :text="item.count" />
+                                                <Span class="fa piece_count_edit" text.decode="&#xf303;" />
+                                            </FormattedString>
+                                        </Label>
                                         <Image src="res://delete" class="delete_icon" @tap="_removePiece(item.code)" />
                                     </StackLayout>
                                 </v-template>
@@ -285,6 +290,7 @@
     }
 
     $piece_count_font_size: 20;
+    $piece_count_icon_size: 14;
     $piece_count_color: midnightblue;
 
     .piece_type_cell {
@@ -315,10 +321,16 @@
 
     .piece_count {
         width: 40;
-        font-size: $piece_count_font_size;
         color: $piece_count_color;
         background-color: yellow;
-        text-align: center;
+    }
+
+    .piece_count_number {
+        font-size: $piece_count_font_size;
+    }
+
+    .piece_count_edit {
+        font-size: $piece_count_icon_size;
     }
 
     .modal_title {
