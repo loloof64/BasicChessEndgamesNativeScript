@@ -82,6 +82,8 @@
   "other_pieces_general_constraint_tab": "Général autres pièces",
   "other_pieces_mutual_constraint_tab": "Mutuelle autres pièces",
   "other_pieces_indexed_constraint_tab": "Indexée autres pièces",
+  "goal_tab": "Objectif",
+  "winning_goal_switch": "Objectif gain ?",
   "adding_piece_count_title": "Ajouter un type de pièce",
   "piece_picker": "Pièce",
   "already_added_piece_type": "Pièce déjà ajoutée !",

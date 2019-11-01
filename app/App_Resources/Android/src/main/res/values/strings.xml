@@ -12,6 +12,8 @@
   <string name="already_added_piece_type">"Already added piece !"</string>
   <string name="piece_picker">"Piece"</string>
   <string name="adding_piece_count_title">"Adding piece type"</string>
+  <string name="winning_goal_switch">"Winning goal ?"</string>
+  <string name="goal_tab">"Goal"</string>
   <string name="other_pieces_indexed_constraint_tab">"Other pieces indexed"</string>
   <string name="other_pieces_mutual_constraint_tab">"Other pieces mutual"</string>
   <string name="other_pieces_general_constraint_tab">"Other pieces general"</string>

@@ -82,6 +82,8 @@
   "other_pieces_general_constraint_tab": "Other pieces general",
   "other_pieces_mutual_constraint_tab": "Other pieces mutual",
   "other_pieces_indexed_constraint_tab": "Other pieces indexed",
+  "goal_tab": "Goal",
+  "winning_goal_switch": "Winning goal ?",
   "adding_piece_count_title": "Adding piece type",
   "piece_picker": "Piece",
   "already_added_piece_type": "Already added piece !",

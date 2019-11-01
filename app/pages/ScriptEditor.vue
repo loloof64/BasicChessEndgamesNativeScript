@@ -233,6 +233,15 @@
                     </GridLayout>
                 </TabViewItem>
 
+                <TabViewItem :title="'goal_tab' | L">
+                    <GridLayout>
+                        <StackLayout orientation="horizontal">
+                            <Label :text="'winning_goal_switch' | L" class="goal_label"/>
+                            <Switch v-model="winningGoal" />
+                        </StackLayout>
+                    </GridLayout>
+                </TabViewItem>
+
             </TabView>
         </StackLayout>
     </Page>
@@ -253,6 +262,7 @@
                 otherScriptsZonesHeight: platformModule.screen.mainScreen.heightDIPs - 220,
                 otherScriptModalHeight: platformModule.screen.mainScreen.heightDIPs - 60,
                 pieces_counts: [],
+                winningGoal: true,
                 add_piece_modal_error: '',
                 edit_piece_modal_error: '',
                 add_piece_modal_open: false,
@@ -695,5 +705,10 @@
     .edit_other_script_button {
         background-color: forestgreen;
         font-size: 20;
+    }
+
+    .goal_label {
+        font-size: 20;
+        vertical-align: middle;
     }
 </style>
