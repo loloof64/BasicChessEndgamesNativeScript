@@ -50,7 +50,7 @@
                                         <Label class="piece_owner_cell" :text="item.owner"
                                             :class="item.code.startsWith('c') ? 'computer_owner' : 'player_owner'"
                                         />
-                                        <Label class="piece_count" :text="item.count" />
+                                        <Label class="piece_count" :text="item.count" @tap="_openEditCountModal(item.code)" />
                                         <Image src="res://delete" class="delete_icon" @tap="_removePiece(item.code)" />
                                     </StackLayout>
                                 </v-template>
@@ -79,11 +79,20 @@
                                 <ListPicker :items="owners" v-model="owner_to_add" selectedIndex="0" />
                                 <StackLayout orientation="horizontal">
                                     <Button :text="'add_piece_type_button' | L" @tap="_addPieceType()" class="modal_button" />
-                                    <Button :text="'cancel_button' | L" @tap="_cancel()" class="modal_button" />
+                                    <Button :text="'cancel_button' | L" @tap="_cancelPieceTypeAdding()" class="modal_button" />
                                     <Label :text="piece_modal_error" class="modal_error" />
                                 </StackLayout>
                             </StackLayout>
                         </ScrollView>
+                        <StackLayout orientation="vertical" class="modal" :class="edit_count_modal_open ? 'open' : ''">
+                            <Label :text="'editing_piece_count_title' | L" class="modal_title" />
+                            <Label :text="editing_piece_count_type_string" class="modal_label center_horizontal" />
+                            <ListPicker :items="available_counts" v-model="current_edited_count" selectedIndex="0" />
+                            <StackLayout orientation="horizontal">
+                                <Button :text="'ok_button' | L" class="modal_button" @tap="_editCount()" />
+                                <Button :text="'cancel_button' | L" class="modal_button" @tap="_cancelCountEditing()" />
+                            </StackLayout>
+                        </StackLayout>
                     </GridLayout>
                 </TabViewItem>
             </TabView>
@@ -108,6 +117,11 @@
                 add_piece_modal_open: false,
                 type_to_add: undefined,
                 owner_to_add: undefined,
+                edit_count_modal_open: false,
+                editing_piece_count_type: '',
+                editing_piece_count_type_string: '',
+                available_counts: [],
+                current_edited_count: undefined,
                 types: [
                     localize('pawn'), 
                     localize('knight'), 
@@ -191,14 +205,51 @@
                 return `${ownerString}${typeString}`;
             },
 
-            _cancel() {
+            _cancelPieceTypeAdding() {
                 this.add_piece_modal_open = false;
+            },
+
+            _openEditCountModal(pieceCode) {
+                const owner = {
+                    'p': this.owners[0],
+                    'c': this.owners[1],
+                }[pieceCode[0]];
+                const type = {
+                    'p': this.types[0],
+                    'n': this.types[1],
+                    'b': this.types[2],
+                    'r': this.types[3],
+                    'q': this.types[4]
+                }[pieceCode[1]];
+                const availableCounts = {
+                    'p': [1,2,3,4,5,6,7,8],
+                    'n': [1,2,3,4,5,6,7,8,9,10],
+                    'b': [1,2,3,4,5,6,7,8,9,10],
+                    'r': [1,2,3,4,5,6,7,8,9,10],
+                    'q': [1,2,3,4,5,6,7,8,9],
+                }[pieceCode[1]];
+                this.editing_piece_count_type = pieceCode;
+                this.editing_piece_count_type_string = `${type} ${owner}`;
+                this.available_counts = availableCounts;
+                this.edit_count_modal_open = true;
             },
 
             _removePiece(pieceCode) {
                 this.pieces_counts = this.pieces_counts.filter(item => item.code !== pieceCode);
                 // Also triggers VueJS change detection
                 this.pieces_counts.splice(this.pieces_counts.length);
+            },
+
+            _editCount() {
+                const pieceTypeIndex = this.pieces_counts.findIndex(item => item.code === this.editing_piece_count_type);
+                this.pieces_counts[pieceTypeIndex].count = this.current_edited_count + 1;
+                // Also triggers VueJS change detection
+                this.pieces_counts.splice(this.pieces_counts.length);
+                this.edit_count_modal_open = false;
+            },
+
+            _cancelCountEditing() {
+                this.edit_count_modal_open = false;
             }
         }
     }
@@ -308,5 +359,9 @@
     .delete_icon {
         width: 30;
         height: 30;
+    }
+
+    .center_horizontal {
+        text-align: center;
     }
 </style>
