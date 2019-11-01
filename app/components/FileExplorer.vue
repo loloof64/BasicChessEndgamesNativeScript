@@ -68,11 +68,13 @@
                     okButtonText: localize('ok_button'),
                     cancelButtonText: localize('cancel_button'),
                 }).then(async result => {
-                    const folderName = result.text || this._randomName();
+                    const validated = result.result;
+                    const folderName = result.text;
 
-                    this._addFolder(folderName);
-                    
-                    this._updateItems();
+                    if (validated && folderName !== undefined) {
+                        this._addFolder(folderName);
+                        this._updateItems();
+                    }
                 });
             },
             _newScriptInEditor() {
@@ -92,15 +94,6 @@
                 if (explorerItem.folder) {
                     this._navigateToFolder(explorerItem.path);
                 }
-            },
-            _randomName() {
-                let name = '';
-                for (let i = 0; i < 20; i++) {
-                    const letterIndex = Math.random() * 26;
-                    const letter = String.fromCharCode('a'.charCodeAt(0) + letterIndex);
-                    name += letter;
-                }
-                return name;
             },
 
             async _getItems() {
