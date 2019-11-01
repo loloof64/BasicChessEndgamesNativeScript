@@ -73,6 +73,7 @@
   "player": "player",
   "computer": "computer",
 
+  "edit_other_script_button_caption": "Edit for %s",
   "update_script": "Update script",
   "script_editor_title": "Script editor",
   "player_king_constraint_tab": "Player king",
@@ -85,5 +86,6 @@
   "add_piece_type_button": "Add",
   "editing_piece_count_title": "Editing pieces count",
   "too_many_pieces_error": "15 pieces at most per owner !",
-  "no_editing_piece_available": "There is no other pieces than kings."
+  "no_editing_piece_available": "There is no other pieces than kings.",
+  "general_modal_title": "General for %s"
 }

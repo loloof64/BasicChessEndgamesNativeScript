@@ -73,6 +73,7 @@
   "player": "joueur",
   "computer": "ordinateur",
 
+  "edit_other_script_button_caption": "Editer pour %s",
   "update_script": "Mettre le script à jour",
   "script_editor_title": "Editeur de script",
   "player_king_constraint_tab": "Roi joueur",
@@ -85,5 +86,6 @@
   "add_piece_type_button": "Ajouter",
   "editing_piece_count_title": "Edition du nombre de pièces",
   "too_many_pieces_error": "15 pièces maximum par particpant !",
-  "no_editing_piece_available": "Il n'y a aucune pièce mis à par les rois."
+  "no_editing_piece_available": "Il n'y a aucune pièce mis à part les rois.",
+  "general_modal_title": "Contrainte générale pour %s"
 }

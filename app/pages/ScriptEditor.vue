@@ -9,7 +9,8 @@
                 <TabViewItem :title="'player_king_constraint_tab' | L">
                     <GridLayout>
                         <ScrollView :height="scriptsZonesHeight">
-                            <TextView editable="true"
+                            <TextView 
+                                editable="true"
                                 autocorrect="false"
                                 ref="player_king"   
                             />
@@ -26,7 +27,8 @@
                 <TabViewItem :title="'computer_king_constraint_tab' | L">
                     <GridLayout>
                         <ScrollView :height="scriptsZonesHeight">
-                            <TextView editable="true" 
+                            <TextView 
+                                editable="true" 
                                 autocorrect="false"
                                 ref="computer_king"
                             />
@@ -76,12 +78,11 @@
                             :visibility="add_piece_modal_open ? 'collapse' : 'visible'"
                         />
 
-
                         <ScrollView class="modal" :class="add_piece_modal_open ? 'open' : ''" :height="pieceTypeModalHeight">
                             <StackLayout orientation="vertical">
                                 <Label :text="'adding_piece_count_title' | L" class="modal_title" />
                                 <Label :text="'piece_picker' | L" class="modal_label" />
-                                <ListPicker :items="pieces_items" v-model="piece_to_add_index" selectedIndex="0" />
+                                <ListPicker :items="pieces_items" v-model="piece_to_add_index" />
                                 <StackLayout orientation="horizontal">
                                     <Button :text="'add_piece_type_button' | L" @tap="_addPieceType()" class="modal_button" />
                                     <Button :text="'cancel_button' | L" @tap="_cancelPieceTypeAdding()" class="modal_button" />
@@ -94,7 +95,7 @@
                             <StackLayout orientation="vertical">
                                 <Label :text="'editing_piece_count_title' | L" class="modal_title" />
                                 <Label :text="editing_piece_count_type_string" class="modal_label center_horizontal" />
-                                <ListPicker :items="available_counts" v-model="current_edited_count" selectedIndex="0" />
+                                <ListPicker :items="available_counts" v-model="current_edited_count" />
                                 <StackLayout orientation="horizontal">
                                     <Button :text="'ok_button' | L" class="modal_button" @tap="_editCount()" />
                                     <Button :text="'cancel_button' | L" class="modal_button" @tap="_cancelCountEditing()" />
@@ -108,18 +109,36 @@
 
                 <TabViewItem :title="'other_pieces_general_constraint_tab' | L">
                     <GridLayout>
-                        <StackLayout orientation="vertical" v-if="registered_pieces_types_strings.length > 0">
-                            <ListPicker :items="registered_pieces_types_strings" v-model="edited_general_type_index" selectedIndex="0" />
-                            <ScrollView :height="otherScriptsZonesHeight">
-                                <TextView 
-                                    :text="_getGeneralConstraintText()"
-                                    editable="true"
+
+                        <ScrollView v-if="pieces_counts.length > 0">
+                            <StackLayout orientation="vertical">
+                                <Button 
+                                    class="edit_other_script_button"
+                                    v-for="item in pieces_counts" :key="item.code"
+                                    :text="_getPieceButtonStringFromCode(item.code)"
+                                    @tap="_openEditGeneralScriptModal(item.code)"
+                                />
+                            </StackLayout>
+                        </ScrollView>
+
+                        <Label v-else :text="'no_editing_piece_available' | L" class="no_piece_to_edit" />
+
+                        <StackLayout class="modal" :class="edit_general_modal_open ? 'open' : ''">
+                            <Label :text="_getGeneralModalTitle()" class="modal_title" />
+                            <StackLayout orientation="horizontal">
+                                <Button :text="'ok_button' | L" class="modal_button" @tap="_editCurrentGeneralConstraint()" />
+                                <Button :text="'cancel_button' | L" class="modal_button" @tap="_cancelGeneralConstraintEditing()" />
+                            </StackLayout>
+                            <ScrollView orientation="vertical" :height="otherScriptModalHeight">
+                                <TextView
+                                    editable="true" 
                                     autocorrect="false"
-                                    ref="general" 
+                                    :text="current_general_constraint_content"
+                                    ref="general_constraint"
                                 />
                             </ScrollView>
-                        </StackLayout>
-                        <Label v-else :text="'no_editing_piece_available' | L" class="no_piece_to_edit" />
+                        </StackLayout> 
+
                     </GridLayout>
                 </TabViewItem>
 
@@ -140,21 +159,23 @@
             return {
                 scriptsZonesHeight: platformModule.screen.mainScreen.heightDIPs - 170,
                 pieceTypeModalHeight: platformModule.screen.mainScreen.heightDIPs - 200,
-                otherScriptsZonesHeight: platformModule.screen.mainScreen.heightDIPs - 200,
+                otherScriptsZonesHeight: platformModule.screen.mainScreen.heightDIPs - 220,
+                otherScriptModalHeight: platformModule.screen.mainScreen.heightDIPs - 60,
                 pieces_counts: [],
                 add_piece_modal_error: '',
                 edit_piece_modal_error: '',
                 add_piece_modal_open: false,
-                piece_to_add_index: undefined,
+                piece_to_add_index: 0,
                 edit_count_modal_open: false,
                 editing_piece_count_type: '',
                 editing_piece_count_type_string: '',
                 available_counts: [],
-                current_edited_count: undefined,
-                edited_general_type_index: undefined,
-                edited_general_scripts: {},
-                registered_pieces_types_strings: [],
+                current_edited_count: 0,
                 pieces_items: [],
+                edit_general_modal_open: false,
+                current_edited_general_code: undefined,
+                current_general_constraint_content: undefined,
+                general_scripts: {},
                 types: [
                     localize('pawn'), 
                     localize('knight'), 
@@ -254,7 +275,6 @@
                 this._sortPiecesCounts();
                 // Also triggers VueJS change detection
                 this.pieces_counts.splice(this.pieces_counts.length);
-                this.registered_pieces_types_strings = this._getRegisteredPiecesTypesStrings();
                 this.add_piece_modal_open = false;
             },
 
@@ -296,8 +316,6 @@
                 this.pieces_counts = this.pieces_counts.filter(item => item.code !== pieceCode);
                 // Also triggers VueJS change detection
                 this.pieces_counts.splice(this.pieces_counts.length);
-
-                this.registered_pieces_types_strings = this._getRegisteredPiecesTypesStrings();
             },
 
             _editCount() {
@@ -339,10 +357,6 @@
                 return currentPlayerPiecesCount <= 15 && currentComputerPiecesCount <= 15;
             },
 
-            _getRegisteredPiecesTypesStrings() {
-                return this.pieces_counts.map(item => this._getPieceTypeStringFromCode(item.code));
-            },
-
             _getPieceTypeStringFromCode(pieceCode) {
                 const owner = {
                     'p': this.owners[0],
@@ -358,18 +372,33 @@
                 return `${type} ${owner}`;
             },
 
-            _getRegisteredPiecesCodes() {
-                return this.pieces_counts.map(item => item.code);
+            _getPieceButtonStringFromCode(pieceCode) {
+                const typeString = this._getPieceTypeStringFromCode(pieceCode);
+                return localize('edit_other_script_button_caption', typeString);
             },
 
-            _getGeneralConstraintText() {
-                /////////////////////////////////////////////
-                console.log(this._getRegisteredPiecesCodes[this.edited_general_type_index]);
-                /////////////////////////////////////////////
-                return this.edited_general_type_index === undefined ? 
-                '' : 
-                this.edited_general_scripts[this._getRegisteredPiecesCodes[this.edited_general_type_index]];
-            }
+            _getGeneralModalTitle() {
+                if (this.current_edited_general_code === undefined) return '';
+                const typeString = this._getPieceTypeStringFromCode(this.current_edited_general_code);
+                return localize('general_modal_title', typeString);
+            },
+
+            _openEditGeneralScriptModal(pieceCode) {
+                this.current_edited_general_code = pieceCode;
+                this.current_general_constraint_content = this.general_scripts[pieceCode];
+                this.edit_general_modal_open = true;
+            },
+
+            _editCurrentGeneralConstraint() {
+                this.general_scripts[this.current_edited_general_code] = this.$refs['general_constraint'].nativeView.text;
+                this.current_general_constraint_content = '';
+                this.edit_general_modal_open = false;
+            },
+
+            _cancelGeneralConstraintEditing() {
+                this.current_general_constraint_content = '';
+                this.edit_general_modal_open = false;
+            },
         }
     }
 </script>
@@ -462,7 +491,7 @@
     .modal {
         opacity: 0;
         visibility: collapse;
-        background-color: white;
+        background-color: pink;
     }
 
     .modal.open {
@@ -492,6 +521,11 @@
     }
 
     .no_piece_to_edit {
+        font-size: 20;
+    }
+
+    .edit_other_script_button {
+        background-color: forestgreen;
         font-size: 20;
     }
 </style>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="general_modal_title">"General for %1$s"</string>
   <string name="no_editing_piece_available">"There is no other pieces than kings."</string>
   <string name="too_many_pieces_error">"15 pieces at most per owner !"</string>
   <string name="editing_piece_count_title">"Editing pieces count"</string>
@@ -13,6 +14,7 @@
   <string name="player_king_constraint_tab">"Player king"</string>
   <string name="script_editor_title">"Script editor"</string>
   <string name="update_script">"Update script"</string>
+  <string name="edit_other_script_button_caption">"Edit for %1$s"</string>
   <string name="computer">"computer"</string>
   <string name="player">"player"</string>
   <string name="queen">"queen"</string>

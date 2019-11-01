@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="no_editing_piece_available">"Il n\'y a aucune pièce mis à par les rois."</string>
+  <string name="general_modal_title">"Contrainte générale pour %1$s"</string>
+  <string name="no_editing_piece_available">"Il n\'y a aucune pièce mis à part les rois."</string>
   <string name="too_many_pieces_error">"15 pièces maximum par particpant !"</string>
   <string name="editing_piece_count_title">"Edition du nombre de pièces"</string>
   <string name="add_piece_type_button">"Ajouter"</string>
@@ -13,6 +14,7 @@
   <string name="player_king_constraint_tab">"Roi joueur"</string>
   <string name="script_editor_title">"Editeur de script"</string>
   <string name="update_script">"Mettre le script à jour"</string>
+  <string name="edit_other_script_button_caption">"Editer pour %1$s"</string>
   <string name="computer">"ordinateur"</string>
   <string name="player">"joueur"</string>
   <string name="queen">"dame"</string>
