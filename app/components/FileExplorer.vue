@@ -198,7 +198,7 @@
                 this.generatingPosition = true;
 
                 try {
-                    scriptData = await new ConstraintScriptLoader().loadCustomScript(gamePathString);
+                    scriptData = await new ConstraintScriptLoader().loadScriptFromAbsolutePath(gamePathString);
                 } catch (e) {
                     this.generatingPosition = false;
                     alert({

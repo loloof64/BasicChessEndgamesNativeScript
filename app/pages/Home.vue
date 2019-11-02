@@ -9,9 +9,12 @@
                 <TabViewItem :title="'sample_scripts' | L"
                 iconSource="res://bookshelf">
                     <GridLayout>
-                        <ListView for="item in sampleScripts" @itemTap="onSampleScriptTap($event.item)" row="0" col="0">
+                        <ListView for="item in sampleScripts" row="0" col="0">
                             <v-template>
-                                <Label :text="item.label" @longPress="readSample(item)" fontSize="22" width="100%" />
+                                <Label :text="item.label" fontSize="22" width="100%"
+                                    @tap="onSampleScriptTap(item)"
+                                    @longPress="readSample(item)"
+                                 />
                             </v-template>
                         </ListView>
                         <ActivityIndicator :busy="generatingPosition" row="0" col="0" />
@@ -87,7 +90,6 @@
         },
         methods: {  
             async onSampleScriptTap(scriptItem) {
-
                 let scriptData;
 
                 this.generatingPosition = true;

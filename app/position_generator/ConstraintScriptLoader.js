@@ -1,3 +1,5 @@
+const fileSystemModule = require("tns-core-modules/file-system");
+
 export default class ConstraintScriptLoader {
 
     constructor() {
@@ -5,26 +7,18 @@ export default class ConstraintScriptLoader {
         this.result = {};
     }
 
-    async loadSampleScript(scriptFilePath) {
-        return this._loadScript(scriptFilePath, 'sample_constraints');
+    async loadSampleScript(scriptFileName) {
+        const currentAppFolder = fileSystemModule.knownFolders.currentApp();
+        const path = fileSystemModule.path.join(currentAppFolder.path, 'sample_constraints', scriptFileName);
+        return this.loadScriptFromAbsolutePath(path);
     }
 
-    async loadCustomScript(scriptFilePath) {
-        return this._loadScript(scriptFilePath);
-    }
-
-    // If baseFolderString defined, scriptFilePath will be consired a sub path of the baseFolderString.
-    async _loadScript(scriptFilePath, baseFolderString) {
+    async loadScriptFromAbsolutePath(absolutePath) {
         this.currentScriptType = undefined;
         this.result = {};
 
-        const fileSystemModule = require("tns-core-modules/file-system");
-        const currentAppFolder = fileSystemModule.knownFolders.currentApp();
-
-        const path = baseFolderString !== undefined ?
-            fileSystemModule.path.join(currentAppFolder.path, baseFolderString, scriptFilePath):
-            scriptFilePath;
-        const file = fileSystemModule.File.fromPath(path);
+        
+        const file = fileSystemModule.File.fromPath(absolutePath);
 
         try {
             const input = await file.readText();
