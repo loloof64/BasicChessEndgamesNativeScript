@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="overwrite_script_file_message">"This file (%1$s) already exists : overwrite it ?"</string>
+  <string name="overwrite_script_file_title">"Overwrite file ?"</string>
   <string name="file_name_title">"Nom du fichier ?"</string>
   <string name="save_script_error_title">"Echec de sauvegarde du script"</string>
   <string name="script_piece_deletion_confirmation_message">"Au moins un script est associé à cette pièce : supprimer ?"</string>

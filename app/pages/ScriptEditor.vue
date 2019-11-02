@@ -615,6 +615,21 @@
                     if (!result.result) throw 'No file name given or canceled dialog';
                     let fileName = result.text;
                     if (!fileName.endsWith(".cst")) fileName += ".cst";
+                    const filePath = fileSystemModule.path.join(destinationFolderPath, fileName);
+                    const fileAlreadyExists = fileSystemModule.File.exists(filePath);
+
+                    let acceptedOverwrite = true;
+                    if (fileAlreadyExists) {
+                        acceptedOverwrite = await confirm({
+                            title: localize("overwrite_script_file_title"),
+                            message: localize("overwrite_script_file_message", fileName),
+                            okButtonText: localize("ok_button"),
+                            cancelButtonText: localize("cancel_button"),
+                        });
+                    }
+
+                    if (!acceptedOverwrite) return;
+
                     const fileInstance = destinationFolderInstance.getFile(fileName);
                     await this._writeScriptInFile(fileInstance);
 

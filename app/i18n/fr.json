@@ -99,5 +99,7 @@
   "script_piece_deletion_confirmation_message": "Au moins un script est associé à cette pièce : supprimer ?",
 
   "save_script_error_title": "Echec de sauvegarde du script",
-  "file_name_title": "Nom du fichier ?"
+  "file_name_title": "Nom du fichier ?",
+  "overwrite_script_file_title": "Ecraser le fichier ?",
+  "overwrite_script_file_message": "Ce fichier (%s) existe déjà dans le dossier chosit : écraser ?"
 }

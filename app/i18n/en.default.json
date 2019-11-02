@@ -99,5 +99,7 @@
   "script_piece_deletion_confirmation_message": "At least a script is associated with this piece : delete it ?",
 
   "save_script_error_title": "Failed to save script",
-  "file_name_title": "File name ?"
+  "file_name_title": "File name ?",
+  "overwrite_script_file_title": "Overwrite file ?",
+  "overwrite_script_file_message": "This file (%s) already exists in selected folder : overwrite it ?"
 }
