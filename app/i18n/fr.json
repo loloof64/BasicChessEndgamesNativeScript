@@ -101,5 +101,5 @@
   "save_script_error_title": "Echec de sauvegarde du script",
   "file_name_title": "Nom du fichier ?",
   "overwrite_script_file_title": "Ecraser le fichier ?",
-  "overwrite_script_file_message": "Ce fichier (%s) existe déjà dans le dossier chosit : écraser ?"
+  "overwrite_script_file_message": "Ce fichier (%s) existe déjà dans le dossier chosit : écraser ?",
 }

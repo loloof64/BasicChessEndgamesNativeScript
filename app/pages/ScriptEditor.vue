@@ -322,7 +322,9 @@
                 return accumOwner;
             }, []);
 
-            const weMustLoadContent = this._weHaveReadPermission() && this.fileName !== undefined && this.folderPath !== undefined;
+            const weMustLoadContent = this._weHaveReadPermission() &&
+                 this.scriptData !== undefined;
+
             if (weMustLoadContent) {
                 this._loadExistingContent();
             }
@@ -331,6 +333,7 @@
             'folderPath',
             'permission',
             'fileName',
+            'scriptData',
         ],
         methods: {
             _weHaveWritePermission() {
@@ -349,7 +352,8 @@
             },
 
             _loadExistingContent() {
-
+                this.$refs['player_king'].nativeView.text = this.scriptData.playerKingConstraint;
+                this.$refs['computer_king'].nativeView.text = this.scriptData.computerKingConstraint;
             },
 
             async _saveAndExit() {

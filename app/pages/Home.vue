@@ -17,7 +17,7 @@
                                  />
                             </v-template>
                         </ListView>
-                        <ActivityIndicator :busy="generatingPosition" row="0" col="0" />
+                        <ActivityIndicator :busy="busy" row="0" col="0" />
                     </GridLayout>
                 </TabViewItem>
 
@@ -80,7 +80,7 @@
                         label: localize('sample_knb_k'),
                     },
                 ],
-                generatingPosition: false,
+                busy: false,
                 explorerItems: [],
             }
         },
@@ -92,12 +92,12 @@
             async onSampleScriptTap(scriptItem) {
                 let scriptData;
 
-                this.generatingPosition = true;
+                this.busy = true;
 
                 try {
                     scriptData = await new ConstraintScriptLoader().loadSampleScript(scriptItem.path);
                 } catch (e) {
-                    this.generatingPosition = false;
+                    this.busy = false;
                     alert({
                         title: localize('script_loading_error_title'),
                         okButtonText: localize('ok_button')
@@ -109,7 +109,7 @@
                 }
 
                 if (scriptData === undefined) {
-                    this.generatingPosition = false;
+                    this.busy = false;
                     alert({
                         title: localize('script_loading_error_title'),
                         okButtonText: localize('ok_button')
@@ -122,7 +122,7 @@
                 try {
                     const position = new ChessPositionGenerator().generatePosition(scriptData);
                     const gameGoal = scriptData.drawish ? localize('drawish_goal') : localize('winning_goal');
-                    this.generatingPosition = false;
+                    this.busy = false;
 
                     if (position === null) {
                         alert({
@@ -145,7 +145,7 @@
                         });
                     }
                 } catch (e) {
-                    this.generatingPosition = false;
+                    this.busy = false;
 
                     const pieceKind = e.pieceKind;
                     const pieceKindStr = pieceKind !== undefined ? localize(pieceKind) : undefined;
@@ -155,19 +155,37 @@
 
                     alert({
                         title,
-                        message: e.error,
+                        message: e.error || e,
                         okButtonText: localize('ok_button')
                     }).then(() => {
-                        console.error(e.error);
+                        console.error(e.error || e);
                     })
                 }
                 
             },
 
-            readSample(item) {
+            async readSample(item) {
                 const currentAppFolder = fileSystemModule.knownFolders.currentApp();
                 const samplesFolder = fileSystemModule.path.join(currentAppFolder.path, 'sample_constraints');
+                this.busy = true;
 
+                let scriptData;
+
+                try {
+                    scriptData = await new ConstraintScriptLoader().loadSampleScript(item.path);
+                } catch (e) {
+                    this.busy = false;
+                    alert({
+                        title: localize('script_loading_error_title'),
+                        okButtonText: localize('ok_button')
+                    }).then(() => {
+                        console.error('Error while loading script');
+                        console.error(e);
+                    })
+                    return;
+                }
+
+                this.busy = false;
                 this.$navigator.navigate('/script_editor', {
                     transition: {
                         name:'slide',
@@ -177,6 +195,7 @@
                         folderPath: samplesFolder.path,
                         fileName: item.path,
                         permission: 'r',
+                        scriptData,
                     }
                 });
             },
