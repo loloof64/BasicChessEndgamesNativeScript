@@ -37,6 +37,8 @@
 
     import Vue from "nativescript-vue";
     Vue.filter("L", localize);
+
+    const fileSystemModule = require("tns-core-modules/file-system");
     
     export default {
         data() {
@@ -161,13 +163,16 @@
             },
 
             readSample(item) {
+                const currentAppFolder = fileSystemModule.knownFolders.currentApp();
+                const samplesFolder = fileSystemModule.path.join(currentAppFolder.path, 'sample_constraints');
+
                 this.$navigator.navigate('/script_editor', {
                     transition: {
                         name:'slide',
                         duration: 200
                     },
                     props: {
-                        folderPath: this.currentFolder.path,
+                        folderPath: samplesFolder.path,
                         fileName: item.path,
                         permission: 'r',
                     }
