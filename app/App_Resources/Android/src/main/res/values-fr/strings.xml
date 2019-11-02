@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="file_name_title">"Nom du fichier ?"</string>
   <string name="save_script_error_title">"Echec de sauvegarde du script"</string>
   <string name="script_piece_deletion_confirmation_message">"Au moins un script est associé à cette pièce : supprimer ?"</string>
   <string name="script_piece_deletion_confirmation_title">"Supprimer pièce %1$s ?"</string>

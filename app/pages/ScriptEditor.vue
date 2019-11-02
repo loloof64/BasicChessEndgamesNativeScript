@@ -322,13 +322,7 @@
         methods: {
             async _saveAndExit() {
                 try {
-                    await this._saveInFile();
-                    this.$navigator.navigate('/home', {
-                        transition: {
-                            name:'slide',
-                            duration: 200
-                        }
-                    });
+                    this._saveInFileAndExitIfSuccess();
                 }
                 catch (err) {
                     console.error(err);
@@ -605,7 +599,7 @@
                     ["", undefined].includes(indexedConstraint);
             },
 
-            async _saveInFile() {
+            _saveInFileAndExitIfSuccess() {
                 const destinationFolderPath = this.folderPath;
                 if (!destinationFolderPath) {
                     console.error("Don't know in which folder to save !");
@@ -613,9 +607,24 @@
                 }
 
                 const destinationFolderInstance = fileSystemModule.Folder.fromPath(destinationFolderPath);
-                const fileName = 'test.cst';
-                const fileInstance = destinationFolderInstance.getFile(fileName);
-                await this._writeScriptInFile(fileInstance);
+                prompt({
+                    title: localize('file_name_title'),
+                    okButtonText: localize('ok_button'),
+                    cancelButtonText: localize('cancel_button'),
+                }).then(async result => {
+                    if (!result.result) throw 'No file name given or canceled dialog';
+                    let fileName = result.text;
+                    if (!fileName.endsWith(".cst")) fileName += ".cst";
+                    const fileInstance = destinationFolderInstance.getFile(fileName);
+                    await this._writeScriptInFile(fileInstance);
+
+                    this.$navigator.navigate('/home', {
+                        transition: {
+                            name:'slide',
+                            duration: 200
+                        }
+                    });
+                });
             },
 
             async _writeScriptInFile(fileInstance) {

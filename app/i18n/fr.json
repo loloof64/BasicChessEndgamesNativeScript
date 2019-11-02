@@ -98,5 +98,6 @@
   "script_piece_deletion_confirmation_title": "Supprimer pièce %s ?",
   "script_piece_deletion_confirmation_message": "Au moins un script est associé à cette pièce : supprimer ?",
 
-  "save_script_error_title": "Echec de sauvegarde du script"
+  "save_script_error_title": "Echec de sauvegarde du script",
+  "file_name_title": "Nom du fichier ?"
 }

@@ -98,5 +98,6 @@
   "script_piece_deletion_confirmation_title": "Delete piece %s ?",
   "script_piece_deletion_confirmation_message": "At least a script is associated with this piece : delete it ?",
 
-  "save_script_error_title": "Failed to save script"
+  "save_script_error_title": "Failed to save script",
+  "file_name_title": "File name ?"
 }
