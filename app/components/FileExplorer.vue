@@ -91,7 +91,6 @@
                     },
                     props: {
                         folderPath: this.currentFolder.path,
-                        mode: 'new',
                         permission: 'w',
                     }
                 });

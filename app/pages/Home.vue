@@ -11,7 +11,7 @@
                     <GridLayout>
                         <ListView for="item in sampleScripts" @itemTap="onSampleScriptTap($event.item)" row="0" col="0">
                             <v-template>
-                                <Label :text="item.label" fontSize="22" width="100%" />
+                                <Label :text="item.label" @longPress="readSample(item)" fontSize="22" width="100%" />
                             </v-template>
                         </ListView>
                         <ActivityIndicator :busy="generatingPosition" row="0" col="0" />
@@ -158,6 +158,20 @@
                     })
                 }
                 
+            },
+
+            readSample(item) {
+                this.$navigator.navigate('/script_editor', {
+                    transition: {
+                        name:'slide',
+                        duration: 200
+                    },
+                    props: {
+                        folderPath: this.currentFolder.path,
+                        fileName: item.path,
+                        permission: 'r',
+                    }
+                });
             },
         },
         components: {FileExplorer,},

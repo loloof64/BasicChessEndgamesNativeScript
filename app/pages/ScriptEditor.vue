@@ -10,7 +10,7 @@
                     <GridLayout>
                         <ScrollView :height="scriptsZonesHeight">
                             <TextView 
-                                editable="true"
+                                :editable="_weHaveWritePermission()"
                                 autocorrect="false"
                                 ref="player_king"   
                             />
@@ -20,6 +20,7 @@
                             backgroundColor="yellowgreen"
                             icon="res://save"
                             @tap="_saveAndExit()"
+                            :visibility="_weHaveWritePermission() ? 'visible' : 'collapse'"
                         />
                     </GridLayout>
                 </TabViewItem>
@@ -28,7 +29,7 @@
                     <GridLayout>
                         <ScrollView :height="scriptsZonesHeight">
                             <TextView 
-                                editable="true" 
+                                :editable="_weHaveWritePermission()" 
                                 autocorrect="false"
                                 ref="computer_king"
                             />
@@ -38,6 +39,7 @@
                             backgroundColor="yellowgreen"
                             icon="res://save"
                             @tap="_saveAndExit()"
+                            :visibility="_weHaveWritePermission() ? 'visible' : 'collapse'"
                         />
                     </GridLayout>
                 </TabViewItem>
@@ -55,10 +57,12 @@
                                         <Label class="piece_count" @tap="_openEditCountModal(item.code)">
                                             <FormattedString>
                                                 <Span class="piece_count_number" :text="item.count" />
-                                                <Span class="fa piece_count_edit" text.decode="&#xf303;" />
+                                                <Span :visibility="_weHaveWritePermission() ? 'visible' : 'collapse'"
+                                                 class="fa piece_count_edit" text.decode="&#xf303;" />
                                             </FormattedString>
                                         </Label>
-                                        <Image src="res://delete" class="delete_icon" @tap="_removePiece(item.code)" />
+                                        <Image src="res://delete" :visibility="_weHaveWritePermission() ? 'visible' : 'collapse'" 
+                                        class="delete_icon" @tap="_removePiece(item.code)" />
                                     </StackLayout>
                                 </v-template>
                             </ListView>
@@ -68,14 +72,14 @@
                             backgroundColor="yellowgreen"
                             icon="res://add"
                             @tap="_openAddCountModal()"
-                            :visibility="add_piece_modal_open ? 'collapse' : 'visible'"
+                            :visibility="_otherPiecesCountTabFabVisibility()"
                         />
                         <Fab
                             class="fab-button hr vb"
                             backgroundColor="yellowgreen"
                             icon="res://save"
                             @tap="_saveAndExit()"
-                            :visibility="add_piece_modal_open ? 'collapse' : 'visible'"
+                            :visibility="_otherPiecesCountTabFabVisibility()"
                         />
 
                         <ScrollView class="modal" :class="add_piece_modal_open ? 'open' : ''" :height="pieceTypeModalHeight">
@@ -131,7 +135,7 @@
                             </StackLayout>
                             <ScrollView orientation="vertical" :height="otherScriptModalHeight">
                                 <TextView
-                                    editable="true" 
+                                    :editable="_weHaveWritePermission()" 
                                     autocorrect="false"
                                     :text="current_global_constraint_content"
                                     ref="general_constraint"
@@ -144,6 +148,7 @@
                             backgroundColor="yellowgreen"
                             icon="res://save"
                             @tap="_saveAndExit()"
+                            :visibility="_weHaveWritePermission() ? 'visible' : 'collapse'"
                         />
 
                     </GridLayout>
@@ -173,7 +178,7 @@
                             </StackLayout>
                             <ScrollView orientation="vertical" :height="otherScriptModalHeight">
                                 <TextView
-                                    editable="true" 
+                                    :editable="_weHaveWritePermission()" 
                                     autocorrect="false"
                                     :text="current_mutual_constraint_content"
                                     ref="mutual_constraint"
@@ -186,6 +191,7 @@
                             backgroundColor="yellowgreen"
                             icon="res://save"
                             @tap="_saveAndExit()"
+                            :visibility="_weHaveWritePermission() ? 'visible' : 'collapse'"
                         />
 
                     </GridLayout>
@@ -215,7 +221,7 @@
                             </StackLayout>
                             <ScrollView orientation="vertical" :height="otherScriptModalHeight">
                                 <TextView
-                                    editable="true" 
+                                    :editable="_weHaveWritePermission()" 
                                     autocorrect="false"
                                     :text="current_indexed_constraint_content"
                                     ref="indexed_constraint"
@@ -228,6 +234,7 @@
                             backgroundColor="yellowgreen"
                             icon="res://save"
                             @tap="_saveAndExit()"
+                            :visibility="_weHaveWritePermission() ? 'visible' : 'collapse'"
                         />
 
                     </GridLayout>
@@ -245,6 +252,7 @@
                             backgroundColor="yellowgreen"
                             icon="res://save"
                             @tap="_saveAndExit()"
+                            :visibility="_weHaveWritePermission() ? 'visible' : 'collapse'"
                         />
                     </GridLayout>
                 </TabViewItem>
@@ -313,13 +321,37 @@
                 
                 return accumOwner;
             }, []);
+
+            const weMustLoadContent = this._weHaveReadPermission() && this.fileName !== undefined && this.folderPath !== undefined;
+            if (weMustLoadContent) {
+                this._loadExistingContent();
+            }
         },
         props: [
             'folderPath',
-            'mode',
             'permission',
+            'fileName',
         ],
         methods: {
+            _weHaveWritePermission() {
+                return (this.permission || '').includes('w');
+            },
+
+            _weHaveReadPermission() {
+                return (this.permission || '').includes('r');
+            },
+
+            _otherPiecesCountTabFabVisibility() {
+                if (!this._weHaveWritePermission()) return 'collapse';
+                if (this.add_piece_modal_open) return 'collapse';
+                if (this.edit_count_modal_open) return 'collapse';
+                return 'visible';
+            },
+
+            _loadExistingContent() {
+
+            },
+
             async _saveAndExit() {
                 try {
                     this._saveInFileAndExitIfSuccess();
